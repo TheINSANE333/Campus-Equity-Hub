@@ -1,0 +1,16 @@
+<!-- templates/index.html -->
+{% extends "layout.html" %}
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Simple Authentication System</h1>
+        <p class="col-md-8 fs-4">A simple authentication system with sign-up and login functionality using flask.</p>
+        {% if 'user_id' not in session %}
+            <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg">Sign Up</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">Login</a>
+        {% else %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-success btn-lg">Go to Dashboard</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
