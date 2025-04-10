@@ -19,7 +19,7 @@ bcrypt = Bcrypt(app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    # email = db.Column(db.String(120), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
 
     def __repr__(self):
@@ -38,26 +38,26 @@ def index():
 def signup():
     if request.method == 'POST':
         username = request.form['username']
-        # email = request.form['email']
+        email = request.form['email']
         password = request.form['password']
         
         # Check if username or email already exists
         existing_user = User.query.filter_by(username=username).first()
-        # existing_email = User.query.filter_by(email=email).first()
+        existing_email = User.query.filter_by(email=email).first()
         
         if existing_user:
             flash('Username already exists!', 'danger')
             return redirect(url_for('signup'))
         
-        # if existing_email:
-        #     flash('Email already registered!', 'danger')
-        #     return redirect(url_for('signup'))
+        if existing_email:
+            flash('Email already registered!', 'danger')
+            return redirect(url_for('signup'))
         
         # Hash the password
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         
         # Create new user
-        new_user = User(username=username, password=hashed_password)
+        new_user = User(username=username, email=email, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         
