@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <h2 class="my-4">Admin Dashboard</h2>
+    
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Quick Stats
+                </div>
+                <div class="card-body">
+                    <p><strong>Total Users:</strong> {{ users|length }}</p>
+                    <p><strong>Admin Users:</strong> {{ users|selectattr('is_admin', 'equalto', true)|list|length }}</p>
+                    <a href="{{ url_for('user.index_view') }}" class="btn btn-primary">Manage Users</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Admin Actions
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('user.create_view') }}" class="btn btn-success mb-2">Create New User</a>
+                    <p class="mt-3">Use the admin panel to manage users, edit user information, or delete accounts.</p>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('reset_database') }}" class="btn btn-sm btn-danger">Delete Database</a>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            Recent Users
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Admin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users[:10] %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{% if user.is_admin %}Yes{% else %}No{% endif %}</td>
+                            <td>
+                                <a href="{{ url_for('user.edit_view', id=user.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                <a href="{{ url_for('user.delete_view', id=user.id) }}" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if users|length > 10 %}
+            <div class="text-center mt-3">
+                <a href="{{ url_for('user.index_view') }}" class="btn btn-outline-secondary">View All Users</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
