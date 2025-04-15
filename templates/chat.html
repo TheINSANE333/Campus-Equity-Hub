@@ -1,0 +1,79 @@
+<!-- templates/chat.html -->
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Available Users</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for user in users %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('chat_with_user', user_id=user.id) }}" class="text-decoration-none">
+                                {{ user.username }}
+                                <span class="text-muted small ms-2">({{ user.campus }})</span>
+                            </a>
+                            {% if user.id in unread_by_user and unread_by_user[user.id] > 0 %}
+                            <span class="badge bg-primary rounded-pill">{{ unread_by_user[user.id] }}</span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Campus Equity Hub Chat</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center py-5">
+                        <h4>Welcome to Campus Equity Hub Chat</h4>
+                        <p class="text-muted">Select a user from the list to start a conversation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Check for unread messages every 10 seconds
+    setInterval(function() {
+        fetch('/api/unread-counts')
+            .then(response => response.json())
+            .then(data => {
+                // Update user badges
+                Object.keys(data.by_user).forEach(userId => {
+                    const count = data.by_user[userId];
+                    const userItems = document.querySelectorAll('.list-group-item');
+                    
+                    userItems.forEach(item => {
+                        const link = item.querySelector('a');
+                        if (link && link.href.endsWith('/' + userId)) {
+                            // Remove existing badge if any
+                            const existingBadge = item.querySelector('.badge');
+                            if (existingBadge) {
+                                existingBadge.remove();
+                            }
+                            
+                            // Add badge if there are unread messages
+                            if (count > 0) {
+                                const badge = document.createElement('span');
+                                badge.className = 'badge bg-primary rounded-pill';
+                                badge.textContent = count;
+                                item.appendChild(badge);
+                            }
+                        }
+                    });
+                });
+            })
+            .catch(error => console.error('Error fetching unread counts:', error));
+    }, 10000);
+</script>
+{% endblock %}

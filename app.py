@@ -89,6 +89,33 @@ class Campus(db.Model):
     
     def __repr__(self):
         return f'<Campus {self.name}>'
+    
+class Chat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    read = db.Column(db.Boolean, default=False)
+    
+    # Define relationships
+    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_messages')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_messages')
+    
+    def __repr__(self):
+        return f'<Chat {self.id}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'sender_id': self.sender_id,
+            'receiver_id': self.receiver_id,
+            'sender_username': self.sender.username,
+            'receiver_username': self.receiver.username,
+            'message': self.message,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'read': self.read
+        }
 
 # Create an initial admin user after database initialization
 # Initialize Flask-Admin
@@ -193,11 +220,6 @@ def signup():
         return redirect(url_for('login'))
     
     return render_template('signup.html')
-
-# Add route for campus search page
-@app.route('/campus-search')
-def campus_search():
-    return render_template('campus.html')
 
 # Add route for campus search API endpoint
 @app.route('/api/campus-search')
@@ -326,6 +348,148 @@ def logout():
         flash('You have been logged out.', 'info')
     
     return redirect(url_for('index'))
+
+@app.route('/chat')
+def chat():
+    if 'user_id' not in session:
+        flash('Please log in to access the chat.', 'danger')
+        return redirect(url_for('login'))
+        
+    # Get all users except the current user
+    users = User.query.filter(User.id != session['user_id']).all()
+    
+    # Get unread message counts for navbar indicator
+    unread_counts = db.session.query(
+        Chat.sender_id, 
+        db.func.count(Chat.id).label('count')
+    ).filter(
+        Chat.receiver_id == session['user_id'],
+        Chat.read == False
+    ).group_by(Chat.sender_id).all()
+    
+    unread_by_user = {sender_id: count for sender_id, count in unread_counts}
+    
+    return render_template('chat.html', users=users, unread_by_user=unread_by_user)
+
+@app.route('/chat/<int:user_id>', methods=['GET', 'POST'])
+def chat_with_user(user_id):
+    if 'user_id' not in session:
+        flash('Please log in to access the chat.', 'danger')
+        return redirect(url_for('login'))
+    
+    current_user_id = session['user_id']
+    
+    # Check if the user exists
+    chat_partner = User.query.get_or_404(user_id)
+    
+    if request.method == 'POST':
+        message = request.form.get('message')
+        
+        if message:
+            # Create new chat message
+            new_message = Chat(
+                sender_id=current_user_id,
+                receiver_id=user_id,
+                message=message
+            )
+            
+            db.session.add(new_message)
+            db.session.commit()
+            
+            # If AJAX request, return the new message as JSON
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify(new_message.to_dict())
+        
+        # For normal form submission, redirect back to the chat
+        return redirect(url_for('chat_with_user', user_id=user_id))
+    
+    # Mark messages as read
+    unread_messages = Chat.query.filter_by(
+        sender_id=user_id,
+        receiver_id=current_user_id,
+        read=False
+    ).all()
+    
+    for msg in unread_messages:
+        msg.read = True
+    
+    db.session.commit()
+    
+    # Get all messages between the current user and the selected user
+    messages = Chat.query.filter(
+        ((Chat.sender_id == current_user_id) & (Chat.receiver_id == user_id)) |
+        ((Chat.sender_id == user_id) & (Chat.receiver_id == current_user_id))
+    ).order_by(Chat.timestamp).all()
+    
+    # Get all users except the current user for the sidebar
+    users = User.query.filter(User.id != current_user_id).all()
+    
+    # Get unread message counts
+    unread_counts = db.session.query(
+        Chat.sender_id, 
+        db.func.count(Chat.id).label('count')
+    ).filter(
+        Chat.receiver_id == current_user_id,
+        Chat.read == False
+    ).group_by(Chat.sender_id).all()
+    
+    unread_by_user = {sender_id: count for sender_id, count in unread_counts}
+    
+    return render_template(
+        'chat_with_user.html',
+        chat_partner=chat_partner,
+        messages=messages,
+        users=users,
+        unread_by_user=unread_by_user
+    )
+
+@app.route('/api/messages/<int:user_id>')
+def get_new_messages(user_id):
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not authenticated'}), 401
+    
+    current_user_id = session['user_id']
+    last_id = request.args.get('last_id', 0, type=int)
+    
+    # Get new messages that the current user hasn't seen yet
+    new_messages = Chat.query.filter(
+        Chat.id > last_id,
+        ((Chat.sender_id == current_user_id) & (Chat.receiver_id == user_id)) |
+        ((Chat.sender_id == user_id) & (Chat.receiver_id == current_user_id))
+    ).order_by(Chat.timestamp).all()
+    
+    # Mark messages as read
+    unread_messages = [msg for msg in new_messages if msg.receiver_id == current_user_id and not msg.read]
+    for msg in unread_messages:
+        msg.read = True
+    
+    db.session.commit()
+    
+    return jsonify([message.to_dict() for message in new_messages])
+
+@app.route('/api/unread-counts')
+def get_unread_counts():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not authenticated'}), 401
+    
+    current_user_id = session['user_id']
+    
+    # Get unread message counts
+    unread_counts = db.session.query(
+        Chat.sender_id, 
+        db.func.count(Chat.id).label('count')
+    ).filter(
+        Chat.receiver_id == current_user_id,
+        Chat.read == False
+    ).group_by(Chat.sender_id).all()
+    
+    unread_by_user = {str(sender_id): count for sender_id, count in unread_counts}
+    total_unread = sum(unread_by_user.values())
+    
+    return jsonify({
+        'by_user': unread_by_user,
+        'total': total_unread
+    })
 
 if __name__ == '__main__':
      app.run(host='0.0.0.0', port=5000, debug=True)

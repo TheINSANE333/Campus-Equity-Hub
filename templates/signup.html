@@ -27,12 +27,11 @@
                     </div> -->
                     <div class="mb-3">
                         <label for="campus" class="form-label">Campus</label>
-                        <!-- <span class="input-group-text"><i class="bi bi-search"></i></span> -->
                         <div class="dropdown">
-                            <input type="text" class="form-control" id="campusSearch" autocomplete="off">
+                            <input type="campus" class="form-control" id="campus" name="campus" required>
                             <div id="searchResults" class="dropdown-menu w-100" style="max-height: 200px; overflow-y: auto;"></div>
                         </div>
-                        <input type="hidden" name="campus_id" id="selectedCampusId">
+                        <!-- <input type="hidden" class="form-control" name="campus" id="campus" required> -->
                         
                     </div>
                     <div class="d-grid">
@@ -49,13 +48,8 @@
 <!-- Add JavaScript for Campus Search functionality -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('campusSearch');
+    const searchInput = document.getElementById('campus');
     const searchResults = document.getElementById('searchResults');
-    // const selectedCampus = document.getElementById('selectedCampus');
-    // const campusName = document.getElementById('campusName');
-    // const campusLocation = document.getElementById('campusLocation');
-    // const campusDescription = document.getElementById('campusDescription');
-    // const selectDifferentCampus = document.getElementById('selectDifferentCampus');
     
     let timeoutId;
     
