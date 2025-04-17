@@ -15,19 +15,19 @@ def reset_database():
             print("Creating tables...")
             db.create_all()
             
-            print("Creating admin user...")
-            admin_password = bcrypt.generate_password_hash('admin123').decode('utf-8')
-            admin = User(username='admin', email='admin@example.com', 
-                         password=admin_password, token=0, is_admin=True, campus='MMU')
-            db.session.add(admin)
-            db.session.commit()
+            # print("Creating admin user...")
+            # admin_password = bcrypt.generate_password_hash('admin123').decode('utf-8')
+            # admin = User(username='admin', email='admin@example.com', 
+            #              password=admin_password, token=0, is_admin=True, campus='MMU')
+            # db.session.add(admin)
+            # db.session.commit()
 
-            print("Creating user1...")
-            user1_password = bcrypt.generate_password_hash('user1123').decode('utf-8')
-            user_1 = User(username='user1', email='user1@example.com', 
-                         password=user1_password, token=0, is_admin=False, campus='MMU')
-            db.session.add(user_1)
-            db.session.commit()
+            # print("Creating user1...")
+            # user1_password = bcrypt.generate_password_hash('user1123').decode('utf-8')
+            # user_1 = User(username='user1', email='user1@example.com', 
+            #              password=user1_password, token=0, is_admin=False, campus='MMU')
+            # db.session.add(user_1)
+            # db.session.commit()
             
             print("Database reset complete!")
         else:

@@ -194,7 +194,6 @@ admin.add_view(SecureUserModelView(User, db.session))
 # Add view to admin
 admin.add_view(ItemModelView(Item, db.session))
 
-
 def create_admin_user():
     with app.app_context():
         # Check if admin user already exists
@@ -247,12 +246,27 @@ def create_sample_campuses():
             db.session.commit()
             print("Sample campuses created.")
 
+def create_sample_items():
+    with app.app_context():
+        # Check if items already exist
+        if Item.query.count() == 0:
+            items = [
+                Item(name='Item1', description='New sample item', price=999999, image_filename='sample.jpg', 
+                     timestamp=datetime.utcnow(), user_id='2', category='sample', status='available'),
+            ]
+            
+            db.session.add_all(items)
+            db.session.commit()
+            print("Sample items created.")
+
+
 # Create database tables
 with app.app_context():
     db.create_all()
     create_admin_user()
     create_user1()
     create_sample_campuses()
+    create_sample_items()   
 
 # Custom Jinja2 filter to convert newlines to <br> tags
 @app.template_filter('nl2br')
