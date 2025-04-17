@@ -1,6 +1,2 @@
-# Simple Authentication System
-
-1. Username: admin
-   Password: admin123
-2. Username: user1
-   Password: user1123
+# Campus Equity Hub
+![](https://github.com/TheINSANE333/Campus-Equity-Hub/blob/main/static/logo.png)
