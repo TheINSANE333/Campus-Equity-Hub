@@ -7,11 +7,16 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Marketplace</h1>
         {% if session.get('user_id') %}
-        <a href="{{ url_for('add_item') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Add New Item
-        </a>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('add_item') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Item
+            </a>
+            <a href="{{ url_for('my_items') }}" class="btn btn-primary">
+                <i class="fas fa-list"></i> My Items
+            </a>
+        </div>
         {% endif %}
-    </div>
+    </div>    
 
     {% if items %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
