@@ -266,7 +266,7 @@ with app.app_context():
     create_admin_user()
     create_user1()
     create_sample_campuses()
-    create_sample_items()   
+    create_sample_items()
 
 # Custom Jinja2 filter to convert newlines to <br> tags
 @app.template_filter('nl2br')
@@ -413,6 +413,9 @@ def reset_database():
 
                 # Recreate the campus
                 create_sample_campuses()
+
+                # Recreate the items
+                create_sample_items()  
                 
                 # Clear the session
                 session.clear()
