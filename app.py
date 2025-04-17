@@ -1,14 +1,16 @@
+import os
+import uuid
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_login import current_user
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
-import os
-from datetime import timedelta
+from datetime import timedelta, datetime
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form import SecureForm
 from wtforms import PasswordField
 from functools import wraps
+from werkzeug.utils import secure_filename
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -20,6 +22,22 @@ app.permanent_session_lifetime = timedelta(minutes=30)
 # Initialize extensions
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+
+# Configure file upload settings
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+# Add to your Flask app configuration
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload
+
+# Create directory if it doesn't exist
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Helper function to check allowed file extensions
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Create Admin decorator for protected routes
 def admin_required(f):
@@ -116,6 +134,55 @@ class Chat(db.Model):
             'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
             'read': self.read
         }
+    
+# Item model
+class Item(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    price = db.Column(db.Float, nullable=False)
+    image_filename = db.Column(db.String(255), nullable=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    category = db.Column(db.String(50), nullable=True)
+    status = db.Column(db.String(20), default='available')  # available, sold, hidden
+    
+    # Define relationship
+    user = db.relationship('User', backref=db.backref('items', lazy=True))
+    
+    def __repr__(self):
+        return f'<Item {self.name}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'price': self.price,
+            'image_url': f'/static/uploads/{self.image_filename}' if self.image_filename else None,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'user_id': self.user_id,
+            'category': self.category,
+            'status': self.status,
+            'seller': self.user.username
+        }
+    
+# Add ModelView for Item to the admin panel
+class ItemModelView(ModelView):
+    form_base_class = SecureForm
+    column_searchable_list = ['name', 'description', 'category']
+    column_filters = ['price', 'status', 'user_id']
+    
+    def is_accessible(self):
+        if 'user_id' not in session:
+            return False
+        
+        user = User.query.get(session['user_id'])
+        return user is not None and user.is_admin
+    
+    def inaccessible_callback(self, name, **kwargs):
+        flash('You do not have permission to access the admin panel.', 'danger')
+        return redirect(url_for('index'))
 
 # Create an initial admin user after database initialization
 # Initialize Flask-Admin
@@ -123,6 +190,10 @@ admin = Admin(app, name='Admin Dashboard', template_mode='bootstrap4')
 
 # Add ModelView
 admin.add_view(SecureUserModelView(User, db.session))
+
+# Add view to admin
+admin.add_view(ItemModelView(Item, db.session))
+
 
 def create_admin_user():
     with app.app_context():
@@ -182,6 +253,13 @@ with app.app_context():
     create_admin_user()
     create_user1()
     create_sample_campuses()
+
+# Custom Jinja2 filter to convert newlines to <br> tags
+@app.template_filter('nl2br')
+def nl2br(value):
+    if value:
+        return value.replace('\n', '<br>')
+    return value
 
 # Routes
 @app.route('/')
@@ -490,6 +568,151 @@ def get_unread_counts():
         'by_user': unread_by_user,
         'total': total_unread
     })
+
+# Routes for item management
+@app.route('/marketplace')
+def marketplace():
+    # Get items sorted by newest first
+    items = Item.query.filter_by(status='available').order_by(Item.timestamp.desc()).all()
+    return render_template('marketplace.html', items=items)
+
+# Routes for viewing uploaded items
+@app.route('/my-items')
+def my_items():
+    if 'user_id' not in session:
+        flash('Please log in to view your items.', 'danger')
+        return redirect(url_for('login'))
+    
+    # Get user's items
+    items = Item.query.filter_by(user_id=session['user_id']).order_by(Item.timestamp.desc()).all()
+    return render_template('my_items.html', items=items)
+
+# Route for adding items
+@app.route('/add-item', methods=['GET', 'POST'])
+def add_item():
+    if 'user_id' not in session:
+        flash('Please log in to add items.', 'danger')
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        price = request.form['price']
+        category = request.form['category']
+        
+        # Validate form data
+        if not name or not price:
+            flash('Name and price are required!', 'danger')
+            return redirect(url_for('add_item'))
+        
+        # Handle image upload
+        image_filename = None
+        if 'image' in request.files:
+            file = request.files['image']
+            if file and file.filename != '' and allowed_file(file.filename):
+                # Generate unique filename
+                filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                image_filename = filename
+        
+        # Create new item
+        new_item = Item(
+            name=name,
+            description=description,
+            price=float(price),
+            category=category,
+            image_filename=image_filename,
+            user_id=session['user_id']
+        )
+        
+        db.session.add(new_item)
+        db.session.commit()
+        
+        flash('Your item has been added successfully!', 'success')
+        return redirect(url_for('my_items'))
+    
+    return render_template('add_item.html')
+
+# Route for viewing specific item details
+@app.route('/item/<int:item_id>')
+def view_item(item_id):
+    item = Item.query.get_or_404(item_id)
+    return render_template('view_item.html', item=item)
+
+# Route for editing items
+@app.route('/edit-item/<int:item_id>', methods=['GET', 'POST'])
+def edit_item(item_id):
+    if 'user_id' not in session:
+        flash('Please log in to edit items.', 'danger')
+        return redirect(url_for('login'))
+    
+    item = Item.query.get_or_404(item_id)
+    
+    # Check if user owns the item or is admin
+    if item.user_id != session['user_id'] and not session.get('is_admin', False):
+        flash('You do not have permission to edit this item.', 'danger')
+        return redirect(url_for('marketplace'))
+    
+    if request.method == 'POST':
+        item.name = request.form['name']
+        item.description = request.form['description']
+        item.price = float(request.form['price'])
+        item.category = request.form['category']
+        item.status = request.form['status']
+        
+        # Handle image upload
+        if 'image' in request.files:
+            file = request.files['image']
+            if file and file.filename != '' and allowed_file(file.filename):
+                # Remove old image if exists
+                if item.image_filename:
+                    try:
+                        old_image_path = os.path.join(app.config['UPLOAD_FOLDER'], item.image_filename)
+                        if os.path.exists(old_image_path):
+                            os.remove(old_image_path)
+                    except Exception as e:
+                        print(f"Error removing old image: {e}")
+                
+                # Generate unique filename
+                filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                item.image_filename = filename
+        
+        db.session.commit()
+        
+        flash('Your item has been updated successfully!', 'success')
+        return redirect(url_for('my_items'))
+    
+    return render_template('edit_item.html', item=item)
+
+# Route to delete item
+@app.route('/delete-item/<int:item_id>', methods=['POST'])
+def delete_item(item_id):
+    if 'user_id' not in session:
+        flash('Please log in to delete items.', 'danger')
+        return redirect(url_for('login'))
+    
+    item = Item.query.get_or_404(item_id)
+    
+    # Check if user owns the item or is admin
+    if item.user_id != session['user_id'] and not session.get('is_admin', False):
+        flash('You do not have permission to delete this item.', 'danger')
+        return redirect(url_for('marketplace'))
+    
+    # Remove image file if exists
+    if item.image_filename:
+        try:
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], item.image_filename)
+            if os.path.exists(image_path):
+                os.remove(image_path)
+        except Exception as e:
+            print(f"Error removing image: {e}")
+    
+    db.session.delete(item)
+    db.session.commit()
+    
+    flash('Your item has been deleted successfully!', 'success')
+    return redirect(url_for('my_items'))
 
 if __name__ == '__main__':
      app.run(host='0.0.0.0', port=5000, debug=True)
