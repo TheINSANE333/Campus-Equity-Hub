@@ -8,7 +8,9 @@ Prerequisites:
 	Run `python get-pip.py `
 
 How to run:
-`pip install -r requirements.txt`
+1. `python -m venv .venv`
+2. `.venv/Scripts/activate`
+3. `pip install -r requirements.txt`
 
 After downloaded the libraries, run:
 `python app.py`
