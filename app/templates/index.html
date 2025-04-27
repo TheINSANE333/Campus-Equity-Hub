@@ -1,0 +1,52 @@
+<!-- templates/index.html -->
+{% extends "layout.html" %}
+{% block content %}
+<div class="hero-section rounded-3">
+    <div class="container-fluid py-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold">Campus Equity Hub</h1>
+                <p class="fs-4">The Campus Equity Hub is a web-based platform dedicated to promoting collaboration and resource optimization. It serves as a platform where students can exchange, donate, or borrow essential resources such as textbooks, electronics and dorm supplies.</p>
+                <div class="mt-4">
+                    {% if 'user_id' not in session %}
+                        <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg me-2">Sign Up</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">Login</a>
+                    {% else %}
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-success btn-lg">Go to Dashboard</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-4 d-flex align-items-center justify-content-center">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Campus Equity Hub Logo" class="img-fluid" style="max-height: 200px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Exchange Resources</h5>
+                <p class="card-text">Find and exchange textbooks, electronics, and other supplies with fellow students.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Donate Items</h5>
+                <p class="card-text">Help others by donating items you no longer need to students who could use them.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Borrow Resources</h5>
+                <p class="card-text">Find resources you need for your classes or dorm without having to purchase them.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -7,8 +7,24 @@
     <title>Campus Equity Hub</title>
     <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css">
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .hero-section {
+            padding: 4rem 0;
+            background-color: #f8f9fa;
+        }
+        .footer {
+            margin-top: 2rem;
+            padding: 1.5rem 0;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+    </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">Campus Equity Hub</a>
@@ -21,25 +37,12 @@
                         <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('chat') }}">Chat</a>
+                        <a class="nav-link" href="#">Chat</a>
                     </li>
                     {% if 'user_id' in session %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
                     </li>
-
-                    {% if session.get('is_admin', False) %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
-                            Admin
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                            <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('admin.index') }}">Admin Panel</a></li>
-                        </ul>
-                    </li>
-                    {% endif %}
-                    
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                     </li>
@@ -67,9 +70,19 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        
-        {% block content %}{% endblock %}
     </div>
+
+    <!-- Main Content Area -->
+    <main class="container py-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer text-center">
+        <div class="container">
+            <span class="text-muted">© 2025 Campus Equity Hub. All rights reserved.</span>
+        </div>
+    </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
 </body>
