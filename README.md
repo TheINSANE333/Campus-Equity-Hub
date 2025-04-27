@@ -1,5 +1,5 @@
 # Campus Equity Hub
-![](https://github.com/TheINSANE333/Campus-Equity-Hub/app/static/logo.png)
+![](https://github.com/TheINSANE333/Campus-Equity-Hub/blob/main/app/static/logo.png)
 
 Prerequisites:
 1. Have python downloaded
