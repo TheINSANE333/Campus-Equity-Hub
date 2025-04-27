@@ -13,7 +13,7 @@ How to run:
 3. `pip install -r requirements.txt`
 
 After downloaded the libraries, run:
-`python run.py`
+`python app.py`
 
 Or
 
