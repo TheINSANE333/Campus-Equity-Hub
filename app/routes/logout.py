@@ -11,7 +11,7 @@ class Logout(Endpoint):
         self.callback = self.login
         self.methods = ['GET', 'POST']
 
-    def login(self):
+    def logout(self):
         if 'user_id' in session:
             session.pop('user_id', None)
             session.pop('username', None)
