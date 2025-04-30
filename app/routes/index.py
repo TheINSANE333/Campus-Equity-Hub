@@ -9,7 +9,7 @@ class Index(Endpoint):
         self.route = '/'
         self.endpoint = 'index'
         self.callback = self.index
-        self.methods = None
+        self.methods = ['GET', 'POST']
 
     def index(self):
         return render_template('index.html')

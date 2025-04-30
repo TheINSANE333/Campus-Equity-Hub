@@ -12,4 +12,5 @@ class Endpoint(ABC): #Abstract factory
         self.flask_app = app
 
     def register_endpoints3(self) -> None:
+        methods = self.methods if self.methods is not None else ['GET', 'POST']
         self.flask_app.app.add_url_rule(rule=self.route, endpoint=self.endpoint, view_func=self.callback, methods=self.methods)
