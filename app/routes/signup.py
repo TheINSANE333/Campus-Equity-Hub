@@ -17,27 +17,48 @@ class Signup(Endpoint):
             username = request.form['username']
             email = request.form['email']
             password = request.form['password']
-        
-            # Check if username or email already exists
+
             dbHandler = DbHandler(self.flask_app)
 
-            user = dbHandler.query_user(username)
-            if user != None and user.username == username:
-                flash('Username already exists!', 'danger')
-                print("Username already exists!")
-                return redirect(url_for('signup'))
+            # user = dbHandler.query_user(username)
+            # if user != None and user.username == username:
+            #     flash('Username already exists!', 'danger')
+            #     print("Username already exists!")
+            #     return redirect(url_for('signup'))
             
-            email_inp = dbHandler.query_email(email)
-            if email_inp != None and email_inp == email:
-                flash('Email already exists!', 'danger')
-                print("Email already exists!")
-                print(email_inp)
-                return redirect(url_for('signup'))
+            # email_inp = dbHandler.query_email(email)
+            # if email_inp != None and email_inp == email:
+            #     flash('Email already exists!', 'danger')
+            #     print("Email already exists!")
+            #     print(email_inp)
+            #     return redirect(url_for('signup'))
             
-            # Create new user
-            dbHandler.add_new_user(username, email, password)
+            # # Create new user
+            # dbHandler.add_new_user(username, email, password)
+
+            command = SignupCommand(dbHandler)
+            success, message = command.execute(username, email, password)
             
-            flash('Your account has been created! You can now log in.', 'success')
-            return redirect(url_for('login'))
+            # flash('Your account has been created! You can now log in.', 'success')
+            # return redirect(url_for('login'))
+
+            flash(message, 'success' if success else 'danger')
+            return redirect(url_for('login' if success else 'signup'))
         
         return render_template('signup.html')
+
+class SignupCommand:
+    def __init__(self, dbHandler):
+        self._dbHandler = dbHandler
+
+    def execute(self, username, email, password):
+        user = self._dbHandler.query_user(username)
+        email_inp = self._dbHandler.query_email(email)
+        if user!= None and user.username == username:
+            return False, 'Username already exists!'
+
+        if email_inp != None and email_inp == email:
+            return False, 'Email already exists!'
+
+        self._dbHandler.add_new_user(username, email, password)
+        return True, 'Account created successfully!'
