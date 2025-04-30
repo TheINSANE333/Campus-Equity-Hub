@@ -8,7 +8,7 @@ class Logout(Endpoint):
 
         self.route = '/logout'
         self.endpoint = 'logout'
-        self.callback = self.login
+        self.callback = self.logout
         self.methods = ['GET', 'POST']
 
     def logout(self):

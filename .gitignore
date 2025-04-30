@@ -1,3 +1,4 @@
 .venv
 instance/users.db
 app/routes/_pycache_/
+app/__pycache__/
