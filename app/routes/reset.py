@@ -1,7 +1,7 @@
 from flask import render_template, request, flash, redirect, url_for, session
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
-from app.dbhandler import DbHandler
+from app.dbhandler import AdminDatabaseTools
 
 class Reset(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -15,7 +15,7 @@ class Reset(Endpoint):
     def reset(self):
         if request.method == 'POST':
             if request.form.get('confirm') == 'RESET':
-                dbHandler = DbHandler(self.flask_app)
+                dbHandler = AdminDatabaseTools(self.flask_app)
                 dbHandler.reset_database()
                 flash('Database has been reset successfully. Please log in again.', 'success')
                 return redirect(url_for('login'))
@@ -23,3 +23,6 @@ class Reset(Endpoint):
                 flash('Confirmation text did not match. Database was not reset.', 'danger')
                 
         return render_template('reset.html')
+
+
+

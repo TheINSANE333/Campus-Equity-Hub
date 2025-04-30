@@ -1,6 +1,6 @@
 from flask import render_template, request, flash, redirect, url_for
 from app.app_stub import Flask_App_Stub
-from app.dbhandler import DbHandler
+from app.dbhandler import UserRepository
 from app.routes.endpoint import Endpoint
 
 class Signup(Endpoint):
@@ -18,7 +18,7 @@ class Signup(Endpoint):
             email = request.form['email']
             password = request.form['password']
 
-            dbHandler = DbHandler(self.flask_app)
+            dbHandler = UserRepository(self.flask_app)
 
             command = SignupCommand(dbHandler)
             success, message = command.execute(username, email, password)

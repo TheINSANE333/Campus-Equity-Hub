@@ -1,3 +1,4 @@
 .venv
 instance/users.db
 __pycache__/
+test.py
