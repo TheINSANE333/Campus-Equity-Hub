@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+
+{% block title %}Add New Item{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1>Add New Item</h1>
+    
+    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Item Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                    <div class="invalid-feedback">
+                        Please provide a name for your item.
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price (RM)</label>
+                    <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
+                    <div class="invalid-feedback">
+                        Please provide a valid price.
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select class="form-select" id="category" name="category">
+                        <option value="">Select a category</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Books">Books</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Furniture">Furniture</option>
+                        <option value="Sports">Sports & Outdoors</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="image" class="form-label">Upload Image</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="previewImage(this);">
+                    <div class="form-text">Allowed formats: PNG, JPG, JPEG, GIF (Max size: 16MB)</div>
+                </div>
+                
+                <div class="mb-3">
+                    <div id="imagePreview" class="mt-2 border rounded p-2 d-flex align-items-center justify-content-center bg-light" style="height: 200px; display: none;">
+                        <img id="preview" src="#" alt="Preview" style="max-height: 100%; max-width: 100%;">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="5"></textarea>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Add Item</button>
+                <a href="{{ url_for('add_item') }}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Image preview functionality
+    function previewImage(input) {
+        const preview = document.getElementById('preview');
+        const previewDiv = document.getElementById('imagePreview');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                previewDiv.style.display = 'flex';
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.src = '';
+            previewDiv.style.display = 'none';
+        }
+    }
+    
+    // Form validation
+    (function() {
+        'use strict';
+        
+        // Fetch all forms we want to apply validation to
+        const forms = document.querySelectorAll('.needs-validation');
+        
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}

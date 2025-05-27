@@ -4,6 +4,7 @@ from app.routes.login import Login
 from app.routes.logout import Logout
 from app.routes.dashboard import Dashboard
 from app.routes.reset import Reset
+from app.routes.add_item import AddItem
 from app.app_stub import Flask_App_Stub
 
 class EndpointFactory: #factory method
@@ -15,7 +16,8 @@ class EndpointFactory: #factory method
             'Login': Login,
             'Dashboard': Dashboard,
             'Logout': Logout,
-            'Reset': Reset
+            'Reset': Reset,
+            'AddItem': AddItem
         }
         self._cache = {}
 

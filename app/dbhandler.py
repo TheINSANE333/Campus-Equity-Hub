@@ -58,7 +58,7 @@ class UserRepository(DbHandler):
         self.db.session.commit()
         print("Commit successful")
 
-    def query_user(self, username: str) -> str:
+    def query_user(self, username: str) -> User:
         try:
             user = self.db.session.query(User).filter_by(username=username).first()
             if user:
