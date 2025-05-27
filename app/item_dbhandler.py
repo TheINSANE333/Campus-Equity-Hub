@@ -58,6 +58,9 @@ class ItemRepository(DbHandler):
         self.db.session.commit()
         print("Commit successful")
 
+    def query_item(self, item_id: str) -> Item:
+        return Item.query.get_or_404(item_id)
+
     def get_available_items(self) -> List[Item]:
         """Get all available items ordered by timestamp (newest first)"""
         return Item.query.filter_by(status='available').order_by(Item.timestamp.desc()).all()
