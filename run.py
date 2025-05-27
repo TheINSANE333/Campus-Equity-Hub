@@ -8,7 +8,6 @@ from app.builder import FlaskAppBuilder
 # main.py (your entry point)
 
 if __name__ == '__main__':
-    os.makedirs('app/static/uploads', exist_ok=True)
     builder = FlaskAppBuilder()
     flask_app = (builder
            .configure_app()

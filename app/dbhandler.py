@@ -1,3 +1,5 @@
+import os
+import shutil
 from app.app_stub import Flask_App_Stub
 from app.models.user import User
 from abc import ABC, abstractmethod
@@ -116,6 +118,7 @@ class AdminDatabaseTools(DbHandler):
         try:
             self.db.drop_all()
             self.db.create_all()
+            shutil.rmtree('app/static/uploads/')
             print("Database reset successfully")
         except Exception as e:
             print(f"Error resetting database: {e}")

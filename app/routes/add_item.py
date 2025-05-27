@@ -38,6 +38,7 @@ class AddItem(Endpoint):
                 if file and file.filename != '' and allowed_file(file.filename):
                     # Generate unique filename
                     filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
+                    os.makedirs('app/static/uploads', exist_ok=True)
                     file.save(os.path.join('app/static/uploads', filename))
                     image_filename = filename
             
