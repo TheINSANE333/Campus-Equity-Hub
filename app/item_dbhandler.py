@@ -2,6 +2,7 @@ from datetime import datetime
 from app.app_stub import Flask_App_Stub
 from app.models.item import Item
 from abc import ABC, abstractmethod
+from typing import List
 
 class DbHandler(ABC):
     _instance = None
@@ -29,11 +30,7 @@ class DbHandler(ABC):
     def add_new_item(self, name: str, description: str, price: float, image_filename: str, 
                      user_id: int, category: str) -> None: ...
 
-    @abstractmethod
-    def query_item(self, username: str): ...
-    
-    @abstractmethod
-    def reset_database(self) -> None: ...
+    def get_available_items(self) -> List[Item]: ...
 
     @classmethod
     def get_instance(cls, app: Flask_App_Stub = None):
@@ -61,33 +58,6 @@ class ItemRepository(DbHandler):
         self.db.session.commit()
         print("Commit successful")
 
-    def query_item(self, name: str) -> Item:
-        try:
-            item = self.db.session.query(Item).filter_by(name=name).first()
-            if item:
-                return item
-            else:
-                return None
-            
-        except Exception as e:
-            print(f"Error querying item: {e}")
-            return None
-    
-    def reset_database(self) -> None:
-        raise NotImplementedError("UserRepository does not implement reset_database")
-
-class AdminDatabaseTools(DbHandler):
-    def reset_database(self) -> None:
-        try:
-            self.db.drop_all()
-            self.db.create_all()
-            print("Database reset successfully")
-        except Exception as e:
-            print(f"Error resetting database: {e}")
-    
-    def add_new_item(self, name: str, description: str, price: float, image_filename: str, 
-                     user_id: int, category: str) -> None:
-        raise NotImplementedError("AdminDatabaseTools does not implement add_new_item")
-
-    def query_item(self, name: str) -> Item | None:
-        raise NotImplementedError("AdminDatabaseTools does not implement query_user")
+    def get_available_items(self) -> List[Item]:
+        """Get all available items ordered by timestamp (newest first)"""
+        return Item.query.filter_by(status='available').order_by(Item.timestamp.desc()).all()

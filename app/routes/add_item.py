@@ -38,7 +38,7 @@ class AddItem(Endpoint):
                 if file and file.filename != '' and allowed_file(file.filename):
                     # Generate unique filename
                     filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
-                    file.save(os.path.join('static/uploads', filename))
+                    file.save(os.path.join('app/static/uploads', filename))
                     image_filename = filename
             
             # Create new item
@@ -47,7 +47,7 @@ class AddItem(Endpoint):
             command = NewItemCommand(item_dbHandler)
             success, message = command.execute(name, description, price, image_filename, category)
             
-            # flash(message, 'success' if success else 'danger')
+            flash(message, 'success' if success else 'danger')
             # return redirect(url_for('my_items'))
     
         return render_template('add_item.html')

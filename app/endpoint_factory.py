@@ -5,6 +5,7 @@ from app.routes.logout import Logout
 from app.routes.dashboard import Dashboard
 from app.routes.reset import Reset
 from app.routes.add_item import AddItem
+from app.routes.marketplace import Marketplace
 from app.app_stub import Flask_App_Stub
 
 class EndpointFactory: #factory method
@@ -17,7 +18,8 @@ class EndpointFactory: #factory method
             'Dashboard': Dashboard,
             'Logout': Logout,
             'Reset': Reset,
-            'AddItem': AddItem
+            'AddItem': AddItem, 
+            'Marketplace': Marketplace
         }
         self._cache = {}
 

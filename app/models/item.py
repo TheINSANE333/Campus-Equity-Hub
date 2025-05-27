@@ -16,6 +16,8 @@ class Item(db.Model):
     
     # Define relationship
     user = db.relationship('User', backref=db.backref('items', lazy=True))
+
+    print("Item model created")
     
     def __repr__(self):
         return f'<Item {self.name}>'
