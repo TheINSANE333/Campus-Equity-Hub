@@ -34,6 +34,9 @@ class DbHandler(ABC):
     def query_user(self, username: str): ...
 
     @abstractmethod
+    def query_user_id(self, user_id: int) -> User: ...
+
+    @abstractmethod
     def add_all_users(self, user_id: int) -> List[User]: ...
 
     @abstractmethod
@@ -75,6 +78,9 @@ class UserRepository(DbHandler):
         except Exception as e:
             print(f"Error querying user: {e}")
             return None
+    
+    def query_user_id(self, user_id: int) -> User:
+        return User.query.get_or_404(user_id)
         
     def get_all_users(self, user_id: int) -> List[User]:
         return User.query.filter(User.id != user_id).all()
@@ -113,6 +119,12 @@ class Authenticator(DbHandler):
 
     def query_user(self, username: str) -> User | None:
         raise NotImplementedError("Authenticator does not implement query_user")
+    
+    def query_user_id(self, user_id: int) -> User:
+        raise NotImplementedError("Authenticator does not implement query_user_id")
+    
+    def get_all_users(self, user_id: int) -> List[User]:
+        raise NotImplementedError("Authenticator does not implement get_all_users")
 
     def query_email(self, email: str) -> str | None:
         raise NotImplementedError("Authenticator does not implement query_email")
@@ -135,6 +147,12 @@ class AdminDatabaseTools(DbHandler):
 
     def query_user(self, username: str) -> User | None:
         raise NotImplementedError("AdminDatabaseTools does not implement query_user")
+    
+    def query_user_id(self, user_id: int) -> User:
+        raise NotImplementedError("Authenticator does not implement query_user_id")
+    
+    def get_all_users(self, user_id: int) -> List[User]:
+        raise NotImplementedError("Authenticator does not implement get_all_users")
 
     def query_email(self, email: str) -> str | None:
         raise NotImplementedError("AdminDatabaseTools does not implement query_email")

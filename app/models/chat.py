@@ -16,3 +16,15 @@ class Chat(db.Model):
     
     def __repr__(self):
         return f'<Chat {self.id}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'sender_id': self.sender_id,
+            'receiver_id': self.receiver_id,
+            'sender_username': self.sender.username,
+            'receiver_username': self.receiver.username,
+            'message': self.message,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'read': self.read
+        }

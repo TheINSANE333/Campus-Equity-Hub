@@ -22,16 +22,16 @@ class Item(db.Model):
     def __repr__(self):
         return f'<Item {self.name}>'
     
-    # def to_dict(self):
-    #     return {
-    #         'id': self.id,
-    #         'name': self.name,
-    #         'description': self.description,
-    #         'price': self.price,
-    #         'image_url': f'/static/uploads/{self.image_filename}' if self.image_filename else None,
-    #         'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
-    #         'user_id': self.user_id,
-    #         'category': self.category,
-    #         'status': self.status,
-    #         'seller': self.user.username
-    #     }
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'price': self.price,
+            'image_url': f'/static/uploads/{self.image_filename}' if self.image_filename else None,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'user_id': self.user_id,
+            'category': self.category,
+            'status': self.status,
+            'seller': self.user.username
+        }
