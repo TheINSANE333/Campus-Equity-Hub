@@ -30,8 +30,12 @@ class DbHandler(ABC):
     def add_new_item(self, name: str, description: str, price: float, image_filename: str, 
                      user_id: int, category: str) -> None: ...
 
-    def get_available_items(self) -> List[Item]: ...
+    @abstractmethod
+    def query_item(self, item_id: str) -> Item: ...
 
+    @abstractmethod
+    def get_available_items(self) -> List[Item]: ...
+    
     @classmethod
     def get_instance(cls, app: Flask_App_Stub = None):
         """

@@ -3,6 +3,7 @@ import shutil
 from app.app_stub import Flask_App_Stub
 from app.models.user import User
 from abc import ABC, abstractmethod
+from typing import List
 
 class DbHandler(ABC):
     _instance = None
@@ -31,6 +32,9 @@ class DbHandler(ABC):
 
     @abstractmethod
     def query_user(self, username: str): ...
+
+    @abstractmethod
+    def add_all_users(self, user_id: int) -> List[User]: ...
 
     @abstractmethod
     def query_email(self, email: str): ...
@@ -71,6 +75,9 @@ class UserRepository(DbHandler):
         except Exception as e:
             print(f"Error querying user: {e}")
             return None
+        
+    def get_all_users(self, user_id: int) -> List[User]:
+        return User.query.filter(User.id != user_id).all()
         
     def query_email(self, email_inp: str) -> str:
         try:
