@@ -27,7 +27,7 @@ class DbHandler(ABC):
 
 class ApplicationRepository(DbHandler):
     def add_application(self, user_id: int, name: str, ic: str, cgpa: float, pdf_filename: str,
-                        income: int, hpnumber: str) -> None:
+                        hpnumber: str, income: int) -> None:
         new_application = Application(user_id = user_id,
                                       name = name,
                                       ic = ic,
