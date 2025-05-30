@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+
+{% block title %}Apply Special Status{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1>Apply Special Status</h1>
+    
+    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                    <div class="invalid-feedback">
+                        Please provide your name.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ic" class="form-label">IC Number</label>
+                    <input type="text" pattern="\d{12}" class="form-control" id="ic" name="ic" required>
+                    <div class="invalid-feedback">
+                        Please provide a valid IC number.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="cgpa" class="form-label">Current CGPA</label>
+                    <input type="text" pattern="[0-4].?\d*" class="form-control" id="cgpa" name="cgpa" required>
+                    <div class="invalid-feedback">
+                        Please provide a valid CGPA.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="hpnum" class="form-label">Contact Number</label>
+                    <input type="text" pattern="\d+" class="form-control" id="hpnum" name="hpnum" required>
+                    <div class="invalid-feedback">
+                        Please provide a valid phone number.
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="col-md-6">
+
+                <div class="mb-3">
+                    <label for="income" class="form-label">Household (Monthly Income)</label>
+                    <input type="number" class="form-control" id="income" name="income" required>
+                    <div class="invalid-feedback">
+                        Please provide a valid income.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="pdf" class="form-label">Upload Parents' Payslip / BE form (Proof of monthly income)</label>
+                    <input type="file" class="form-control" id="pdf" name="pdf" accept="application/pdf" onchange=previewPDF(this) required>
+                    <div class="form-text">Allowed formats: PDF</div>
+                </div>
+                
+                <div class="mb-3">
+                    <div id="pdfPreview" class="mt-2 border rounded p-2 d-flex align-items-center justify-content-center bg-light" style="height: 200px; display: none;">
+                        <embed id="preview" src="" type="application/pdf" width="100%" height="180px" style="max-width:100%; max-height:100%;" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Apply</button>
+                <a href="{{ url_for('apply_status') }}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // PDF preview functionality
+    function previewPDF(input) {
+        const preview = document.getElementById('preview')
+        const previewDiv = document.getElementById('pdfPreview')
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                previewDiv.style.display = 'flex'
+            }
+            
+            reader.readAsDataURL(input.files[0])
+        } 
+        else {
+            preview.src = '';
+            previewDiv.style.display = 'none'
+        }
+    }
+    
+    // Form validation
+    (function() {
+        // Fetch all forms we want to apply validation to
+        const forms = document.querySelectorAll('.needs-validation')
+        
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+{% endblock %}
