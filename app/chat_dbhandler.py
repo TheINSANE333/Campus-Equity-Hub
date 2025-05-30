@@ -108,5 +108,5 @@ class ChatRepository(DbHandler):
     def get_all_message(self, sender_id: int, receiver_id: int) -> List[Chat]:
        return Chat.query.filter(
             ((Chat.sender_id == sender_id) & (Chat.receiver_id == receiver_id)) |
-            ((Chat.sender_id == sender_id) & (Chat.receiver_id == receiver_id))
+            ((Chat.sender_id == receiver_id) & (Chat.receiver_id == sender_id))
         ).order_by(Chat.timestamp).all()
