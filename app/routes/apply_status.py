@@ -33,8 +33,8 @@ class ApplyStatus(Endpoint):
             if pdf and pdf.filename != '' and pdfVerification(pdf.filename):
                 # Generate unique filename
                 filename = str(uuid.uuid4()) + '.' + pdf.filename.rsplit('.', 1)[1].lower()
-                os.makedirs('./Campus-Equity-Hub/app/static/uploads', exist_ok=True)
-                pdf.save(os.path.join('./Campus-Equity-Hub/app/static/uploads', filename))
+                os.makedirs('app/static/uploads', exist_ok=True)
+                pdf.save(os.path.join('app/static/uploads', filename))
                 pdf_filename = filename
             
             # Create new application
