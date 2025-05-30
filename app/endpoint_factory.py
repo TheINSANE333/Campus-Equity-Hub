@@ -7,6 +7,10 @@ from app.routes.reset import Reset
 from app.routes.add_item import AddItem
 from app.routes.marketplace import Marketplace
 from app.routes.view_item import ViewItem
+from app.routes.chat_with_user import ChatWithUser
+from app.routes.chat import Chat
+from app.routes.message_api import MessageApi
+from app.routes.unread_api import UnreadApi
 from app.app_stub import Flask_App_Stub
 
 class EndpointFactory: #factory method
@@ -21,7 +25,11 @@ class EndpointFactory: #factory method
             'Reset': Reset,
             'AddItem': AddItem, 
             'Marketplace': Marketplace,
-            'ViewItem': ViewItem
+            'ViewItem': ViewItem,
+            'Chat': Chat,
+            'ChatWithUser': ChatWithUser,
+            'MessageApi': MessageApi,
+            'UnreadApi': UnreadApi
         }
         self._cache = {}
 

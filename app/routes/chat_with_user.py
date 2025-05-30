@@ -23,7 +23,7 @@ class ChatWithUser(Endpoint):
         # Check if the user exists
         user_dbhandler = UserRepository(self.flask_app)
         chat_dbhandler = ChatRepository(self.flask_app)
-        chat_partner = user_dbhandler(user_id)
+        chat_partner = user_dbhandler.query_user_id(user_id)
     
         if request.method == 'POST':
             message = request.form.get('message')
