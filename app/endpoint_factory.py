@@ -12,6 +12,7 @@ from app.routes.chat import Chat
 from app.routes.message_api import MessageApi
 from app.routes.unread_api import UnreadApi
 from app.routes.apply_status import ApplyStatus
+from app.routes.edit_item import EditItem
 from app.app_stub import Flask_App_Stub
 
 class EndpointFactory: #factory method
@@ -31,7 +32,8 @@ class EndpointFactory: #factory method
             'ChatWithUser': ChatWithUser,
             'MessageApi': MessageApi,
             'UnreadApi': UnreadApi,
-            'ApplyStatus': ApplyStatus
+            'ApplyStatus': ApplyStatus, 
+            'EditItem': EditItem
         }
         self._cache = {}
 

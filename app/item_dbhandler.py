@@ -1,6 +1,9 @@
 from datetime import datetime
+import os
+import uuid
 from app.app_stub import Flask_App_Stub
 from app.models.item import Item
+from app.function import allowed_file
 from abc import ABC, abstractmethod
 from typing import List
 
@@ -47,6 +50,7 @@ class DbHandler(ABC):
         return cls._instance
 
 class ItemRepository(DbHandler):
+    UPLOAD_FOLDER = 'app/static/uploads'
     def add_new_item(self, name: str, description: str, price: float, image_filename: str, 
                      user_id: int, category: str) -> None:
         new_item = Item(name = name, 
@@ -68,3 +72,31 @@ class ItemRepository(DbHandler):
     def get_available_items(self) -> List[Item]:
         """Get all available items ordered by timestamp (newest first)"""
         return Item.query.filter_by(status='available').order_by(Item.timestamp.desc()).all()
+    
+    def upload_image(self, item, file) -> None:
+        # Handle image upload
+        file = file
+        if file and file.filename != '' and allowed_file(file.filename):
+            # Remove old image if exists
+            if item.image_filename:
+                try:
+                    old_image_path = os.path.join(self.app.config['UPLOAD_FOLDER'], item.image_filename)
+                    if os.path.exists(old_image_path):
+                        os.remove(old_image_path)
+                except Exception as e:
+                    print(f"Error removing old image: {e}")
+            
+            # Generate unique filename
+            filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
+            file.save(os.path.join(self.app.config['UPLOAD_FOLDER'], filename))
+            item.image_filename = filename
+    
+            self.db.session.commit()
+
+    def edit_item(self, item, name, description, price, category, status) -> None:
+        item.name = name
+        item.description = description
+        item.price = price
+        item.category = category
+        item.status = status
+        self.db.session.commit()
