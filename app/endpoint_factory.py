@@ -14,6 +14,7 @@ from app.routes.unread_api import UnreadApi
 from app.routes.apply_status import ApplyStatus
 from app.routes.edit_item import EditItem
 from app.routes.application_approval import ApplicationApproval
+from app.routes.view_application import ViewApplication
 from app.app_stub import Flask_App_Stub
 
 class EndpointFactory: #factory method
@@ -35,7 +36,8 @@ class EndpointFactory: #factory method
             'UnreadApi': UnreadApi,
             'ApplyStatus': ApplyStatus, 
             'EditItem': EditItem,
-            'ApplicationApproval': ApplicationApproval
+            'ApplicationApproval': ApplicationApproval,
+            'ViewApplication': ViewApplication
         }
         self._cache = {}
 

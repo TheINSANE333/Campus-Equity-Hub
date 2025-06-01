@@ -43,4 +43,7 @@ class ApplicationRepository(DbHandler):
     def get_pending_approval(self) -> List[Application]:
         # Get all pending approval
         return Application.query.filter_by(status='pending').all()
+    
+    def query_item(self, application_id: str) -> Application:
+        return Application.query.get_or_404(application_id)
         
