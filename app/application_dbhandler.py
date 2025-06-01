@@ -46,4 +46,8 @@ class ApplicationRepository(DbHandler):
     
     def query_item(self, application_id: str) -> Application:
         return Application.query.get_or_404(application_id)
+    
+    def update_status(self, application, status) -> None:
+        application.status = status
+        self.db.session.commit()
         

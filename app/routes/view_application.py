@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request
 from app.app_stub import Flask_App_Stub
 from app.application_dbhandler import ApplicationRepository
 from app.routes.endpoint import Endpoint
@@ -14,6 +14,6 @@ class ViewApplication(Endpoint):
 
     def view_application(self, application_id):
         application_dbHandler = ApplicationRepository(self.flask_app)
-
         application = application_dbHandler.query_item(application_id)
+
         return render_template('view_application.html', application = application)

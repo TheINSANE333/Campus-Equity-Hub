@@ -39,12 +39,18 @@
             </table>
             
             <div class="d-flex gap-2">
-                <button class="btn btn-primary" id="approve">
-                    Approve
-                </button>
-                <button class="btn btn-primary" id="reject" style="background-color: red;">
-                    Reject
-                </button>
+                <form method="POST" action="{{ url_for('process_application', application_id=application.id) }}" style="display: inline;">
+                    <input type="hidden" name="action" value="approved">
+                    <button type="submit" class="btn btn-success">
+                        Approve
+                    </button>
+                </form>
+                <form method="POST" action="{{ url_for('process_application', application_id=application.id) }}" style="display: inline;">
+                    <input type="hidden" name="action" value="rejected">
+                    <button type="submit" class="btn btn-danger">
+                        Reject
+                    </button>
+                </form>
             </div>
         </div>
         
