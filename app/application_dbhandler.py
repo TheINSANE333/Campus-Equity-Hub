@@ -2,6 +2,7 @@ from app.app_stub import Flask_App_Stub
 from app.models.item import Item
 from abc import ABC, abstractmethod
 from app.models.application import Application
+from typing import List
 
 class DbHandler(ABC):
     _instance = None
@@ -38,3 +39,8 @@ class ApplicationRepository(DbHandler):
                                       status = 'pending')
         self.db.session.add(new_application)
         self.db.session.commit()
+
+    def get_pending_approval(self) -> List[Application]:
+        # Get all pending approval
+        return Application.query.filter_by(status='pending').all()
+        

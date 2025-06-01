@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}Status Approval{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Status Approval</h1>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Back
+            </a>
+        </div>
+    </div>
+
+    {% if approval %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Contact Number</th>
+                    <th scope="col">Income</th>
+                    <th scope="col">Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for approval in approval %}
+                <tr>
+                    <th scope="row">{{ approval.id }}</th>
+                    <td>{{ approval.name }}</td>
+                    <td>{{ approval.hpnumber }}</td>
+                    <td>${{ approval.income }}</td>
+                    <td>
+                        <a href="#" class="btn btn-primary pull-right" type="submit">View Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <p>No pending application at the moment.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
