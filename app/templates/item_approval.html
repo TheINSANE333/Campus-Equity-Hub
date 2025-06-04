@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}Item Approval{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Item Approval</h1>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Back
+            </a>
+        </div>
+    </div>
+
+    {% if approval %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Upload Time</th>
+                    <th scope="col">Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for approval in approval %}
+                <tr>
+                    <th scope="row">{{ approval.id }}</th>
+                    <td>{{ approval.name }}</td>
+                    <td>{{ approval.category }}</td>
+                    <td>{{ approval.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>
+                        <a href="{{ url_for('item_approval_detail', item_id=approval.id) }}" class="btn btn-primary pull-right" type="submit">View Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <p>No pending item at the moment.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

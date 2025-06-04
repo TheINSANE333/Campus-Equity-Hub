@@ -60,7 +60,7 @@ class ItemRepository(DbHandler):
                         timestamp = datetime.utcnow(),
                         user_id = user_id,
                         category = category, 
-                        status = 'available')
+                        status = 'pending')  # pending status for admin approval
         self.db.session.add(new_item)
         print("Item added to database")
         self.db.session.commit()
@@ -72,6 +72,10 @@ class ItemRepository(DbHandler):
     def get_available_items(self) -> List[Item]:
         """Get all available items ordered by timestamp (newest first)"""
         return Item.query.filter_by(status='available').order_by(Item.timestamp.desc()).all()
+    
+    def get_pending_items(self) -> List[Item]:
+        """Get all pending items ordered by timestamp (newest first)"""
+        return Item.query.filter_by(status='pending').order_by(Item.timestamp.desc()).all()
     
     def upload_image(self, item, file) -> None:
         # Handle image upload
@@ -99,4 +103,11 @@ class ItemRepository(DbHandler):
         item.price = price
         item.category = category
         item.status = status
+        self.db.session.commit()
+
+    def update_status(self, item, status) -> None:
+        if(status == 'approved'):
+            item.status = 'available'
+        elif (status == 'rejected'):
+            item.status = 'rejected'
         self.db.session.commit()

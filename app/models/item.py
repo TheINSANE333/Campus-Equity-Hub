@@ -12,8 +12,8 @@ class Item(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     category = db.Column(db.String(50), nullable=True)
-    status = db.Column(db.String(20), default='available')  # available, sold, hidden, pending
-    
+    status = db.Column(db.String(20), default='pending')  # available, sold, hidden, pending, rejected
+
     # Define relationship
     user = db.relationship('User', backref=db.backref('items', lazy=True))
 

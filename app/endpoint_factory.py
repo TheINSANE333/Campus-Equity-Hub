@@ -16,6 +16,9 @@ from app.routes.edit_item import EditItem
 from app.routes.application_approval import ApplicationApproval
 from app.routes.view_application import ViewApplication
 from app.routes.process_application import ProcessApplication
+from app.routes.item_approval import ItemApproval
+from app.routes.item_approval_detail import ItemApprovalDetail
+from app.routes.process_item import ProcessItem
 from app.app_stub import Flask_App_Stub
 
 class EndpointFactory: #factory method
@@ -39,7 +42,10 @@ class EndpointFactory: #factory method
             'EditItem': EditItem,
             'ApplicationApproval': ApplicationApproval,
             'ViewApplication': ViewApplication,
-            'ProcessApplication': ProcessApplication
+            'ProcessApplication': ProcessApplication,
+            'ItemApproval': ItemApproval,
+            'ItemApprovalDetail': ItemApprovalDetail,
+            'ProcessItem': ProcessItem,
         }
         self._cache = {}
 
