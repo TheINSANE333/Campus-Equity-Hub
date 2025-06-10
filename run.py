@@ -14,6 +14,7 @@ if __name__ == '__main__':
            .init_extensions()
            .create_database()
            .register_endpoints()
+           .seed_database()
            .build())
 
     flask_app.run(debug=True, host='0.0.0.0', port=5000)

@@ -3,6 +3,7 @@ from app.configs import Config
 from app.extensions import Extensions, db, bcrypt
 from app.app import Flask_App
 from app.endpoint_factory import EndpointFactory
+from app.seeder import DatabaseSeeder
 
 class FlaskAppBuilder: #builder
     """Builder class to set up the Flask application."""
@@ -28,6 +29,12 @@ class FlaskAppBuilder: #builder
         with self._app.app_context():
             self._db.create_all()
         return self
+    
+    def seed_database(self) -> 'FlaskAppBuilder':
+        """Seed the database with initial data."""
+        seeder = DatabaseSeeder(self._app)
+        seeder.seed_all()
+        return self
 
     def register_endpoints(self) -> 'FlaskAppBuilder':
         flask_app = Flask_App(self._app, self._db, self._bcrypt, self._session)
@@ -36,6 +43,6 @@ class FlaskAppBuilder: #builder
         return self
 
     def build(self) -> Flask_App:
-        print(self._db)
+        print("Build success")
         return Flask_App(self._app, self._db, self._bcrypt, self._session)
         # return self._app

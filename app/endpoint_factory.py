@@ -3,6 +3,7 @@ from app.routes.signup import Signup
 from app.routes.login import Login
 from app.routes.logout import Logout
 from app.routes.dashboard import Dashboard
+from app.routes.admin_dashboard import AdminDashboard
 from app.routes.reset import Reset
 from app.routes.add_item import AddItem
 from app.routes.marketplace import Marketplace
@@ -29,6 +30,7 @@ class EndpointFactory: #factory method
             'Signup': Signup,
             'Login': Login,
             'Dashboard': Dashboard,
+            'AdminDashboard': AdminDashboard,
             'Logout': Logout,
             'Reset': Reset,
             'AddItem': AddItem, 
