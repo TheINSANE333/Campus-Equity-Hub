@@ -1,17 +1,161 @@
-<!-- templates/dashboard.html -->
 {% extends "layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
 {% block content %}
-<div class="p-5 mb-4 bg-light rounded-3">
-    <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Welcome, {{ username }}!</h1>
-        <p class="col-md-8 fs-4">You have successfully logged in. </p>
-        <a href="{{ url_for('reset') }}" class="btn btn-danger btn-lg">Reset Database</a>
-        <a href= "{{ url_for('logout') }}" class="btn btn-danger btn-lg">Logout</a>
-        <a href="{{ url_for('add_item') }}" class="btn btn-outline-primary btn-lg">Add Item</a>
-        <a href="{{ url_for('marketplace') }}" class="btn btn-outline-primary btn-lg">Marketplace</a>
-        <a href="{{ url_for('apply_status') }}" class="btn btn-outline-primary btn-lg">Status Application</a>
-        <a href="{{ url_for('application_approval') }}" class="btn btn-outline-primary btn-lg">Application Approval</a>
-        <a href="{{ url_for('item_approval') }}" class="btn btn-outline-primary btn-lg">Item Approval</a>
+<div class="container mt-4">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h5 class="mb-1">Welcome back, {{ username }}!</h5>
+            <small class="text-muted">Multimedia University</small>
+            
+            <!-- Pending Alert -->
+            <div class="pending-alert mt-3">
+                <i class="fas fa-clock me-2"></i>
+                <strong>Pending swap request waiting for action: 1</strong>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <span class="priority-badge">
+                <i class="fas fa-star me-1"></i>
+                Priority Access Certified
+            </span>
+        </div>
+    </div>
+    
+    <!-- Categories -->
+    <div class="row g-3 mb-4">
+        <div class="col">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <small class="fw-medium">Textbooks</small>
+            </div>
+        </div>
+        <div class="col">
+            <div class="category-card position-relative">
+                <div class="notification-badge">1</div>
+                <div class="category-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <small class="fw-medium">Electronics</small>
+            </div>
+        </div>
+        <div class="col">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-tshirt"></i>
+                </div>
+                <small class="fw-medium">Clothing</small>
+            </div>
+        </div>
+        <div class="col">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <small class="fw-medium">Dorm Essentials</small>
+            </div>
+        </div>
+        <div class="col">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <small class="fw-medium">Donate</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs border-0 mb-4">
+        <li class="nav-item">
+            <a class="nav-link active fw-medium text-primary border-0" href="#discover">Discover</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-muted border-0" href="#swaps">My Swaps</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-muted border-0" href="#listings">My Listings</a>
+        </li>
+    </ul>
+
+    <div class="row">
+        <!-- Left Column - Recommended Items -->
+        <div class="col-md-8">
+            <h6 class="mb-3">Recommended For You</h6>
+
+            {% if items %}
+                {% for item in items %}
+                <div class="item-card">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="mb-1">{{ item.name }}</h6>
+                    </div>
+                    <div class="text-muted mb-3">
+                        <small>{{ item.category }}</small><br>
+                        <small>{{ item.user.username }}</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary btn-sm px-3">Request Swap</button>
+                        <button class="btn btn-outline-primary btn-sm px-3">Request</button>
+                        <button class="btn btn-outline-secondary btn-sm px-3">Message</button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="item-card">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h6 class="mb-1">No item found</h6>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Column - Your Impact -->
+        <div class="col-md-4">
+            <div class="impact-card mb-5">
+                <h6 class="mb-3">Your Impact</h6>
+                
+                <div class="impact-item">
+                    <div class="impact-icon" style="background: #e3f2fd; color: #1976d2;">
+                        <i class="fas fa-share"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="fw-medium">Items Shared</div>
+                        <div class="fs-5 fw-bold">3</div>
+                    </div>
+                </div>
+                
+                <div class="impact-item">
+                    <div class="impact-icon" style="background: #fff3cd; color: #856404;">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="fw-medium">Tokens</div>
+                        <div class="fs-5 fw-bold">25</div>
+                    </div>
+                </div>
+                
+                <div class="impact-item">
+                    <div class="impact-icon" style="background: #f3e5f5; color: #7b1fa2;">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="fw-medium">Swap Complete</div>
+                        <div class="fs-5 fw-bold">6</div>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('add_item') }}" class="btn btn-primary w-100 mt-3">Add Item</a> 
+                
+                <div class="mt-4">
+                    <h6>Need something specific?</h6>
+                    <p class="small text-muted">Create a request and we'll notify you when it becomes available</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
