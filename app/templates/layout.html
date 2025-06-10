@@ -26,12 +26,14 @@
                         <input type="text" class="form-control search-input" placeholder="Search for items...">
                     </div>
                 </div>
-                <div class="col-auto">
-                    <div class="notification-icon text-white">
+                <a href="{{ url_for('view_notification') }}" class="col-auto text-decoration-none">
+                    <div class="notification-icon text-white position-relative">
                         <i class="fas fa-bell fs-5"></i>
-                        <span class="notification-count">3</span>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            3
+                        </span>
                     </div>
-                </div>
+                </a>
                 {% else %}
                 <!-- login signup -->
                 <div class="col-auto">

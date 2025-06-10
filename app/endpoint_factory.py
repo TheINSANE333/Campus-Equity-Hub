@@ -20,6 +20,7 @@ from app.routes.process_application import ProcessApplication
 from app.routes.item_approval import ItemApproval
 from app.routes.item_approval_detail import ItemApprovalDetail
 from app.routes.process_item import ProcessItem
+from app.routes.view_notification import ViewNotification
 from app.app_stub import Flask_App_Stub
 
 class EndpointFactory: #factory method
@@ -33,14 +34,14 @@ class EndpointFactory: #factory method
             'AdminDashboard': AdminDashboard,
             'Logout': Logout,
             'Reset': Reset,
-            'AddItem': AddItem, 
+            'AddItem': AddItem,
             'Marketplace': Marketplace,
             'ViewItem': ViewItem,
             'Chat': Chat,
             'ChatWithUser': ChatWithUser,
             'MessageApi': MessageApi,
             'UnreadApi': UnreadApi,
-            'ApplyStatus': ApplyStatus, 
+            'ApplyStatus': ApplyStatus,
             'EditItem': EditItem,
             'ApplicationApproval': ApplicationApproval,
             'ViewApplication': ViewApplication,
@@ -48,6 +49,7 @@ class EndpointFactory: #factory method
             'ItemApproval': ItemApproval,
             'ItemApprovalDetail': ItemApprovalDetail,
             'ProcessItem': ProcessItem,
+            'ViewNotification': ViewNotification,
         }
         self._cache = {}
 
@@ -55,9 +57,9 @@ class EndpointFactory: #factory method
         if endpoint_name not in self._cache:
             endpoint_class = self.endpoint_classes[endpoint_name]
             self._cache[endpoint_name] = endpoint_class(self.app)
-        
+
         return self._cache[endpoint_name]
-    
+
     def register_endpoints1(self) -> None:
         for endpoint_name in self.endpoint_classes.keys():
             endpoint = self.create_endpoint(endpoint_name)

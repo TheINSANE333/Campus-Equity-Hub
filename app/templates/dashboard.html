@@ -1,3 +1,4 @@
+<!-- templates/dashboard.html -->
 {% extends "layout.html" %}
 
 {% block title %}Dashboard{% endblock %}
@@ -9,7 +10,7 @@
         <div class="col-md-8">
             <h5 class="mb-1">Welcome back, {{ username }}!</h5>
             <small class="text-muted">Multimedia University</small>
-            
+
             <!-- Pending Alert -->
             <div class="pending-alert mt-3">
                 <i class="fas fa-clock me-2"></i>
@@ -23,7 +24,7 @@
             </span>
         </div>
     </div>
-    
+
     <!-- Categories -->
     <div class="row g-3 mb-4">
         <div class="col">
@@ -117,7 +118,7 @@
         <div class="col-md-4">
             <div class="impact-card mb-5">
                 <h6 class="mb-3">Your Impact</h6>
-                
+
                 <div class="impact-item">
                     <div class="impact-icon" style="background: #e3f2fd; color: #1976d2;">
                         <i class="fas fa-share"></i>
@@ -127,7 +128,7 @@
                         <div class="fs-5 fw-bold">3</div>
                     </div>
                 </div>
-                
+
                 <div class="impact-item">
                     <div class="impact-icon" style="background: #fff3cd; color: #856404;">
                         <i class="fas fa-coins"></i>
@@ -137,7 +138,7 @@
                         <div class="fs-5 fw-bold">25</div>
                     </div>
                 </div>
-                
+
                 <div class="impact-item">
                     <div class="impact-icon" style="background: #f3e5f5; color: #7b1fa2;">
                         <i class="fas fa-exchange-alt"></i>
@@ -147,9 +148,9 @@
                         <div class="fs-5 fw-bold">6</div>
                     </div>
                 </div>
-                
-                <a href="{{ url_for('add_item') }}" class="btn btn-primary w-100 mt-3">Add Item</a> 
-                
+
+                <a href="{{ url_for('add_item') }}" class="btn btn-primary w-100 mt-3">Add Item</a>
+
                 <div class="mt-4">
                     <h6>Need something specific?</h6>
                     <p class="small text-muted">Create a request and we'll notify you when it becomes available</p>
