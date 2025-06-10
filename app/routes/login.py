@@ -31,7 +31,12 @@ class Login(Endpoint):
 
                 flash(f'Welcome back, {user.username}!', 'success')
 
-                return redirect(url_for('dashboard'))
+                if user.role == "admin":
+                    print("is admin")
+                    return redirect(url_for('admin_dashboard'))
+                else:
+                    return redirect(url_for('dashboard'))
+                
             else:
                 flash('Login unsuccessful. Please check your username and password.', 'danger')
         
