@@ -22,6 +22,7 @@ from app.routes.item_approval_detail import ItemApprovalDetail
 from app.routes.process_item import ProcessItem
 from app.routes.view_notification import ViewNotification
 from app.app_stub import Flask_App_Stub
+from app.routes.request_swap_admin import SwapAdmin
 
 class EndpointFactory: #factory method
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -50,6 +51,7 @@ class EndpointFactory: #factory method
             'ItemApprovalDetail': ItemApprovalDetail,
             'ProcessItem': ProcessItem,
             'ViewNotification': ViewNotification,
+            'SwapAdmin': SwapAdmin
         }
         self._cache = {}
 
