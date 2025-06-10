@@ -21,6 +21,7 @@ from app.routes.item_approval import ItemApproval
 from app.routes.item_approval_detail import ItemApprovalDetail
 from app.routes.process_item import ProcessItem
 from app.routes.view_notification import ViewNotification
+from app.routes.profile import Profile
 from app.app_stub import Flask_App_Stub
 
 class EndpointFactory: #factory method
@@ -50,6 +51,7 @@ class EndpointFactory: #factory method
             'ItemApprovalDetail': ItemApprovalDetail,
             'ProcessItem': ProcessItem,
             'ViewNotification': ViewNotification,
+            'Profile': Profile,
         }
         self._cache = {}
 
