@@ -58,7 +58,7 @@
         <div class="container">
             <div class="row text-center">
                 <div class="col">
-                    <a href="{{ url_for('dashboard') }}" class="nav-item active d-block">
+                    <a href="{{ url_for('admin_dashboard') if session.get('role') == 'admin' else url_for('dashboard') }}" class="nav-item active d-block">
                         <i class="fas fa-compass d-block"></i>
                         <small>Discover</small>
                     </a>
