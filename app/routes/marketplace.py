@@ -21,7 +21,8 @@ class Marketplace(Endpoint):
         item_dbHandler = ItemRepository(self.flask_app)
 
 
-        if category_filter:
+        if category_filter != "All":
+            print(category_filter)
             items = item_dbHandler.get_item_by_category(category_filter)
         else:
             items = item_dbHandler.get_available_items()

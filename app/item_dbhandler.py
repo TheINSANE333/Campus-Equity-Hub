@@ -116,4 +116,4 @@ class ItemRepository(DbHandler):
         self.db.session.commit()
 
     def get_item_by_category(self, category) -> List[Item]:
-        return Item.query.filter_by(category=category).order_by(Item.timestamp.desc()).all()
+        return Item.query.filter_by(status="available", category=category).order_by(Item.timestamp.desc()).all()
