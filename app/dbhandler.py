@@ -85,6 +85,14 @@ class UserRepository(DbHandler):
     def update_role(self, user, new_role):
         user.role = new_role
         self.db.session.commit()
+
+    def update_name(self, user, new_username):
+        user.username = new_username
+        self.db.session.commit()
+
+    def update_email(self, user, new_email):
+        user.email = new_email
+        self.db.session.commit()
         
     def get_all_users(self, user_id: int) -> List[User]:
         return User.query.filter(User.id != user_id).all()
