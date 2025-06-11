@@ -6,7 +6,7 @@
 <div class="container py-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url_for('marketplace') }}">Marketplace</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('marketplace', category='All') }}">Marketplace</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ item.name }}</li>
         </ol>
     </nav>

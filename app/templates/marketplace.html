@@ -8,10 +8,9 @@
         <h1>Marketplace</h1>
         {% if session.get('user_id') %}
         <div class="d-flex gap-2">
-            <a href="{{ url_for('add_item') }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Add New Item
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-circle-left"></i> Back
             </a>
-            
         </div>
         {% endif %}
     </div>    
