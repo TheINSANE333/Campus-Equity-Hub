@@ -18,10 +18,17 @@
             </div>
         </div>
         <div class="col-md-4 text-end">
+            {% if session.get('role') == 'special' %}
             <span class="priority-badge">
                 <i class="fas fa-star me-1"></i>
                 Priority Access Certified
             </span>
+            {% elif session.get('role') == 'student' %}
+            <span class="priority-badge non">
+                <i class="fas fa-star me-1"></i>
+                Apply for Priority Access
+            </span>
+            {% endif %}
         </div>
     </div>
 

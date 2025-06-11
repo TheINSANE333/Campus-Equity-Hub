@@ -56,6 +56,15 @@
     display: inline-block;
 }
 
+.priority-badge.non{
+    background: grey;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    display: inline-block;
+}
+
 .item-card {
     background: white;
     border-radius: 12px;
