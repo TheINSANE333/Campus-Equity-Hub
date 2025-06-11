@@ -62,8 +62,7 @@ class ItemRepository(DbHandler):
                         image_filename = image_filename, 
                         timestamp = datetime.utcnow(),
                         user_id = user_id,
-                        category = category, 
-                        status = 'pending')  # pending status for admin approval
+                        category = category)
         self.db.session.add(new_item)
         print("Item added to database")
         self.db.session.commit()
@@ -74,11 +73,11 @@ class ItemRepository(DbHandler):
 
     def get_available_items(self) -> List[Item]:
         """Get all available items ordered by timestamp (newest first)"""
-        return Item.query.filter_by(status='available').order_by(Item.timestamp.desc()).all()
+        return Item.query.filter_by(approval='approved', status='available').order_by(Item.timestamp.desc()).all()
     
     def get_pending_items(self) -> List[Item]:
         """Get all pending items ordered by timestamp (newest first)"""
-        return Item.query.filter_by(approval='pending').order_by(Item.timestamp.desc()).all()
+        return Item.query.filter_by(approval='pending', status='available').order_by(Item.timestamp.desc()).all()
     
     def upload_image(self, item, file) -> None:
         # Handle image upload
@@ -117,4 +116,4 @@ class ItemRepository(DbHandler):
         self.db.session.commit()
 
     def get_item_by_category(self, category) -> List[Item]:
-        return Item.query.filter_by(status="available", approval=True, category=category).order_by(Item.timestamp.desc()).all()
+        return Item.query.filter_by(status="available", approval='approved', category=category).order_by(Item.timestamp.desc()).all()

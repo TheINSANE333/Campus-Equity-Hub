@@ -27,8 +27,7 @@
                 
                 <div class="mb-3">
                     <label for="category" class="form-label">Category</label>
-                    <select class="form-select" id="category" name="category">
-                        <option value="">{{ item.category }}y</option>
+                    <select class="form-select" id="category" name="category" value="{{ item.category }}">
                         <option value="Textbooks" {% if item.category == 'Textbooks' %}selected{% endif %}>Textbooks</option>
                         <option value="Electronics" {% if item.category == 'Electronics' %}selected{% endif %}>Electronics</option>
                         <option value="Clothing" {% if item.category == 'Clothing' %}selected{% endif %}>Clothing</option>
@@ -40,7 +39,7 @@
                 
                 <div class="mb-3">
                     <label for="status" class="form-label">Status</label>
-                    <select class="form-select" id="status" name="status">
+                    <select class="form-select" id="status" name="status" value="{{ item.status }}">
                         <option value="available" {% if item.status == 'available' %}selected{% endif %}>Available</option>
                         <option value="sold" {% if item.status == 'sold' %}selected{% endif %}>Sold</option>
                         <option value="hidden" {% if item.status == 'hidden' %}selected{% endif %}>Hidden</option>
