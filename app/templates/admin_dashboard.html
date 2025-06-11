@@ -21,9 +21,10 @@
                 <div class="card-header">
                     Admin Actions
                 </div>
-                <div class="card-body">
-                    
-                    <p class="mt-3">Use the admin panel to manage users, edit user information, or delete accounts.</p>
+                <div class="card-body">    
+                    <!-- <p class="mt-3">Use the admin panel to manage users, edit user information, or delete accounts.</p> -->
+                    <a href="{{ url_for('item_approval') }}" class="btn btn-primary w-100 mt-3">Item Approval</a>
+                    <a href="{{ url_for('application_approval') }}" class="btn btn-primary w-100 mt-3">Status Approval</a>
                 </div>
                 <div class="card-body">
                     

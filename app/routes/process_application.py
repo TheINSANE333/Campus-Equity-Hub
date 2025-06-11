@@ -20,6 +20,7 @@ class ProcessApplication(Endpoint):
         application = application_dbHandler.query_item(application_id)
         
         application_dbHandler.update_status(application,action)
+        flash('Application status updated!', 'success')
         
         # Redirect back to application list or details page
         return redirect(url_for('application_approval'))

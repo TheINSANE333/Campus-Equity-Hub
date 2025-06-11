@@ -14,10 +14,24 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col">
+                    {% if 'user_id' in session %}
+                        {% if session.get('role') == 'admin' %}
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-exchange-alt me-2"></i>
+                            <a href="{{ url_for('admin_dashboard') }}" class="text-decoration-none text-white">Swap & Share: Campus Equity Hub</a>
+                        </h4>
+                        {% else %}
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-exchange-alt me-2"></i>
+                            <a href="{{ url_for('dashboard') }}" class="text-decoration-none text-white">Swap & Share: Campus Equity Hub</a>
+                        </h4>
+                        {% endif %}
+                    {% else %}
                     <h4 class="mb-0 fw-bold">
                         <i class="fas fa-exchange-alt me-2"></i>
                         <a href="{{ url_for('dashboard') }}" class="text-decoration-none text-white">Swap & Share: Campus Equity Hub</a>
                     </h4>
+                    {% endif %}
                 </div>
                 {% if 'user_id' in session %}
                 <div class="col-auto">
@@ -71,20 +85,29 @@
     <div class="bottom-nav">
         <div class="container">
             <div class="row text-center">
+                {% if session.get('role') == 'admin' %}
                 <div class="col">
-                    <a href="{{ url_for('admin_dashboard') if session.get('role') == 'admin' else url_for('dashboard') }}" class="nav-item active d-block">
+                    <a href="{{ url_for('admin_dashboard') }}" class="nav-item {% if request.endpoint == 'admin_dashboard' %}active{% endif %} d-block">
                         <i class="fas fa-compass d-block"></i>
                         <small>Discover</small>
                     </a>
                 </div>
+                {% else %}
                 <div class="col">
-                    <a href="{{ url_for('chat') }}" class="nav-item d-block">
+                    <a href="{{ url_for('dashboard') }}" class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %} d-block">
+                        <i class="fas fa-compass d-block"></i>
+                        <small>Discover</small>
+                    </a>
+                </div>
+                {% endif %}
+                <div class="col">
+                    <a href="{{ url_for('chat') }}" class="nav-item {% if request.endpoint == 'chat' %}active{% endif %} d-block">
                         <i class="fas fa-comments d-block"></i>
                         <small>Message</small>
                     </a>
                 </div>
                 <div class="col">
-                    <a href="{{ url_for('profile') }}" class="nav-item d-block">
+                    <a href="{{ url_for('profile') }}" class="nav-item {% if request.endpoint == 'profile' %}active{% endif %} d-block">
                         <i class="fas fa-user d-block"></i>
                         <small>Profile</small>
                     </a>

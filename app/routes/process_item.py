@@ -20,6 +20,6 @@ class ProcessItem(Endpoint):
         item = item_dbHandler.query_item(item_id)
         
         item_dbHandler.update_status(item,action)
-        
+        flash('Item status updated!', 'success')
         # Redirect back to item list or details page
         return redirect(url_for('item_approval'))
