@@ -60,4 +60,4 @@ class NewItemCommand:
     def execute(self, name, description, price, image_filename, category):
         user_id = session['user_id']
         self._item_dbHandler.add_new_item(name, description, price, image_filename, user_id, category)
-        return True, 'Item created successfully!'
+        return True, 'Item created successfully! Item will be available after admin approval!'
