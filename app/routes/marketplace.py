@@ -15,7 +15,15 @@ class Marketplace(Endpoint):
         self.methods = ['GET', 'POST']
 
     def marketplace(self):
+
+        category_filter = request.args.get('category')
+
         item_dbHandler = ItemRepository(self.flask_app)
 
-        items = item_dbHandler.get_available_items()
-        return render_template('marketplace.html', items=items)
+
+        if category_filter:
+            items = item_dbHandler.get_item_by_category(category_filter)
+        else:
+            items = item_dbHandler.get_available_items()
+
+        return render_template('marketplace.html', items=items, selected_category=category_filter)
