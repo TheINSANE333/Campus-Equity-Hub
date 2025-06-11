@@ -18,5 +18,5 @@ class Profile(Endpoint):
             return redirect(url_for('login'))
         
         dbHandler = UserRepository(self.flask_app)
-        user = dbHandler.query_user(session['username'])
+        user = dbHandler.query_user_id(session['user_id'])
         return render_template('profile.html', user=user)

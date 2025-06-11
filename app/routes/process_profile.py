@@ -3,7 +3,7 @@ from app.app_stub import Flask_App_Stub
 from app.dbhandler import UserRepository
 from app.routes.endpoint import Endpoint
 
-class ProcessItem(Endpoint):
+class ProcessProfile(Endpoint):  # Changed class name to match endpoint
     def __init__(self, app: Flask_App_Stub) -> None:
         super().__init__(app)
 
@@ -12,18 +12,20 @@ class ProcessItem(Endpoint):
         self.callback = self.process_profile
         self.methods = ['POST']
         
-    def process_profile(self, process, newInfo):
+    def process_profile(self, user_id):  # Changed to accept user_id parameter
+        process = request.form.get('process')  # Get from form data
+        newInfo = request.form.get('newInfo')  # Get from form data
+        
         # Get the profile from database
         dbHandler = UserRepository(self.flask_app)
         user = dbHandler.query_user(session['username'])
         
         if process == 'username':
+            session['username'] = newInfo
             dbHandler.update_name(user, newInfo)
-            flash('User information updated!', 'success')
-
+            flash('Username updated successfully!', 'success')
         elif process == 'email':
             dbHandler.update_email(user, newInfo)
-            flash('User information updated!', 'success')
+            flash('Email updated successfully!', 'success')
 
-        # Redirect back to item list or details page
         return redirect(url_for('profile'))

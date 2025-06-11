@@ -79,7 +79,7 @@
                                 <div class="field-label">Name</div>
                                 <div class="field-value">{{ user.username }}</div>
                             </div>
-                            <button class="btn btn-primary btn-sm px-3">Edit</button>
+                            <button type="button" class="btn btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#username">Edit</button>
                         </div>
                     </div>
                     
@@ -89,7 +89,7 @@
                                 <div class="field-label">Email</div>
                                 <div class="field-value">{{ user.email }}</div>
                             </div>
-                            <button class="btn btn-primary btn-sm px-3">Edit</button>
+                            <button type="button" class="btn btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#email">Edit</button>
                         </div>
                     </div>
                     
@@ -132,6 +132,50 @@
                 </div>    
             </div>
         </div>      
+    </div>
+</div>
+
+<!-- Username Modal -->
+<div class="modal fade" id="username" tabindex="-1" aria-labelledby="usernameTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('process_profile', user_id=user.id) }}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="usernameTitle">Edit Username</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="process" value="username">
+                    <input type="text" name="newInfo" class="form-control" value="{{ user.username }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Email Modal -->
+<div class="modal fade" id="email" tabindex="-1" aria-labelledby="emailTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('process_profile', user_id=user.id) }}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="emailTitle">Edit Email</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="process" value="email">
+                    <input type="text" name="newInfo" class="form-control" value="{{ user.email }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}
