@@ -28,12 +28,12 @@
                 <div class="mb-3">
                     <label for="category" class="form-label">Category</label>
                     <select class="form-select" id="category" name="category">
-                        <option value="">Select a category</option>
+                        <option value="">{{ item.category }}y</option>
+                        <option value="Textbooks" {% if item.category == 'Textbooks' %}selected{% endif %}>Textbooks</option>
                         <option value="Electronics" {% if item.category == 'Electronics' %}selected{% endif %}>Electronics</option>
-                        <option value="Books" {% if item.category == 'Books' %}selected{% endif %}>Books</option>
                         <option value="Clothing" {% if item.category == 'Clothing' %}selected{% endif %}>Clothing</option>
-                        <option value="Furniture" {% if item.category == 'Furniture' %}selected{% endif %}>Furniture</option>
-                        <option value="Sports" {% if item.category == 'Sports' %}selected{% endif %}>Sports & Outdoors</option>
+                        <option value="Dorm Essentials" {% if item.category == 'Dorm Essentials' %}selected{% endif %}>Dorm Essentials</option>
+                        <option value="Donate" {% if item.category == 'Donate' %}selected{% endif %}>Donate</option>
                         <option value="Other" {% if item.category == 'Other' %}selected{% endif %}>Other</option>
                     </select>
                 </div>
