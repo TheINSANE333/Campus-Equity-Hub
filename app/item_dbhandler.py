@@ -78,7 +78,7 @@ class ItemRepository(DbHandler):
     
     def get_pending_items(self) -> List[Item]:
         """Get all pending items ordered by timestamp (newest first)"""
-        return Item.query.filter_by(status='pending').order_by(Item.timestamp.desc()).all()
+        return Item.query.filter_by(approval=False).order_by(Item.timestamp.desc()).all()
     
     def upload_image(self, item, file) -> None:
         # Handle image upload
@@ -116,4 +116,4 @@ class ItemRepository(DbHandler):
         self.db.session.commit()
 
     def get_item_by_category(self, category) -> List[Item]:
-        return Item.query.filter_by(status="available", category=category).order_by(Item.timestamp.desc()).all()
+        return Item.query.filter_by(status="available", approval=True, category=category).order_by(Item.timestamp.desc()).all()
