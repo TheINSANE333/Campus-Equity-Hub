@@ -2,6 +2,8 @@ from flask import render_template, url_for, flash, session, redirect
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.item_dbhandler import ItemRepository
+from app.dbhandler import UserRepository
+from app.function import dateCounter
 
 class Dashboard(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -19,6 +21,16 @@ class Dashboard(Endpoint):
         
         item_dbHandler = ItemRepository(self.flask_app)
         items = item_dbHandler.get_available_items()
+
+        user_dbhandler = UserRepository(self.flask_app)
+
+        user = user_dbhandler.query_user(session['username'])
+        user_role = user.role
+
+        two_days_ago = dateCounter()
+
+        if user_role != 'special student':
+            items = [item for item in items if item.timestamp <= two_days_ago]
 
         context = {
             'username': session['username'],
