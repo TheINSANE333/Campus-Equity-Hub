@@ -21,6 +21,7 @@ from app.routes.item_approval import ItemApproval
 from app.routes.item_approval_detail import ItemApprovalDetail
 from app.routes.process_item import ProcessItem
 from app.routes.view_notification import ViewNotification
+from app.routes.update_delete_notification import UpdateDeleteNotification
 from app.routes.profile import Profile
 from app.routes.process_profile import ProcessProfile
 from app.app_stub import Flask_App_Stub
@@ -52,6 +53,7 @@ class EndpointFactory: #factory method
             'ItemApprovalDetail': ItemApprovalDetail,
             'ProcessItem': ProcessItem,
             'ViewNotification': ViewNotification,
+            'UpdateDeleteNotification': UpdateDeleteNotification,
             'Profile': Profile,
             'ProcessProfile': ProcessProfile
         }

@@ -13,6 +13,8 @@ class Notification(db.Model):
     notification_type = db.Column(db.String(20), default='system')
     title = db.Column(db.String(100), nullable=True)
 
+    def __repr__(self):
+        return f'<Notification {self.name}>'
     def to_dict(self):
         return {
             'id': self.id,
