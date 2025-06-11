@@ -38,6 +38,9 @@ class DbHandler(ABC):
 
     @abstractmethod
     def get_available_items(self) -> List[Item]: ...
+
+    # @abstractmethod
+    # def get_item_by_cateogory(self, category: str) -> List[Item]: ...
     
     @classmethod
     def get_instance(cls, app: Flask_App_Stub = None):
@@ -111,3 +114,6 @@ class ItemRepository(DbHandler):
         elif (status == 'rejected'):
             item.status = 'rejected'
         self.db.session.commit()
+
+    def get_item_by_category(self, category) -> List[Item]:
+        return Item.query.filter_by(category=category).order_by(Item.timestamp.desc()).all()

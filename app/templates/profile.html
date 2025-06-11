@@ -3,15 +3,68 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
+<style>
+    .profile-field {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.25rem;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+    
+    .profile-field:hover {
+        border-color: #0d6efd;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+        transform: translateY(-2px);
+    }
+    
+    .field-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+    
+    .field-value {
+        color: #6c757d;
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+    
+    .profile-avatar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .profile-avatar:hover {
+        transform: scale(1.05);
+    }
+    
+    .btn-logout {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(238, 90, 82, 0.3);
+    }
+    
+    .btn-logout:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(238, 90, 82, 0.4);
+    }
+</style>
+
 <div class="container-fluid vh-95">
     <div class="row h-90">
         
         <!-- Left Column - Profile Image -->
         <div class="col-4 bg-white d-flex flex-column justify-content-center align-items-center">
-            <div class="bg-secondary rounded-circle mb-4" style="width: 200px; height: 200px;">
-                <i class="fas fa-user d-block text-white" style="font-size: 100px; line-height: 200px; text-align: center;"></i>
+            <div class="profile-avatar rounded-circle mb-4 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px;">
+                <i class="fas fa-user text-white" style="font-size: 80px;"></i>
             </div>
-            <a href="{{ url_for('logout') }}" class="btn btn-danger btn-lg px-4">Log Out</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-logout btn-lg px-5 py-3">Log Out</a>
         </div>
         
         <!-- Right Column - Profile Fields -->
@@ -19,51 +72,63 @@
             <div class="h-100 d-flex flex-column">
                 <!-- Profile Fields Container -->
                 <div class="flex-grow-1 p-5 overflow-auto">
-                    <div class="mb-4">
-                        <h5 class="fw-normal mb-3">Name:</h5>
-                        <div class="d-flex justify-content-between align-items-center border-bottom border-3 border-secondary border-opacity-25 pb-3" style="border-style: dashed !important;">
-                            <span class="text-muted fs-5">{{ user.username }}</span>
-                            <button class="btn btn-primary">Edit</button>
+                    
+                    <div class="profile-field">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="field-label">Name</div>
+                                <div class="field-value">{{ user.username }}</div>
+                            </div>
+                            <button class="btn btn-primary btn-sm px-3">Edit</button>
                         </div>
                     </div>
                     
-                    <div class="mb-4">
-                        <h5 class="fw-normal mb-3">Email:</h5>
-                        <div class="d-flex justify-content-between align-items-center border-bottom border-3 border-secondary border-opacity-25 pb-3" style="border-style: dashed !important;">
-                            <span class="text-muted fs-5">{{ user.email }}</span>
-                            <button class="btn btn-primary">Edit</button>
+                    <div class="profile-field">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="field-label">Email</div>
+                                <div class="field-value">{{ user.email }}</div>
+                            </div>
+                            <button class="btn btn-primary btn-sm px-3">Edit</button>
                         </div>
                     </div>
                     
-                    <div class="mb-4">
-                        <h5 class="fw-normal mb-3">Current Role</h5>
-                        <div class="d-flex justify-content-between align-items-center border-bottom border-3 border-secondary border-opacity-25 pb-3" style="border-style: dashed !important;">
-                            <span class="text-muted fs-5">{{ user.role }}</span>
+                    <div class="profile-field">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="field-label">Current Role</div>
+                                <div class="field-value">{{ user.role }}</div>
+                            </div>
                             {% if session.get('role') == 'admin' %}
-                            <a class="btn btn-primary disabled">Edit</a>
+                            <button class="btn btn-secondary btn-sm px-3" disabled>Edit</button>
                             {% elif session.get('role') == 'special'%}
-                            <a href="{{ url_for('apply_status') }}" class="btn btn-primary disabled">Apply Status</a>
+                            <a href="{{ url_for('apply_status') }}" class="btn btn-secondary btn-sm px-3 disabled">Apply Status</a>
                             {% else %}
-                            <a href="{{ url_for('apply_status') }}" class="btn btn-primary">Apply Status</a>
+                            <a href="{{ url_for('apply_status') }}" class="btn btn-primary btn-sm px-3">Apply Status</a>
                             {% endif %}
                         </div>
                     </div>
                     
-                    <div class="mb-4">
-                        <h5 class="fw-normal mb-3">University:</h5>
-                        <div class="d-flex justify-content-between align-items-center border-bottom border-3 border-secondary border-opacity-25 pb-3" style="border-style: dashed !important;">
-                            <span class="text-muted fs-5">Multimedia University</span>
-                            <button class="btn btn-primary" disabled>Edit</button>
+                    <div class="profile-field">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="field-label">University</div>
+                                <div class="field-value">Multimedia University</div>
+                            </div>
+                            <button class="btn btn-secondary btn-sm px-3" disabled>Edit</button>
                         </div>
                     </div>
                     
-                    <div class="mb-4">
-                        <h5 class="fw-normal mb-3">Student ID:</h5>
-                        <div class="d-flex justify-content-between align-items-center border-bottom border-3 border-secondary border-opacity-25 pb-3" style="border-style: dashed !important;">
-                            <span class="text-muted fs-5">{{ user.id }}</span>
-                            <button class="btn btn-primary" disabled>Edit</button>
+                    <div class="profile-field">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="field-label">Student ID</div>
+                                <div class="field-value">{{ user.id }}</div>
+                            </div>
+                            <button class="btn btn-secondary btn-sm px-3" disabled>Edit</button>
                         </div>
                     </div>
+                    
                 </div>    
             </div>
         </div>      

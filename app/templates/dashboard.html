@@ -36,43 +36,63 @@
     <div class="row g-3 mb-4">
         <div class="col">
             <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-book"></i>
-                </div>
-                <small class="fw-medium">Textbooks</small>
+                <a href="{{ url_for('marketplace', category='Textbooks') }}" style="text-decoration: none; color: black;">
+                    <div class="category-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <small class="fw-medium">Textbooks</small>
+                </a>
             </div>
         </div>
         <div class="col">
             <div class="category-card position-relative">
-                <div class="notification-badge">1</div>
-                <div class="category-icon">
-                    <i class="fas fa-mobile-alt"></i>
-                </div>
-                <small class="fw-medium">Electronics</small>
+                <a href="{{ url_for('marketplace', category='Electronics') }}" style="text-decoration: none; color: black;">
+                    <div class="notification-badge">1</div>
+                    <div class="category-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <small class="fw-medium">Electronics</small>
+                </a>
             </div>
         </div>
         <div class="col">
             <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-tshirt"></i>
-                </div>
-                <small class="fw-medium">Clothing</small>
+                <a href="{{ url_for('marketplace', category='Clothing') }}" style="text-decoration: none; color: black;">
+                    <div class="category-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <small class="fw-medium">Clothing</small>
+                </a>
             </div>
         </div>
         <div class="col">
             <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-home"></i>
-                </div>
-                <small class="fw-medium">Dorm Essentials</small>
+                <a href="{{ url_for('marketplace', category='Dorm Essentials') }}" style="text-decoration: none; color: black;">
+                    <div class="category-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <small class="fw-medium">Dorm Essentials</small>
+                </a>
             </div>
         </div>
         <div class="col">
             <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-gift"></i>
-                </div>
-                <small class="fw-medium">Donate</small>
+                <a href="{{ url_for('marketplace', category='Donate') }}" style="text-decoration: none; color: black;">
+                    <div class="category-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <small class="fw-medium">Donate</small>
+                </a>
+            </div>
+        </div>
+        <div class="col">
+            <div class="category-card">
+                <a href="{{ url_for('marketplace') }}" style="text-decoration: none; color: black;">
+                    <div class="category-icon">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                    <small class="fw-medium">All</small>
+                </a>
             </div>
         </div>
     </div>
@@ -96,22 +116,22 @@
             <h6 class="mb-3">Recommended For You</h6>
 
             {% if items %}
-                {% for item in items[:3] %}
-                <div class="item-card">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h6 class="mb-1">{{ item.name }}</h6>
-                    </div>
-                    <div class="text-muted mb-3">
-                        <small>{{ item.category }}</small><br>
-                        <small>{{ item.user.username }}</small>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-primary btn-sm px-3">Request Swap</button>
-                        <button class="btn btn-outline-primary btn-sm px-3">Request</button>
-                        <button class="btn btn-outline-secondary btn-sm px-3">Message</button>
-                    </div>
+            {% for item in items[:3] %}
+            <div class="item-card">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h6 class="mb-1">{{ item.name }}</h6>
                 </div>
-                {% endfor %}
+                <div class="text-muted mb-3">
+                    <small>{{ item.category }}</small><br>
+                    <small>{{ item.user.username }}</small>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary btn-sm px-3">Request Swap</button>
+                    <button class="btn btn-outline-primary btn-sm px-3">Request</button>
+                    <button class="btn btn-outline-secondary btn-sm px-3">Message</button>
+                </div>
+            </div>
+            {% endfor %}
             {% else %}
             <div class="item-card">
                 <div class="d-flex justify-content-between align-items-start mb-2">
