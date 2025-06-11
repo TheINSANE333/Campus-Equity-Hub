@@ -17,6 +17,10 @@ class AdminDashboard(Endpoint):
             flash('Please log in to access this page.', 'danger')
             return redirect(url_for('login'))
         
+        if session['username'] != "admin":
+            flash ('Please log in as admin to access this page.', 'danger')
+            return redirect(url_for('login'))
+        
         dbHandler = UserRepository(self.flask_app)
         user_id = session['user_id']
         users = dbHandler.get_all_users(user_id)
