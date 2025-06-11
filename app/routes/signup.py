@@ -17,11 +17,12 @@ class Signup(Endpoint):
             username = request.form['username']
             email = request.form['email']
             password = request.form['password']
+            campus = request.form['campus']
 
             dbHandler = UserRepository(self.flask_app)
 
             command = SignupCommand(dbHandler)
-            success, message = command.execute(username, email, password)
+            success, message = command.execute(username, email, password, campus)
 
             flash(message, 'success' if success else 'danger')
             return redirect(url_for('login' if success else 'signup'))
@@ -32,7 +33,7 @@ class SignupCommand:
     def __init__(self, dbHandler):
         self._dbHandler = dbHandler
 
-    def execute(self, username, email, password):
+    def execute(self, username, email, password, campus):
         user = self._dbHandler.query_user(username)
         email_inp = self._dbHandler.query_email(email)
         if user!= None and user.username == username:
@@ -41,5 +42,5 @@ class SignupCommand:
         if email_inp != None and email_inp == email:
             return False, 'Email already exists!'
 
-        self._dbHandler.add_new_user(username, email, password)
+        self._dbHandler.add_new_user(username, email, password, campus)
         return True, 'Account created successfully!'

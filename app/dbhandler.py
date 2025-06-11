@@ -59,9 +59,9 @@ class DbHandler(ABC):
         return cls._instance
 
 class UserRepository(DbHandler):
-    def add_new_user(self, username: str, email: str, password: str) -> None:
+    def add_new_user(self, username: str, email: str, password: str, campus: str) -> None:
         hashed_password = self.bcrypt.generate_password_hash(password).decode('utf-8')
-        new_user = User(username=username, email=email, password=hashed_password, role="student")
+        new_user = User(username=username, email=email, password=hashed_password, role="student", campus=campus)
         self.db.session.add(new_user)
         print("User added to session")
         self.db.session.commit()

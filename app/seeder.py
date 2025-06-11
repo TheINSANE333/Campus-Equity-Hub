@@ -20,7 +20,8 @@ class DatabaseSeeder:
                     username='admin', 
                     email='admin@example.com', 
                     password=admin_password,
-                    role='admin'
+                    role='admin', 
+                    campus='MMU'
                 )
                 db.session.add(admin)
                 db.session.commit()
