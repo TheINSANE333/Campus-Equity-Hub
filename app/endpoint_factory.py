@@ -25,6 +25,8 @@ from app.routes.update_delete_notification import UpdateDeleteNotification
 from app.routes.profile import Profile
 from app.routes.process_profile import ProcessProfile
 from app.app_stub import Flask_App_Stub
+from app.routes.request_swap import RequestSwap
+from app.routes.submit_swap_request import SubmitSwapRequest
 
 class EndpointFactory: #factory method
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -55,7 +57,9 @@ class EndpointFactory: #factory method
             'ViewNotification': ViewNotification,
             'UpdateDeleteNotification': UpdateDeleteNotification,
             'Profile': Profile,
-            'ProcessProfile': ProcessProfile
+            'ProcessProfile': ProcessProfile,
+            'RequestSwap': RequestSwap,
+            'SubmitSwapRequest': SubmitSwapRequest
         }
         self._cache = {}
 
