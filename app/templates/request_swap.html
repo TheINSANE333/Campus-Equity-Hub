@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Swap Description</title>
+</head>
+<body>
+{% extends "layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Swap Description</h1>
+<div class="container mt-4">
+    <form method="POST" action="{{ url_for('submit_swap_request', item_id=item.id) }}">
+        <div class="form-group">
+            <label for="description">Message to item owner:</label>
+            <textarea class="form-control" id="description" name="description" rows="4" required placeholder="Please input swap description"></textarea>
+        </div>
+        <button href="javascript:history.back()" class="back-button" title="Back">
+            <i class="fas fa-chevron-left"></i>
+            Back
+        </button>
+        <button type="submit" class="btn btn-primary mt-2">Submit Request</button>
+    </form>
+</div>
+{% endblock %}
+</body>
+</html>
