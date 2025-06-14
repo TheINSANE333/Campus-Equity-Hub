@@ -2,6 +2,7 @@ from flask import render_template, url_for, flash, session, redirect
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.dbhandler import UserRepository # For fetching user role
+from app.item_dbhandler import ItemRepository
 from app.function import dateCounter
 
 # Import Item and Swap models for querying
@@ -43,7 +44,7 @@ class Dashboard(Endpoint):
             if user_role != 'special' and user_role != 'special student':
                 items_for_display_query = items_for_display_query.filter(Item.timestamp <= two_days_ago)
 
-        items_for_display = items_for_display_query.all()
+            items_for_display = items_for_display_query.all()
 
         # --- Swaps for "My Swaps" tab ---
         incoming_swap_requests = Swap.query \
@@ -51,11 +52,16 @@ class Dashboard(Endpoint):
             .filter(Item.user_id == current_user_id) \
             .filter(Swap.status == 'pending') \
             .all()
+        
+        print(session.get('user_id'))
+        item_dbhandler = ItemRepository(self.flask_app)
+        myItem = item_dbhandler.get_user_items(session.get('user_id'))
 
         context = {
             'username': session.get('username', 'User'),
             'items': items_for_display,
             'swaps': incoming_swap_requests,
+            'myItems': myItem
         }
 
         return render_template('dashboard.html', **context)
