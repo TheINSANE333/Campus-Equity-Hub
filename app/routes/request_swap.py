@@ -24,13 +24,24 @@ class RequestSwap(Endpoint):
         if item.status != 'available':
             flash('This item is no longer available for swap.', 'danger')
             return redirect(url_for('dashboard'))
-        
+
+        if 'user_id' not in session:
+            flash('Please log in to request a swap.', 'danger')
+            return redirect(url_for('login'))
+
+        current_user_id = session.get('user_id')
         item_dbhandler = ItemRepository(self.flask_app)
-        myItem = item_dbhandler.get_user_items(session.get('user_id'))
-        
+        all_my_items = item_dbhandler.get_user_items(current_user_id)
+
+        # Filter user's items: must be 'available' and 'approved'
+        eligible_my_items = [
+            item for item in all_my_items
+            if item.status == 'available' and item.approval == 'approved'
+        ]
+
         context = {
             'item': item,
-            'myItems': myItem,
+            'myItems': eligible_my_items, # Pass the filtered list
         }
 
         # Render the request swap page
