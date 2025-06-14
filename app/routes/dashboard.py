@@ -31,7 +31,9 @@ class Dashboard(Endpoint):
         # --- Items for "Discover" tab ---
         items_for_display_query = Item.query.filter(
             Item.user_id != current_user_id,
-            Item.status == 'available'
+            Item.status == 'available',
+            Item.approval != 'rejected',
+            Item.status != 'deleted'
         )
 
         user_dbhandler = UserRepository(self.flask_app)
@@ -54,13 +56,14 @@ class Dashboard(Endpoint):
             .all()
         
         item_dbhandler = ItemRepository(self.flask_app)
-        myItem = item_dbhandler.get_user_items(session.get('user_id'))
+        all_my_items = item_dbhandler.get_user_items(session.get('user_id'))
+        my_items_for_display = [item for item in all_my_items if item.status != 'deleted' and item.approval != 'rejected']
 
         context = {
             'username': session.get('username', 'User'),
             'items': items_for_display,
             'swaps': incoming_swap_requests,
-            'myItems': myItem
+            'myItems': my_items_for_display
         }
 
         return render_template('dashboard.html', **context)
