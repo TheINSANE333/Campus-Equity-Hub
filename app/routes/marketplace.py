@@ -35,7 +35,7 @@ class Marketplace(Endpoint):
         else:
             items = item_dbHandler.get_available_items()
 
-        if user_role != 'special student':
+        if user_role != 'special':
             items = [item for item in items if item.timestamp <= two_days_ago]
 
         return render_template('marketplace.html', items=items, selected_category=category_filter)
