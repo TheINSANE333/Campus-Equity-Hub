@@ -53,7 +53,6 @@ class Dashboard(Endpoint):
             .filter(Swap.status == 'pending') \
             .all()
         
-        print(session.get('user_id'))
         item_dbhandler = ItemRepository(self.flask_app)
         myItem = item_dbhandler.get_user_items(session.get('user_id'))
 

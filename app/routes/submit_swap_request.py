@@ -19,6 +19,8 @@ class SubmitSwapRequest(Endpoint):
     def submit_swap_request(self, item_id):
         # Find the item to be swapped
         item = Item.query.get_or_404(item_id)
+        target_item_id = request.form['swapItem']
+        target_item = Item.query.get_or_404(target_item_id)
 
         # Check if the item is available for swap
         if item.status != 'available':
@@ -48,7 +50,9 @@ class SubmitSwapRequest(Endpoint):
                 username=user.username,  # Add username
                 status='pending',
                 date=datetime.now(),
-                swap_description=description
+                swap_description=description,
+                target_item_id=target_item.id,
+                target_item_name=target_item.name
             )
 
             # Update the item status to "requested"

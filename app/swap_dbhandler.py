@@ -1,0 +1,37 @@
+from app.app_stub import Flask_App_Stub
+from app.models.item import Item
+from abc import ABC, abstractmethod
+from app.models.swap import Swap
+from typing import List
+
+class DbHandler(ABC):
+    _instance = None
+    
+    def __new__(cls, app: Flask_App_Stub = None):
+        if cls._instance is None:
+            if app is None:
+                raise ValueError("App must be provided when initializing DbHandler for the first time")
+            cls._instance = super(DbHandler, cls).__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
+    
+    def __init__(self, app: Flask_App_Stub) -> None:
+        if self._initialized:
+            return
+            
+        if app is None:
+            raise ValueError("App must be provided when initializing DbHandler for the first time")
+        
+        self.flask_app = app
+        self.db = app.db
+        self.bcrypt = app.bcrypt
+
+class SwapRepository(DbHandler):
+    def query_swap(self, swap_id: str) -> Swap:
+        return Swap.query.get_or_404(swap_id)
+    
+    # Update swap status after a swap is done or rejected
+    def update_swap_status(self,swap, status) -> None:
+        swap.status = status
+        self.db.session.commit()
+        

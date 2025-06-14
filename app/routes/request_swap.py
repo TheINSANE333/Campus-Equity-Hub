@@ -5,6 +5,7 @@ from app.extensions import db
 from datetime import datetime
 from app.routes.endpoint import Endpoint
 from app.models.swap import Swap
+from app.item_dbhandler import ItemRepository
 
 class RequestSwap(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -23,6 +24,14 @@ class RequestSwap(Endpoint):
         if item.status != 'available':
             flash('This item is no longer available for swap.', 'danger')
             return redirect(url_for('dashboard'))
+        
+        item_dbhandler = ItemRepository(self.flask_app)
+        myItem = item_dbhandler.get_user_items(session.get('user_id'))
+        
+        context = {
+            'item': item,
+            'myItems': myItem,
+        }
 
         # Render the request swap page
-        return render_template('request_swap.html', item=item)
+        return render_template('request_swap.html', **context)
