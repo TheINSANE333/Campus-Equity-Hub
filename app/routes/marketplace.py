@@ -19,8 +19,11 @@ class Marketplace(Endpoint):
             flash('Please log in to edit items.', 'danger')
             return redirect(url_for('login'))
         
-        category_filter = request.args.get('category')
-        item_name = request.args.get('name')
+        category_filter = request.args.get('category', 'All')
+        item_name = request.args.get('name', '')
+
+        print("Item name: ", item_name)
+        print("Category: ", category_filter)
 
         item_dbHandler = ItemRepository(self.flask_app)
         user_dbhandler = UserRepository(self.flask_app)

@@ -18,7 +18,7 @@ class SearchApi(Endpoint):
         
         if query:
             # Search for campuses that match the query (case-insensitive)
-            items = item_dbhandler.find_item(query)
+            items = item_dbhandler.find_item(query, 'All')
             
             # Format results for JSON response
             results = [

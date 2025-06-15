@@ -129,7 +129,9 @@ class ItemRepository(DbHandler):
         return Item.query.filter_by(status="available", approval='approved', category=category).order_by(Item.timestamp.desc()).all()
     
     def find_item(self, item_name: str, category: str) -> List[Item]:
-        if category != 'All':
+        
+        # Find specific item in specific categories
+        if category != 'All' and item_name !='':
             return Item.query.filter(
                 and_(
                     Item.status == "available",
@@ -138,11 +140,31 @@ class ItemRepository(DbHandler):
                     Item.name.ilike(f"%{item_name}%")
                 )
             ).order_by(Item.timestamp.desc()).limit(10).all()
+
+        # Find all items in specific category
+        elif category !='All' and item_name == '':
+            return Item.query.filter(
+                and_(
+                    Item.status == "available",
+                    Item.approval == "approved",
+                    Item.category == category
+                )
+            ).order_by(Item.timestamp.desc()).limit(10).all()
         
+        # Find specific items in all categories
+        elif category =='All' and item_name != '':
+            return Item.query.filter(
+                and_(
+                    Item.status == "available",
+                    Item.approval == "approved",
+                    Item.name.ilike(f"%{item_name}%")
+                )
+            ).order_by(Item.timestamp.desc()).limit(10).all()
+        
+        # Find all items in all categories
         return Item.query.filter(
             and_(
                 Item.status == "available",
-                Item.approval == "approved",
-                Item.name.ilike(f"%{item_name}%")
+                Item.approval == "approved"
             )
         ).order_by(Item.timestamp.desc()).limit(10).all()

@@ -36,12 +36,12 @@
                 {% if 'user_id' in session %}
                 <div class="col-auto">
                     <div class="search-container">
-                        <a href="{{ url_for('marketplace', category='All')}}">
-                            <i class="fas fa-search" id="search-button">
-                                
-                            </i>
-                        </a>
-                        <input type="item" class="form-control search-input" id="item" name="item" placeholder="Search for items...">
+                        <form id="search-form" action="{{ url_for('marketplace') }}" method="GET" style="display: flex; align-items: center;">
+                            <button type="submit" style="background: none; border: none; cursor: pointer;">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <input type="text" class="form-control search-input" name="name" id="search-input" placeholder="Search for items..." value="{{ query }}">
+                        </form>
                         <div id="searchResults" class="dropdown-menu w-100" style="max-height: 200px; overflow-y: auto;"></div>
                     </div>
                 </div>
@@ -134,26 +134,74 @@
             this.style.background = 'rgba(255,255,255,0.2)';
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('item');
-            const searchResults = document.getElementById('searchResults');
-            const searchButton = document.getElementById('search-button');
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const query = this.querySelector('input[name="name"]').value;
             
+            if (query.trim()) {
+                // Use the |safe filter to prevent HTML escaping
+                window.location.href = `{{ url_for('marketplace')|safe }}?category=All&name=${encodeURIComponent(query)}`;
+            }
+        });
+       
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('searchResults');
+            const searchForm = document.getElementById('search-form'); // Add this if your form has this ID
+
+            // Check if required elements exist
+            if (!searchInput) {
+                console.error('Search input element not found');
+                return;
+            }
+
+            if (!searchResults) {
+                console.error('Search results element not found');
+                return;
+            }
+
             let timeoutId;
             
-            // Handle input in search box
+            // Handle form submission (try to find the form by different methods)
+            const searchButton = document.querySelector('button[type="submit"]');
+            const parentForm = searchInput.closest('form');
+            
+            if (searchForm) {
+                searchForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        window.location.href = `/marketplace?category=All&name=${encodeURIComponent(query)}`;
+                    }
+                });
+            } else if (parentForm) {
+                parentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        window.location.href = `/marketplace?category=All&name=${encodeURIComponent(query)}`;
+                    }
+                });
+            } else if (searchButton) {
+                searchButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        window.location.href = `/marketplace?category=All&name=${encodeURIComponent(query)}`;
+                    }
+                });
+            }
+
+            // Handle input in search box for auto-suggestions
             searchInput.addEventListener('input', function() {
                 const query = this.value.trim();
                 
                 // Clear previous timeout
                 clearTimeout(timeoutId);
                 
-                // Hide selected campus when searching
-                // selectedCampus.style.display = 'none';
-                
-                if (query.length < 0) {
-                    searchResults.style.display = 'none';
+                if (query.length < 1) {
                     searchResults.innerHTML = '';
+                    searchResults.classList.remove('show');
                     return;
                 }
                 
@@ -162,7 +210,18 @@
                     fetchSearchResults(query);
                 }, 300);
             });
-        
+
+            // Handle Enter key press in search input
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const query = this.value.trim();
+                    if (query) {
+                        window.location.href = `/marketplace?category=All&name=${encodeURIComponent(query)}`;
+                    }
+                }
+            });
+
             // Fetch search results from API
             function fetchSearchResults(query) {
                 fetch(`/api/item-search?query=${encodeURIComponent(query)}`)
@@ -174,7 +233,7 @@
                         console.error('Error fetching search results:', error);
                     });
             }
-        
+
             // Display search results
             function displaySearchResults(results) {
                 searchResults.innerHTML = '';
@@ -197,10 +256,13 @@
                     item.className = 'dropdown-item';
                     item.innerHTML = `<strong>${highlightMatch(searchItem.name, searchInput.value)}</strong>`;
 
-                    item.addEventListener('click', function () {
+                    item.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // Just fill in the input, don't navigate
                         searchInput.value = searchItem.name;
-                        document.getElementById('selectedItemId').value = searchItem.id;
                         searchResults.classList.remove('show');
+                        searchInput.focus(); // Keep focus on input for further typing
                     });
 
                     searchResults.appendChild(item);
@@ -209,7 +271,6 @@
                 searchResults.classList.add('show');
             }
 
-        
             // Highlight matching text
             function highlightMatch(text, query) {
                 if (!query) return text;
@@ -217,44 +278,16 @@
                 const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
                 return text.replace(regex, '<span class="text-primary">$1</span>');
             }
-            
-            // Select a campus
-            function selectItem(itemId) {
-                fetch(`/api/item-search/${itemId}`)
-                    .then(response => response.json())
-                    .then(selectedItem => {
-                        // Set campus details
-                        itemName.textContent = selectedItem.name;
-                        
-                        // Show selected campus and hide search results
-                        selectedItem.style.display = 'block';
-                        searchResults.style.display = 'none';
-                        searchInput.value = '';
-                        
-                        // You could also store the selected campus ID in a hidden form field if needed
-                        // document.getElementById('selectedCampusId').value = campus.id;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching item details:', error);
-                    });
-            }
-
-            // Show specific 
-            
-            // Handle "Select Different Campus" button
-            selectDifferentItem.addEventListener('click', function() {
-                selectedItem.style.display = 'none';
-                searchInput.value = '';
-                searchInput.focus();
-            });
-
         });
 
         // Close search results when clicking outside
         document.addEventListener('click', function(e) {
-            // Check if click happened inside the dropdown container
-            if (!e.target.closest('.dropdown')) {
-                searchResults.classList.remove('show');
+            const searchResults = document.getElementById('searchResults');
+            // Check if click happened outside the search container
+            if (!e.target.closest('.search-container')) {
+                if (searchResults) {
+                    searchResults.classList.remove('show');
+                }
             }
         });
     </script>
