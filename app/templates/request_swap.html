@@ -16,7 +16,7 @@
         <div class="form-group">
             <div class="form-group">
                 <label for="swapItem">Select your item to swap:</label>
-                <select class="form-control" id="swapItem" name="swapItem" required>
+                <select class="form-select" id="swapItem" name="swapItem" required>
                     <option value="" disabled selected>Select Item</option>
                     {% for item in myItems %}
                         {% if item.status == 'available' %}
