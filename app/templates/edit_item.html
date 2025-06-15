@@ -47,10 +47,11 @@
                 
                 <div class="mb-3">
                     <label for="status" class="form-label">Status</label>
-                    <select class="form-select" name="status" {% if item.status == 'requested' %}disabled{% endif %}>
+                    <select class="form-select" id="status" name="status" {% if item.status == 'requested' %}disabled{% endif %}>
                         <option value="available" {% if item.status == 'available' %}selected{% endif %}>Available</option>
                         <option value="hidden" {% if item.status == 'hidden' %}selected{% endif %}>Hidden</option>
                         <option value="sold" {% if item.status == 'sold' %}selected disabled{% endif %}>Sold</option>
+                        <option value="requested" {% if item.status == 'requested' %}selected disabled{% endif %}>Requested</option>
                     </select>
                 </div>
             </div>

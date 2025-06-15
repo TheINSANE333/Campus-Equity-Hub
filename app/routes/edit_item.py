@@ -33,7 +33,7 @@ class EditItem(Endpoint):
             description = request.form['description']
             price = float(request.form['price'])
             category = request.form['category']
-            status = request.form['status']
+            status = request.form.get('status', item.status)
 
             item_dbhandler.edit_item(item, name, description, price, category, status)
             
