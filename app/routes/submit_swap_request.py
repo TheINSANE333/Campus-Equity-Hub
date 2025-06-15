@@ -57,6 +57,7 @@ class SubmitSwapRequest(Endpoint):
 
             # Update the item status to "requested"
             item.status = 'requested'
+            target_item.status = 'swapping'
 
             # Add the swap item to the database
             db.session.add(swap_item)
