@@ -58,6 +58,14 @@ class Dashboard(Endpoint):
             .filter(Item.status != 'deleted') \
             .all()
         
+        # Get swaps where user is the requester
+        outgoing_swap_requests = Swap.query \
+            .filter(Swap.user_id == current_user_id) \
+            .all()
+        
+        # Combine both types of swaps
+        merged_swaps = incoming_swap_requests + outgoing_swap_requests
+        
         item_dbhandler = ItemRepository(self.flask_app)
         all_my_items = item_dbhandler.get_user_items(session.get('user_id'))
         my_items_for_display = [item for item in all_my_items if item.status != 'deleted' and item.approval != 'rejected']
@@ -65,7 +73,7 @@ class Dashboard(Endpoint):
         context = {
             'username': session.get('username', 'User'),
             'items': items_for_display,
-            'swaps': incoming_swap_requests,
+            'swaps': merged_swaps,
             'myItems': my_items_for_display
         }
 
