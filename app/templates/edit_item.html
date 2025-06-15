@@ -4,6 +4,14 @@
 
 {% block content %}
 <div class="container py-4">
+    {% if item.status == 'sold' %}
+    <div class="alert alert-danger d-flex align-items-center" role="alert">
+        <i class="fa fa-exclamation-triangle me-2"></i>
+        <div>
+            Item cannot be edited anymore when it is sold!
+        </div>
+    </div>
+    {% endif %}
     <h1>Edit Item</h1>
     
     <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
@@ -43,6 +51,7 @@
                         <option value="available" {% if item.status == 'available' %}selected{% endif %}>Available</option>
                         <option value="requested" {% if item.status == 'requested' %}selected{% endif %}>Requested</option>
                         <option value="swapped" {% if item.status == 'swapped' %}selected{% endif %}>Swapped</option>
+                        <option value="sold" {% if item.status == 'sold' %}selected disabled{% endif %}>Sold</option>
                     </select>
                 </div>
             </div>
@@ -73,7 +82,7 @@
             </div>
             
             <div class="col-12">
-                <button type="submit" class="btn btn-primary">Update Item</button>
+                <button type="submit" class="btn btn-primary" {% if item.status == 'sold' %}disabled{% endif %}>Update Item</button>
                 <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </div>
