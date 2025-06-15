@@ -49,8 +49,7 @@
                     <label for="status" class="form-label">Status</label>
                     <select class="form-select" name="item_status" {% if item.status == 'requested' %}disabled{% endif %}>
                         <option value="available" {% if item.status == 'available' %}selected{% endif %}>Available</option>
-                        <option value="requested" {% if item.status == 'requested' %}selected{% endif %}>Requested</option>
-                        <option value="swapped" {% if item.status == 'swapped' %}selected{% endif %}>Swapped</option>
+                        <option value="hidden" {% if item.status == 'hidden' %}selected{% endif %}>Hidden</option>
                         <option value="sold" {% if item.status == 'sold' %}selected disabled{% endif %}>Sold</option>
                     </select>
                 </div>
