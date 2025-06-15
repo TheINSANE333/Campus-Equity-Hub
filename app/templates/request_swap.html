@@ -19,7 +19,9 @@
                 <select class="form-control" id="swapItem" name="swapItem" required>
                     <option value="" disabled selected>Select Item</option>
                     {% for item in myItems %}
+                        {% if item.status == 'available' %}
                         <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </div>
