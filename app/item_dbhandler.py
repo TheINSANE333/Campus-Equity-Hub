@@ -122,6 +122,7 @@ class ItemRepository(DbHandler):
 
     def update_item_status(self, item, status) -> None:
         item.status = status
+        self.db.session.add(item)
         self.db.session.commit()
 
     def get_item_by_category(self, category) -> List[Item]:
