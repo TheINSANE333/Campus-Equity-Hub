@@ -21,8 +21,10 @@ class ViewSwap(Endpoint):
         item_dbHandler = ItemRepository(self.flask_app)
         swap = swap_dbHandler.query_swap(swap_id)
         item = item_dbHandler.query_item(swap.item_id)
+        target = item_dbHandler.query_item(swap.target_item_id)
         context = {
             'swap': swap,
-            'item': item
+            'item': item,
+            'target': target
         }
         return render_template('view_swap.html', **context)

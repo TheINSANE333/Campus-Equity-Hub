@@ -41,8 +41,12 @@
                         <td>{{ item.name }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Item Description</strong></td>
-                        <td>{{ item.description }}</td>
+                        <td><strong>You will get</strong></td>
+                        <td>{{ target.name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Target Item Description</strong></td>
+                        <td>{{ target.description }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -71,6 +75,8 @@
                     </div>
                 </div>
             </div>
+            <br>
+            <br>
             {% else %}
             <div class="card shadow-sm p-4 border-0 rounded-3">
                 <div class="d-flex flex-column gap-3">
@@ -88,15 +94,17 @@
                     </div>
                 </div>
             </div>
+            <br>
+            <br>
             {% endif %}
         </div>
         
         <div class="col-md-6">
             <div class="mb-3">
-                <strong>Item Image: </strong>
+                <strong>Image of Item to Swap: </strong>
             </div>
             {% if item.image_filename %}
-            <img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" class="img-fluid rounded" alt="{{ item.name }}">
+            <img src="{{ url_for('static', filename='uploads/' + target.image_filename) }}" class="img-fluid rounded" alt="{{ target.name }}">
             {% else %}
             <div class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height: 400px;">
                 <span class="text-white">No Image</span>

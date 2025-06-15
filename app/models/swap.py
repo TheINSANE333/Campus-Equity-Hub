@@ -14,6 +14,8 @@ class Swap(db.Model):
     status = db.Column(db.String(20), default='pending') # accepted, rejected, pending
     swap_description = db.Column(db.String(255), nullable=True)
     username = db.Column(db.String(255), db.ForeignKey('users.username'), nullable=False)
+    dealLocation = db.Column(db.String(255), nullable=True)
+    dealTime = db.Column(db.DateTime, nullable=True)
 
     # Explicitly specify the foreign keys for the relationships
     user = db.relationship('User', foreign_keys=[user_id], backref='swaps_requested_users')
@@ -32,5 +34,7 @@ class Swap(db.Model):
             'username': self.user.username,
             'item_name': self.item.name,
             'target_item_id': self.target_item_id,
-            'target_item_name': self.target_item_name
+            'target_item_name': self.target_item_name,
+            'dealLocation': self.dealLocation,
+            'dealTime': self.dealTime
         }

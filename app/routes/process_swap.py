@@ -22,22 +22,23 @@ class ProcessSwap(Endpoint):
 
         swap = swap_dbHandler.query_swap(swap_id)
         item = item_dbHandler.query_item(swap.item_id)
-        target_item = item_dbHandler.query_item(swap.target_item_id)
+        target = item_dbHandler.query_item(swap.target_item_id)
 
         if action == 'accepted':
             item_dbHandler.update_item_status(item,'sold')
-            item_dbHandler.update_item_status(target_item,'sold')
+            item_dbHandler.update_item_status(target,'sold')
             swap_dbHandler.update_swap_status(swap, 'accepted')
             flash('Swap Accepted!', 'success')
         else:
             item_dbHandler.update_status(item, 'available')
-            item_dbHandler.update_status(target_item, 'available')
+            item_dbHandler.update_status(target, 'available')
             swap_dbHandler.update_swap_status(swap, 'rejected')
             flash('Swap Rejected!', 'success')
 
         context = {
             'swap': swap,
-            'item': item
+            'item': item,
+            'target': target
         }
         
         return render_template('view_swap.html', **context)
