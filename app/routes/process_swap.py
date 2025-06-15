@@ -36,8 +36,8 @@ class ProcessSwap(Endpoint):
             swap_dbHandler.update_time(swap, time)
             flash('Swap Accepted!', 'success')
         else:
-            item_dbHandler.update_status(item, 'available')
-            item_dbHandler.update_status(target, 'available')
+            item_dbHandler.update_item_status(item, 'available')
+            item_dbHandler.update_item_status(target, 'available')
             swap_dbHandler.update_swap_status(swap, 'rejected')
             flash('Swap Rejected!', 'success')
 
