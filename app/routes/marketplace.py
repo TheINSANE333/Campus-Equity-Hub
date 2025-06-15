@@ -22,9 +22,6 @@ class Marketplace(Endpoint):
         category_filter = request.args.get('category', 'All')
         item_name = request.args.get('name', '')
 
-        print("Item name: ", item_name)
-        print("Category: ", category_filter)
-
         item_dbHandler = ItemRepository(self.flask_app)
         user_dbhandler = UserRepository(self.flask_app)
 
