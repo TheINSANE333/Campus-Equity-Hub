@@ -39,10 +39,10 @@
                 
                 <div class="mb-3">
                     <label for="status" class="form-label">Status</label>
-                    <select class="form-select" id="status" name="status" value="{{ item.status }}">
+                    <select class="form-select" name="item_status" {% if item.status == 'requested' %}disabled{% endif %}>
                         <option value="available" {% if item.status == 'available' %}selected{% endif %}>Available</option>
-                        <option value="sold" {% if item.status == 'sold' %}selected{% endif %}>Sold</option>
-                        <option value="hidden" {% if item.status == 'hidden' %}selected{% endif %}>Hidden</option>
+                        <option value="requested" {% if item.status == 'requested' %}selected{% endif %}>Requested</option>
+                        <option value="swapped" {% if item.status == 'swapped' %}selected{% endif %}>Swapped</option>
                     </select>
                 </div>
             </div>
@@ -74,10 +74,14 @@
             
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Update Item</button>
-                <a href="{{ url_for('marketplace') }}" class="btn btn-outline-secondary">Cancel</a>
+                <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </div>
     </form>
+
+    <br>
+    <br>
+
 </div>
 
 <script>
