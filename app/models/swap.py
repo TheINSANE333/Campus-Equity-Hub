@@ -11,7 +11,7 @@ class Swap(db.Model):
     target_item_id = db.Column(db.Integer, db.ForeignKey('items.id'), nullable=False)
     target_item_name = db.Column(db.String(255), nullable=False)
     date = db.Column(db.DateTime, default=datetime.now)
-    status = db.Column(db.String(20), default='pending')
+    status = db.Column(db.String(20), default='pending') # accepted, rejected, pending
     swap_description = db.Column(db.String(255), nullable=True)
     username = db.Column(db.String(255), db.ForeignKey('users.username'), nullable=False)
 

@@ -55,7 +55,7 @@ class Dashboard(Endpoint):
         incoming_swap_requests = Swap.query \
             .join(Item, Swap.item_id == Item.id) \
             .filter(Item.user_id == current_user_id) \
-            .filter(Swap.status == 'pending' and Item.status != 'deleted') \
+            .filter(Item.status != 'deleted') \
             .all()
         
         item_dbhandler = ItemRepository(self.flask_app)

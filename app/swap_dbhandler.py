@@ -31,7 +31,7 @@ class SwapRepository(DbHandler):
         return Swap.query.get_or_404(swap_id)
     
     # Update swap status after a swap is done or rejected
-    def update_swap_status(self,swap, status) -> None:
+    def update_swap_status(self, swap, status) -> None:
         swap.status = status
         self.db.session.commit()
         

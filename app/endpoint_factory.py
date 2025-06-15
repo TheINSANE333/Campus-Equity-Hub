@@ -29,6 +29,7 @@ from app.routes.request_swap import RequestSwap
 from app.routes.submit_swap_request import SubmitSwapRequest
 from app.routes.view_swap import ViewSwap
 from app.routes.delete_item import DeleteItem
+from app.routes.process_swap import ProcessSwap
 
 class EndpointFactory: #factory method
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -63,7 +64,8 @@ class EndpointFactory: #factory method
             'RequestSwap': RequestSwap,
             'SubmitSwapRequest': SubmitSwapRequest,
             'ViewSwap': ViewSwap,
-            'DeleteItem': DeleteItem
+            'DeleteItem': DeleteItem,
+            'ProcessSwap': ProcessSwap
         }
         self._cache = {}
 

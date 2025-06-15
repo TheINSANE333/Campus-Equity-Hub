@@ -119,5 +119,9 @@ class ItemRepository(DbHandler):
         item.approval = status
         self.db.session.commit()
 
+    def update_item_status(self, item, status) -> None:
+        item.status = status
+        self.db.session.commit()
+
     def get_item_by_category(self, category) -> List[Item]:
         return Item.query.filter_by(status="available", approval='approved', category=category).order_by(Item.timestamp.desc()).all()
