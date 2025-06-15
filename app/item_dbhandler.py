@@ -126,3 +126,10 @@ class ItemRepository(DbHandler):
 
     def get_item_by_category(self, category) -> List[Item]:
         return Item.query.filter_by(status="available", approval='approved', category=category).order_by(Item.timestamp.desc()).all()
+    
+    def find_item(self, item_name: str) -> List[Item]: 
+        return Item.query.filter(
+            self.db.or_(
+                Item.name.ilike(f'%{item_name}%'),
+            )
+        ).limit(10).all()
