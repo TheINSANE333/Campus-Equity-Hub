@@ -36,7 +36,11 @@
                 {% if 'user_id' in session %}
                 <div class="col-auto">
                     <div class="search-container">
-                        <i class="fas fa-search"></i>
+                        <a href="{{ url_for('marketplace', category='All')}}">
+                            <i class="fas fa-search" id="search-button">
+                                
+                            </i>
+                        </a>
                         <input type="item" class="form-control search-input" id="item" name="item" placeholder="Search for items...">
                         <div id="searchResults" class="dropdown-menu w-100" style="max-height: 200px; overflow-y: auto;"></div>
                     </div>
@@ -133,6 +137,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('item');
             const searchResults = document.getElementById('searchResults');
+            const searchButton = document.getElementById('search-button');
             
             let timeoutId;
             
@@ -233,6 +238,8 @@
                         console.error('Error fetching item details:', error);
                     });
             }
+
+            // Show specific 
             
             // Handle "Select Different Campus" button
             selectDifferentItem.addEventListener('click', function() {

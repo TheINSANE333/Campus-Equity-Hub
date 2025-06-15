@@ -20,6 +20,7 @@ class Marketplace(Endpoint):
             return redirect(url_for('login'))
         
         category_filter = request.args.get('category')
+        item_name = request.args.get('name')
 
         item_dbHandler = ItemRepository(self.flask_app)
         user_dbhandler = UserRepository(self.flask_app)
@@ -30,10 +31,7 @@ class Marketplace(Endpoint):
         
         two_days_ago = dateCounter()
 
-        if category_filter != "All":
-            items = item_dbHandler.get_item_by_category(category_filter)
-        else:
-            items = item_dbHandler.get_available_items()
+        items = item_dbHandler.find_item(item_name, category_filter)
 
         if user_role != 'special':
             items = [item for item in items if item.timestamp <= two_days_ago]
