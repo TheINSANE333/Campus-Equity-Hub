@@ -34,4 +34,12 @@ class SwapRepository(DbHandler):
     def update_swap_status(self, swap, status) -> None:
         swap.status = status
         self.db.session.commit()
+
+    def update_location(self, swap, location):
+        swap.dealLocation = location
+        self.db.session.commit()
+
+    def update_time(self, swap, time):
+        swap.dealTime = time
+        self.db.session.commit()
         

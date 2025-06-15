@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import render_template, request, redirect, url_for, flash
 from app.app_stub import Flask_App_Stub
 from app.item_dbhandler import ItemRepository
@@ -25,9 +26,14 @@ class ProcessSwap(Endpoint):
         target = item_dbHandler.query_item(swap.target_item_id)
 
         if action == 'accepted':
+            location = request.form.get('location')
+            timeStr = request.form.get('trade_time')
+            time = datetime.strptime(timeStr, '%Y-%m-%dT%H:%M')
             item_dbHandler.update_item_status(item,'sold')
             item_dbHandler.update_item_status(target,'sold')
             swap_dbHandler.update_swap_status(swap, 'accepted')
+            swap_dbHandler.update_location(swap, location)
+            swap_dbHandler.update_time(swap, time)
             flash('Swap Accepted!', 'success')
         else:
             item_dbHandler.update_status(item, 'available')
