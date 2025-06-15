@@ -33,10 +33,7 @@ class Dashboard(Endpoint):
             Item.user_id != current_user_id,
             Item.status == 'available',
             Item.approval != 'rejected',
-            Item.approval != 'pending',
-            Item.status != 'deleted',
-            Item.status != 'swapping',
-            Item.status != 'requested'
+            Item.status != 'deleted'
         )
 
         user_dbhandler = UserRepository(self.flask_app)
@@ -46,8 +43,8 @@ class Dashboard(Endpoint):
             user_role = user.role
             two_days_ago = dateCounter()
 
-           # if user_role != 'special' and user_role != 'special student':
-             #   items_for_display_query = items_for_display_query.filter(Item.timestamp <= two_days_ago)
+            if user_role != 'special' and user_role != 'special student':
+                items_for_display_query = items_for_display_query.filter(Item.timestamp <= two_days_ago)
 
             items_for_display = items_for_display_query.all()
 
@@ -55,7 +52,7 @@ class Dashboard(Endpoint):
         incoming_swap_requests = Swap.query \
             .join(Item, Swap.item_id == Item.id) \
             .filter(Item.user_id == current_user_id) \
-            .filter(Swap.status == 'pending' and Item.status != 'deleted') \
+            .filter(Swap.status == 'pending') \
             .all()
         
         item_dbhandler = ItemRepository(self.flask_app)
