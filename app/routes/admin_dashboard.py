@@ -25,7 +25,8 @@ class AdminDashboard(Endpoint):
         dbHandler = UserRepository(self.flask_app)
         user_id = session['user_id']
         users = dbHandler.get_all_users(user_id)
+        myselfs = dbHandler.query_user_id(user_id)
 
         total_unread = getUnreadCount(self.flask_app, user_id)
         
-        return render_template('admin_dashboard.html', users=users, total_unread=total_unread)
+        return render_template('admin_dashboard.html', users=users, total_unread=total_unread, me=myselfs)
