@@ -70,11 +70,14 @@ class Dashboard(Endpoint):
         all_my_items = item_dbhandler.get_user_items(session.get('user_id'))
         my_items_for_display = [item for item in all_my_items if item.status != 'deleted' and item.approval != 'rejected']
 
+        item_count = item_dbhandler.get_available_items_count()
+
         context = {
             'username': session.get('username', 'User'),
             'items': items_for_display,
             'swaps': merged_swaps,
-            'myItems': my_items_for_display
+            'myItems': my_items_for_display,
+            'itemCount': item_count
         }
 
         return render_template('dashboard.html', **context)
