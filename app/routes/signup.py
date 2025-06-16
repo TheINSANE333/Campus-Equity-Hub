@@ -42,5 +42,5 @@ class SignupCommand:
         if email_inp != None and email_inp == email:
             return False, 'Email already exists!'
 
-        self._dbHandler.add_new_user(username, email, password, campus)
+        self._dbHandler.add_new_user(username, email, password, campus, 'student')
         return True, 'Account created successfully!'
