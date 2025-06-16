@@ -91,9 +91,6 @@ class Dashboard(Endpoint):
             'user': user
         }
 
-        print(items_for_display)
-        print(all_item)
-
         user_id = session['user_id']
         total_unread = getUnreadCount(self.flask_app, user_id)
 
