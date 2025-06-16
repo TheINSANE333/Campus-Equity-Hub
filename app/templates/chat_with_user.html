@@ -120,6 +120,12 @@
         
         chatContainer.scrollTop = chatContainer.scrollHeight;
         
+        // Initialize existing messages to make links clickable
+        const existingMessages = document.querySelectorAll('.message-content');
+        existingMessages.forEach(messageContent => {
+            messageContent.innerHTML = makeLinksClickable(messageContent.textContent);
+        });
+        
         // If there's a pre-filled message, position cursor at the end
         if (messageInput.value) {
             messageInput.focus();
@@ -173,19 +179,19 @@
             const messageElement = document.createElement('div');
             messageElement.className = `message ${isSent ? 'message-sent' : 'message-received'}`;
             messageElement.dataset.messageId = message.id;
-
+            
             // Make URLs in messages clickable
             const messageText = makeLinksClickable(message.message);
-
+            
             messageElement.innerHTML = `
-                ${message.message}
+                ${messageText}
                 <span class="message-time">${message.timestamp}</span>
             `;
             
             chatContainer.appendChild(messageElement);
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
-
+        
         // Function to make URLs in text clickable
         function makeLinksClickable(text) {
             const urlRegex = /(https?:\/\/[^\s]+)/g;
