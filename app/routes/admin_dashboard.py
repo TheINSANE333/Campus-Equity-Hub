@@ -18,7 +18,7 @@ class AdminDashboard(Endpoint):
             flash('Please log in to access this page.', 'danger')
             return redirect(url_for('login'))
         
-        if session['username'] != "admin":
+        if session['role'] != "admin":
             flash ('Please log in as admin to access this page.', 'danger')
             return redirect(url_for('login'))
         

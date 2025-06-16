@@ -27,7 +27,7 @@ class SignupAdmin(Endpoint):
             flash(message, 'success' if success else 'danger')
             return redirect(url_for('login' if success else 'signup'))
         
-        return render_template('signup.html')
+        return render_template('signup_admin.html')
 
 class SignupCommand:
     def __init__(self, dbHandler):

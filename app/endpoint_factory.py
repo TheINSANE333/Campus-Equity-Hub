@@ -33,6 +33,7 @@ from app.routes.process_swap import ProcessSwap
 from app.routes.search_api import SearchApi
 from app.routes.search_api_item import SearchApiItem
 from app.routes.view_swap_history import ViewSwapHistory
+from app.routes.signup_admin import SignupAdmin
 
 class EndpointFactory: #factory method
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -71,7 +72,8 @@ class EndpointFactory: #factory method
             'ProcessSwap': ProcessSwap, 
             'SearchApi': SearchApi,
             'SearchApiItem': SearchApiItem,
-            'ViewSwapHistory': ViewSwapHistory
+            'ViewSwapHistory': ViewSwapHistory, 
+            'SignupAdmin': SignupAdmin
         }
         self._cache = {}
 
