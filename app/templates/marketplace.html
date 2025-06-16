@@ -34,7 +34,14 @@
                 </div>
                 {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ item.name }}</h5>
+                    <h5 class="card-title">{{ item.name }}
+                        {% if item not in items %}
+                        <span class="priority-badge non" style="float: right;">
+                            <i class="fas fa-lock me-1"></i>
+                            Priority Access Exclusive
+                        </span>
+                        {% endif %}
+                    </h5>
                     <p class="card-text text-truncate">{{ item.description }}</p>
                     <p class="card-text"><strong>Price:</strong> RM{{ "%.2f"|format(item.price) }}</p>
                     <p class="card-text"><small class="text-muted">Seller: {{ item.user.username }}</small></p>
