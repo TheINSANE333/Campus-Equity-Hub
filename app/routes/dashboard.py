@@ -72,7 +72,10 @@ class Dashboard(Endpoint):
         all_my_items = item_dbhandler.get_user_items(session.get('user_id'))
         my_items_for_display = [item for item in all_my_items if item.status != 'deleted' and item.approval != 'rejected']
 
-        all_item = item_dbhandler.get_available_items()
+        # Get all available items and exclude user's own items
+        all_items_temp = item_dbhandler.get_available_items()
+        my_item_ids = {item.id for item in my_items_for_display}
+        all_item = [item for item in all_items_temp if item.id not in my_item_ids]
 
         item_count = item_dbhandler.get_available_items_count()
         shared_item_count = item_dbhandler.get_shared_item_count(current_user_id)
