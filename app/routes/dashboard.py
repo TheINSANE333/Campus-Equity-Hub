@@ -4,6 +4,7 @@ from app.routes.endpoint import Endpoint
 from app.dbhandler import UserRepository # For fetching user role
 from app.item_dbhandler import ItemRepository
 from app.function import dateCounter
+from app.swap_dbhandler import SwapRepository
 
 # Import Item and Swap models for querying
 from app.models.item import Item
@@ -67,17 +68,21 @@ class Dashboard(Endpoint):
         merged_swaps = incoming_swap_requests + outgoing_swap_requests
         
         item_dbhandler = ItemRepository(self.flask_app)
+        swap_dbhandler = SwapRepository(self.flask_app)
         all_my_items = item_dbhandler.get_user_items(session.get('user_id'))
         my_items_for_display = [item for item in all_my_items if item.status != 'deleted' and item.approval != 'rejected']
 
         item_count = item_dbhandler.get_available_items_count()
+
+        swap_completed_count = swap_dbhandler.get_swap_completed_count(current_user_id)
 
         context = {
             'username': session.get('username', 'User'),
             'items': items_for_display,
             'swaps': merged_swaps,
             'myItems': my_items_for_display,
-            'itemCount': item_count
+            'itemCount': item_count,
+            'completedSwap': swap_completed_count
         }
 
         return render_template('dashboard.html', **context)
