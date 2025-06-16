@@ -51,7 +51,7 @@
                         <option value="available" {% if item.status == 'available' %}selected{% endif %}>Available</option>
                         <option value="hidden" {% if item.status == 'hidden' %}selected{% endif %}>Hidden</option>
                         <option value="sold" disabled {% if item.status == 'sold' %}selected disabled{% endif %}>Sold</option>
-                        <option value="requested" {% if item.status == 'requested' %}selected disabled{% endif %}>Requested</option>
+                        <option value="requested" disabled {% if item.status == 'requested' %}selected disabled{% endif %}>Requested</option>
                     </select>
                 </div>
             </div>
