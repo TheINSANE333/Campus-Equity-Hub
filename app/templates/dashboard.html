@@ -132,7 +132,7 @@
                     </div>
                     <div class="d-flex gap-2">
                         <a href="{{ url_for('request_swap_page', item_id=item.id) }}" class="btn btn-primary btn-sm px-3">Request Swap</a>
-                        <button class="btn btn-outline-secondary btn-sm px-3">Message</button>
+                        <a href="{{ url_for('chat_with_user', user_id=item.user.id, item_id=item.id) }}" class="btn btn-outline-secondary btn-sm px-3">Message</a>
                     </div>
                 </div>
                 {% endfor %}

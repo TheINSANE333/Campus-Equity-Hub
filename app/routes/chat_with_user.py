@@ -3,6 +3,7 @@ from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.chat_dbhandler import ChatRepository
 from app.dbhandler import UserRepository
+from app.item_dbhandler import ItemRepository
 from app.function import getUnreadCount
 
 class ChatWithUser(Endpoint):
@@ -20,11 +21,17 @@ class ChatWithUser(Endpoint):
             return redirect(url_for('login'))
     
         current_user_id = session['user_id']
+        item_id = request.args.get('item_id')
     
         # Check if the user exists
         user_dbhandler = UserRepository(self.flask_app)
         chat_dbhandler = ChatRepository(self.flask_app)
         chat_partner = user_dbhandler.query_user_id(user_id)
+
+        item = None
+        if item_id:
+            item_dbhandler = ItemRepository(self.flask_app)  # Assuming you have an ItemRepository
+            item = item_dbhandler.query_item(item_id)
     
         if request.method == 'POST':
             message = request.form.get('message')
@@ -63,5 +70,6 @@ class ChatWithUser(Endpoint):
             messages=messages,
             users=users,
             unread_by_user=unread_by_user, 
-            total_unread=total_unread
+            total_unread=total_unread, 
+            item=item
         )
