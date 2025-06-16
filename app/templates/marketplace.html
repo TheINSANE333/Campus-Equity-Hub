@@ -21,34 +21,7 @@
         {% endif %}
     </div>    
 
-    {% if items %}
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for item in items %}
-        <div class="col">
-            <div class="card h-100">
-                {% if item.image_filename %}
-                <img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" class="card-img-top" alt="{{  url_for('static', filename='uploads/' + item.image_filename) }}" style="height: 200px; object-fit: cover;">
-                {% else %}
-                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
-                    <span class="text-white">No Image</span>
-                </div>
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ item.name }}</h5>
-                    <p class="card-text text-truncate">{{ item.description }}</p>
-                    <p class="card-text"><strong>Price:</strong> RM{{ "%.2f"|format(item.price) }}</p>
-                    <p class="card-text"><small class="text-muted">Seller: {{ item.user.username }}</small></p>
-                </div>
-                <div class="card-footer">
-                    <a href="{{ url_for('request_swap_page', item_id=item.id) }}" class="btn btn-primary">Request Swap</a>
-                    <a href="{{ url_for('view_item', item_id=item.id) }}" class="btn btn-outline-primary">View Details</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
-    {% elif unfiltered_items %}
+    {% if unfiltered_items %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for item in unfiltered_items %}
         <div class="col">
@@ -66,10 +39,17 @@
                     <p class="card-text"><strong>Price:</strong> RM{{ "%.2f"|format(item.price) }}</p>
                     <p class="card-text"><small class="text-muted">Seller: {{ item.user.username }}</small></p>
                 </div>
+                {% if item in items %}
+                <div class="card-footer">
+                    <a href="{{ url_for('request_swap_page', item_id=item.id) }}" class="btn btn-primary">Request Swap</a>
+                    <a href="{{ url_for('view_item', item_id=item.id) }}" class="btn btn-outline-primary">View Details</a>
+                </div>
+                {% else %}
                 <div class="card-footer">
                     <a href="{{ url_for('request_swap_page', item_id=item.id) }}" class="btn btn-primary disabled">Request Swap</a>
                     <a href="{{ url_for('view_item', item_id=item.id) }}" class="btn btn-outline-primary disabled">View Details</a>
                 </div>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
