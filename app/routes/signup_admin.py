@@ -2,6 +2,7 @@ from flask import render_template, request, flash, redirect, url_for
 from app.app_stub import Flask_App_Stub
 from app.dbhandler import UserRepository
 from app.routes.endpoint import Endpoint
+from app.function import getUnreadCount
 
 class SignupAdmin(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -13,6 +14,7 @@ class SignupAdmin(Endpoint):
         self.methods = ['GET', 'POST']
 
     def signupAdmin(self):
+        total_unread = getUnreadCount(self.flask_app, 1)
         if request.method == 'POST':
             username = request.form['username']
             email = request.form['email']
@@ -27,7 +29,7 @@ class SignupAdmin(Endpoint):
             flash(message, 'success' if success else 'danger')
             return redirect(url_for('login' if success else 'signup'))
         
-        return render_template('signup_admin.html')
+        return render_template('signup_admin.html', total_unread=total_unread)
 
 class SignupCommand:
     def __init__(self, dbHandler):

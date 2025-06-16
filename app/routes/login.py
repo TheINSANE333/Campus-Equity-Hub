@@ -14,7 +14,7 @@ class Login(Endpoint):
         self.methods = ['GET', 'POST']
 
     def login(self):
-        total_unread = getUnreadCount(self.flask_app, 1)
+        total_unread = getUnreadCount(self.flask_app, 0)
 
         if request.method == 'POST':
             username = request.form['username']
