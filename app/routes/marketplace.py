@@ -33,7 +33,7 @@ class Marketplace(Endpoint):
 
         items = item_dbHandler.find_item(item_name, category_filter)
 
-        if user_role != 'special':
+        if user_role != 'special' and user_role != 'admin':
             items = [item for item in items if item.timestamp <= two_days_ago]
 
         user_id = session['user_id']
