@@ -44,11 +44,11 @@ class Dashboard(Endpoint):
         user = user_dbhandler.query_user(session.get('username'))
 
         if user:
-            user_role = user.role
+            # user_role = user.role
             two_days_ago = dateCounter()
 
-            if user_role != 'special' and user_role != 'special student':
-                items_for_display_query = items_for_display_query.filter(Item.timestamp <= two_days_ago)
+            # if user_role != 'special' and user_role != 'special student':
+            items_for_display_query = items_for_display_query.filter(Item.timestamp <= two_days_ago)
 
             items_for_display = items_for_display_query.all()
 
@@ -72,6 +72,8 @@ class Dashboard(Endpoint):
         all_my_items = item_dbhandler.get_user_items(session.get('user_id'))
         my_items_for_display = [item for item in all_my_items if item.status != 'deleted' and item.approval != 'rejected']
 
+        all_item = item_dbhandler.get_available_items()
+
         item_count = item_dbhandler.get_available_items_count()
         shared_item_count = item_dbhandler.get_shared_item_count(current_user_id)
 
@@ -84,8 +86,13 @@ class Dashboard(Endpoint):
             'myItems': my_items_for_display,
             'itemCount': item_count,
             'completedSwap': swap_completed_count,
-            'sharedItemCount': shared_item_count
+            'sharedItemCount': shared_item_count,
+            'allItems': all_item,
+            'user': user
         }
+
+        print(items_for_display)
+        print(all_item)
 
         user_id = session['user_id']
         total_unread = getUnreadCount(self.flask_app, user_id)
