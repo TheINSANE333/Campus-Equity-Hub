@@ -114,5 +114,4 @@ class ChatRepository(DbHandler):
     def get_total_unread(self, user_id) -> int:
         unread_counts = self.get_unread_counts(user_id)
         total_unread = sum(count for _, count in unread_counts)
-        print("Unread counts: ", total_unread)
         return total_unread

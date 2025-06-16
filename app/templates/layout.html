@@ -106,7 +106,7 @@
                 </div>
                 {% endif %}
                 <div class="col">
-                    <a href="{{ url_for('chat') }}" class="nav-item {% if request.endpoint == 'chat' %}active{% endif %} d-block">
+                    <a href="{{ url_for('chat') }}" class="nav-item {% if 'chat' in request.endpoint %}active{% endif %} d-block">
                         <i class="fas fa-comments d-block"></i>
                         
                         <small>Message</small>

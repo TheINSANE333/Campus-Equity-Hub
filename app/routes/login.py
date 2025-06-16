@@ -2,6 +2,7 @@ from flask import render_template, request, flash, redirect, url_for, session
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.dbhandler import UserRepository, Authenticator
+from app.function import getUnreadCount
 
 class Login(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -13,6 +14,8 @@ class Login(Endpoint):
         self.methods = ['GET', 'POST']
 
     def login(self):
+        total_unread = getUnreadCount(self.flask_app, 0)
+
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
@@ -41,4 +44,4 @@ class Login(Endpoint):
             else:
                 flash('Login unsuccessful. Please check your username and password.', 'danger')
 
-        return render_template('login.html')
+        return render_template('login.html', total_unread=total_unread)
