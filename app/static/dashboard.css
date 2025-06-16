@@ -181,3 +181,12 @@
 .tab-content {
     margin-bottom: 100px;
 }
+
+.alert-button{
+    border: 1px solid rgba(216, 216, 216, 0.67);
+    color: #2563eb;
+    background: rgba(255, 255, 255, 0.89);
+    border-radius: 8px;
+    padding: 0.5rem 3rem;
+    font-size: 0.9rem;
+}
