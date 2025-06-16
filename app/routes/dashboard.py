@@ -3,7 +3,7 @@ from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.dbhandler import UserRepository # For fetching user role
 from app.item_dbhandler import ItemRepository
-from app.function import dateCounter
+from app.function import dateCounter, getUnreadCount
 from app.swap_dbhandler import SwapRepository
 
 # Import Item and Swap models for querying
