@@ -73,6 +73,7 @@ class Dashboard(Endpoint):
         my_items_for_display = [item for item in all_my_items if item.status != 'deleted' and item.approval != 'rejected']
 
         item_count = item_dbhandler.get_available_items_count()
+        shared_item_count = item_dbhandler.get_shared_item_count(current_user_id)
 
         swap_completed_count = swap_dbhandler.get_swap_completed_count(current_user_id)
 
@@ -82,7 +83,8 @@ class Dashboard(Endpoint):
             'swaps': merged_swaps,
             'myItems': my_items_for_display,
             'itemCount': item_count,
-            'completedSwap': swap_completed_count
+            'completedSwap': swap_completed_count,
+            'sharedItemCount': shared_item_count
         }
 
         return render_template('dashboard.html', **context)

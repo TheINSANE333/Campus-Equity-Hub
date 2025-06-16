@@ -88,6 +88,9 @@ class ItemRepository(DbHandler):
         """Get all pending items ordered by timestamp (newest first)"""
         return Item.query.filter_by(approval='pending', status='available').order_by(Item.timestamp.desc()).all()
     
+    def get_shared_item_count(self, userId) -> List[Item]:
+        return Item.query.filter_by(user_id=userId, status='sold').count()
+    
     def upload_image(self, item, file) -> None:
         # Handle image upload
         file = file
