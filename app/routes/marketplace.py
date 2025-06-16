@@ -1,5 +1,5 @@
 from flask import render_template, request, session, flash, redirect, url_for
-from app.function import dateCounter
+from app.function import dateCounter, getUnreadCount
 from app.app_stub import Flask_App_Stub
 from app.item_dbhandler import ItemRepository
 from app.dbhandler import UserRepository
@@ -36,4 +36,7 @@ class Marketplace(Endpoint):
         if user_role != 'special':
             items = [item for item in items if item.timestamp <= two_days_ago]
 
-        return render_template('marketplace.html', items=items, selected_category=category_filter)
+        user_id = session['user_id']
+        total_unread = getUnreadCount(self.flask_app, user_id)
+
+        return render_template('marketplace.html', items=items, selected_category=category_filter, total_unread=total_unread)

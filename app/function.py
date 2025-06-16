@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from app.chat_dbhandler import ChatRepository
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 
@@ -13,3 +14,7 @@ def pdfVerification(filename):
 
 def dateCounter():
     return datetime.utcnow() - timedelta(days=2)
+
+def getUnreadCount(app, user_id):
+    chat_dbHandler = ChatRepository(app)
+    return chat_dbHandler.get_total_unread(user_id)

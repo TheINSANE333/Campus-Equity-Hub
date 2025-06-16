@@ -4,7 +4,7 @@ from flask import render_template, request, url_for, flash, session, redirect
 from app.app_stub import Flask_App_Stub
 from app.application_dbhandler import ApplicationRepository
 from app.routes.endpoint import Endpoint
-from app.function import pdfVerification
+from app.function import pdfVerification, getUnreadCount
 
 class ApplyStatus(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -46,8 +46,11 @@ class ApplyStatus(Endpoint):
             if success:
                 return render_template('dashboard.html')
             
+        user_id = session['user_id']
+        total_unread = getUnreadCount(self.flask_app, user_id)
+            
     
-        return render_template('apply_status.html')
+        return render_template('apply_status.html', total_unread=total_unread)
     
 class NewApplicationCommand:
     def __init__(self, application_dbHandler):

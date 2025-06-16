@@ -1,9 +1,10 @@
 from datetime import datetime
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, session
 from app.app_stub import Flask_App_Stub
 from app.item_dbhandler import ItemRepository
 from app.swap_dbhandler import SwapRepository  # Add this import
 from app.routes.endpoint import Endpoint
+from app.function import getUnreadCount
 
 class ProcessSwap(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -46,5 +47,8 @@ class ProcessSwap(Endpoint):
             'item': item,
             'target': target
         }
+
+        user_id = session['user_id']
+        total_unread = getUnreadCount(self.flask_app, user_id)
         
-        return render_template('view_swap.html', **context)
+        return render_template('view_swap.html', **context, total_unread=total_unread)

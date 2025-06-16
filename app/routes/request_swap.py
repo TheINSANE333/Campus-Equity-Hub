@@ -2,10 +2,10 @@ from flask import render_template, request, flash, redirect, url_for, session
 from app.app_stub import Flask_App_Stub
 from app.models.item import Item
 from app.extensions import db
-from datetime import datetime
 from app.routes.endpoint import Endpoint
 from app.models.swap import Swap
 from app.item_dbhandler import ItemRepository
+from app.function import getUnreadCount
 
 class RequestSwap(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -44,5 +44,8 @@ class RequestSwap(Endpoint):
             'myItems': eligible_my_items, # Pass the filtered list
         }
 
+        user_id = session['user_id']
+        total_unread = getUnreadCount(self.flask_app, user_id)
+
         # Render the request swap page
-        return render_template('request_swap.html', **context)
+        return render_template('request_swap.html', **context, total_unread=total_unread)

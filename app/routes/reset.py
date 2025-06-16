@@ -2,6 +2,7 @@ from flask import render_template, request, flash, redirect, url_for, session
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.dbhandler import AdminDatabaseTools
+from app.function import getUnreadCount
 
 class Reset(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -21,8 +22,11 @@ class Reset(Endpoint):
                 return redirect(url_for('login'))
             else:
                 flash('Confirmation text did not match. Database was not reset.', 'danger')
+
+        user_id = session['user_id']
+        total_unread = getUnreadCount(self.flask_app, user_id)
                 
-        return render_template('reset.html')
+        return render_template('reset.html', total_unread=total_unread)
 
 
 

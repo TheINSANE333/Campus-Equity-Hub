@@ -5,7 +5,7 @@ from app.app_stub import Flask_App_Stub
 from app.swap_dbhandler import SwapRepository
 from app.item_dbhandler import ItemRepository
 from app.routes.endpoint import Endpoint
-from app.function import allowed_file
+from app.function import allowed_file, getUnreadCount
 
 class ViewSwap(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -27,4 +27,7 @@ class ViewSwap(Endpoint):
             'item': item,
             'target': target
         }
-        return render_template('view_swap.html', **context)
+
+        user_id = session['user_id']
+        total_unread = getUnreadCount(self.flask_app, user_id)
+        return render_template('view_swap.html', **context, total_unread=total_unread)

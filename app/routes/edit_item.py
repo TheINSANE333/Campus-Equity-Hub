@@ -4,7 +4,7 @@ from flask import render_template, request, url_for, flash, session, redirect
 from app.app_stub import Flask_App_Stub
 from app.item_dbhandler import ItemRepository
 from app.routes.endpoint import Endpoint
-from app.function import allowed_file
+from app.function import allowed_file, getUnreadCount
 
 class EditItem(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -43,5 +43,8 @@ class EditItem(Endpoint):
             
             flash('Your item has been updated successfully!', 'success')
             # return redirect(url_for('my_items'))
+
+        user_id = session['user_id']
+        total_unread = getUnreadCount(self.flask_app, user_id)
         
-        return render_template('edit_item.html', item=item)
+        return render_template('edit_item.html', item=item, total_unread=total_unread)

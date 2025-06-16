@@ -3,6 +3,7 @@ from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.chat_dbhandler import ChatRepository
 from app.dbhandler import UserRepository
+from app.function import getUnreadCount
 
 class ChatWithUser(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -53,11 +54,14 @@ class ChatWithUser(Endpoint):
         unread_counts = chat_dbhandler.get_unread_counts(current_user_id)
         
         unread_by_user = {sender_id: count for sender_id, count in unread_counts}
+
+        total_unread = getUnreadCount(self.flask_app, current_user_id)
         
         return render_template(
             'chat_with_user.html',
             chat_partner=chat_partner,
             messages=messages,
             users=users,
-            unread_by_user=unread_by_user
+            unread_by_user=unread_by_user, 
+            total_unread=total_unread
         )

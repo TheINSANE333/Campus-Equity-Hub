@@ -3,7 +3,7 @@ from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.dbhandler import UserRepository # For fetching user role
 from app.item_dbhandler import ItemRepository
-from app.function import dateCounter
+from app.function import dateCounter, getUnreadCount
 
 # Import Item and Swap models for querying
 from app.models.item import Item
@@ -77,4 +77,7 @@ class Dashboard(Endpoint):
             'myItems': my_items_for_display
         }
 
-        return render_template('dashboard.html', **context)
+        user_id = session['user_id']
+        total_unread = getUnreadCount(self.flask_app, user_id)
+
+        return render_template('dashboard.html', **context, total_unread=total_unread)

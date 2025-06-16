@@ -110,3 +110,9 @@ class ChatRepository(DbHandler):
             ((Chat.sender_id == sender_id) & (Chat.receiver_id == receiver_id)) |
             ((Chat.sender_id == receiver_id) & (Chat.receiver_id == sender_id))
         ).order_by(Chat.timestamp).all()
+    
+    def get_total_unread(self, user_id) -> int:
+        unread_counts = self.get_unread_counts(user_id)
+        total_unread = sum(count for _, count in unread_counts)
+        print("Unread counts: ", total_unread)
+        return total_unread

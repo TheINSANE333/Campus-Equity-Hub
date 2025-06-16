@@ -108,7 +108,13 @@
                 <div class="col">
                     <a href="{{ url_for('chat') }}" class="nav-item {% if request.endpoint == 'chat' %}active{% endif %} d-block">
                         <i class="fas fa-comments d-block"></i>
+                        
                         <small>Message</small>
+                        {% if total_unread > 0 %}
+                        <span class="position-absolute top-0 start-60 translate-middle badge rounded-pill bg-danger">
+                            {{ total_unread }}
+                        </span>
+                        {% endif %}
                     </a>
                 </div>
                 <div class="col">
@@ -290,6 +296,8 @@
                 }
             }
         });
+
+        
     </script>
     {% endif %}
 </body>

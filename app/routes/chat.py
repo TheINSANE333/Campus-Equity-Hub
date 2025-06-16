@@ -28,5 +28,6 @@ class Chat(Endpoint):
         unread_counts = chat_dbHandler.get_unread_counts(user_id)
         
         unread_by_user = {sender_id: count for sender_id, count in unread_counts}
+        total_unread = chat_dbHandler.get_total_unread(user_id)
         
-        return render_template('chat.html', users=users, unread_by_user=unread_by_user)
+        return render_template('chat.html', users=users, unread_by_user=unread_by_user, total_unread=total_unread   )

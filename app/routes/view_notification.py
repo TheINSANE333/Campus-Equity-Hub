@@ -2,6 +2,7 @@ from flask import render_template, request, flash, redirect, url_for, session, j
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.notification_dbhandler import NotificationRepository
+from app.function import getUnreadCount
 
 class ViewNotification(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -38,4 +39,7 @@ class ViewNotification(Endpoint):
             hidden_ids = update_delete_notification.hidden_notifications.get(user_id, [])
             notifications = [n for n in notifications if n.id not in hidden_ids]
 
-        return render_template('notification.html', notifications=notifications)
+        user_id = session['user_id']
+        total_unread = getUnreadCount(self.flask_app, user_id)
+
+        return render_template('notification.html', notifications=notifications, total_unread=total_unread)

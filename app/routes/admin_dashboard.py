@@ -2,6 +2,7 @@ from flask import render_template, url_for, flash, session, redirect
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.dbhandler import UserRepository, Authenticator
+from app.function import getUnreadCount
 
 class AdminDashboard(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -24,5 +25,7 @@ class AdminDashboard(Endpoint):
         dbHandler = UserRepository(self.flask_app)
         user_id = session['user_id']
         users = dbHandler.get_all_users(user_id)
+
+        total_unread = getUnreadCount(self.flask_app, user_id)
         
-        return render_template('admin_dashboard.html', users=users)
+        return render_template('admin_dashboard.html', users=users, total_unread=total_unread)
