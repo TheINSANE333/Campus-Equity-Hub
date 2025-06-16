@@ -11,8 +11,7 @@
                 </div>
                 <div class="card-body">
                     <p><strong>Total Users:</strong> {{ users|length }}</p>
-                    <p><strong>Admin Users:</strong> {{ users|selectattr('is_admin', 'equalto', true)|list|length }}</p>
-                    
+                    <p><strong>Admin Users:</strong> {{ users|selectattr('role', 'equalto', 'admin')|list|length }}</p>
                 </div>
             </div>
         </div>
@@ -73,4 +72,6 @@
         </div>
     </div>
 </div>
+<br>
+<br>
 {% endblock %}
