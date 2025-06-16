@@ -48,9 +48,9 @@
             
             <div class="d-flex gap-2">
                 {% if session.get('user_id') and session.get('user_id') != item.user_id %}
-                <button class="btn btn-primary" id="contact-seller" data-user-id="{{ item.user_id }}">
+                <a href="{{ url_for('chat_with_user', user_id=item.user.id, item_id=item.id) }}" class="btn btn-primary" id="contact-seller" data-user-id="{{ item.user_id }}">
                     Contact Seller
-                </button>
+                </a>
                 {% endif %}
             </div>
         </div>

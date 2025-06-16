@@ -120,63 +120,21 @@
             <div id="discover-content" class="content-pane active">
                 <h6 class="mb-3">Recommended For You</h6>
 
-                {% if allItems %}
-                {% for item in allItems[:3] %}
-                    {% if item in items %}
-                    <div class="item-card">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h6 class="mb-1">{{ item.name }}</h6>
-                        </div>
-                        <div class="text-muted mb-3">
-                            <small>{{ item.category }}</small><br>
-                            <small>{{ item.user.username }}</small>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <a href="{{ url_for('request_swap_page', item_id=item.id) }}" class="btn btn-primary btn-sm px-3">Request Swap</a>
-                            <button class="btn btn-outline-secondary btn-sm px-3">Message</button>
-                        </div>
+                {% if items %}
+                {% for item in items[:3] %}
+                <div class="item-card">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="mb-1">{{ item.name }}</h6>
                     </div>
-                    {% else %}
-                        {% if user.role == 'special' %}
-                        <div class="item-card">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h6 class="mb-1">{{ item.name }}</h6>
-                                <span class="priority-badge">
-                                    <i class="fas fa-star me-1"></i>
-                                    Priority Access Exclusive
-                                </span>
-                            </div>
-                            <div class="text-muted mb-3">
-                                <small>Special: {{ item.category }}</small><br>
-                                <small>{{ item.user.username }}</small>
-                            </div>
-                            
-                            <div class="d-flex gap-2">
-                                <a href="{{ url_for('request_swap_page', item_id=item.id) }}" class="btn btn-primary btn-sm px-3">Request Swap</a>
-                                <button class="btn btn-outline-secondary btn-sm px-3">Message</button>
-                            </div>
-                        </div>
-                        {% else %}
-                        <div class="item-card">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h6 class="mb-1">{{ item.name }}</h6>
-                                <span class="priority-badge non">
-                                    <i class="fas fa-lock me-1"></i>
-                                    Priority Access Exclusive
-                                </span>
-                            </div>
-                            <div class="text-muted mb-3">
-                                <small>Special: {{ item.category }}</small><br>
-                                <small>{{ item.user.username }}</small>
-                            </div>
-                            
-                            <div class="d-flex gap-2">
-                                <a href="{{ url_for('request_swap_page', item_id=item.id) }}" class="btn btn-primary btn-sm px-3 disabled">Request Swap</a>
-                                <button class="btn btn-outline-secondary btn-sm px-3" disabled>Message</button>
-                            </div>
-                        </div>
-                        {% endif %}
-                    {% endif %}
+                    <div class="text-muted mb-3">
+                        <small>{{ item.category }}</small><br>
+                        <small>{{ item.user.username }}</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('request_swap_page', item_id=item.id) }}" class="btn btn-primary btn-sm px-3">Request Swap</a>
+                        <button class="btn btn-outline-secondary btn-sm px-3">Message</button>
+                    </div>
+                </div>
                 {% endfor %}
                 {% else %}
                 <div class="item-card">
