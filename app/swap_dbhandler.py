@@ -45,4 +45,11 @@ class SwapRepository(DbHandler):
         swap.dealTime = time
         self.db.session.add(swap)
         self.db.session.commit()
+
+    def get_swap_completed_count(self, user_id) -> List[Item]:
+        """Get number of available items ordered by timestamp (newest first)"""
+        return Swap.query.join(Item, Swap.item_id == Item.id).filter(self.db.or_(
+            self.db.and_(Swap.user_id==user_id, Swap.status=='accepted'),
+            self.db.and_(Item.user_id==user_id, Swap.status=='accepted')
+        )).count()
         

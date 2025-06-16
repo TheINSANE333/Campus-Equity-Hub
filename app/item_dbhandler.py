@@ -76,6 +76,10 @@ class ItemRepository(DbHandler):
         """Get all available items ordered by timestamp (newest first)"""
         return Item.query.filter_by(approval='approved', status='available').order_by(Item.timestamp.desc()).all()
     
+    def get_available_items_count(self) -> List[Item]:
+        """Get number of available items ordered by timestamp (newest first)"""
+        return Item.query.filter_by(approval='approved', status='available').count()
+    
     def get_user_items(self, userId) -> List[Item]:
         """Get all available items ordered by timestamp (newest first)"""
         return Item.query.filter_by(user_id=userId).order_by(Item.timestamp.desc()).all()
@@ -83,6 +87,9 @@ class ItemRepository(DbHandler):
     def get_pending_items(self) -> List[Item]:
         """Get all pending items ordered by timestamp (newest first)"""
         return Item.query.filter_by(approval='pending', status='available').order_by(Item.timestamp.desc()).all()
+    
+    def get_shared_item_count(self, userId) -> List[Item]:
+        return Item.query.filter_by(user_id=userId, status='sold').count()
     
     def upload_image(self, item, file) -> None:
         # Handle image upload
