@@ -6,6 +6,7 @@ from app.models.item import Item
 from app.function import allowed_file
 from abc import ABC, abstractmethod
 from typing import List
+from sqlalchemy import or_, and_
 
 class DbHandler(ABC):
     _instance = None
@@ -127,9 +128,43 @@ class ItemRepository(DbHandler):
     def get_item_by_category(self, category) -> List[Item]:
         return Item.query.filter_by(status="available", approval='approved', category=category).order_by(Item.timestamp.desc()).all()
     
-    def find_item(self, item_name: str) -> List[Item]: 
+    def find_item(self, item_name: str, category: str) -> List[Item]:
+        
+        # Find specific item in specific categories
+        if category != 'All' and item_name !='':
+            return Item.query.filter(
+                and_(
+                    Item.status == "available",
+                    Item.approval == "approved",
+                    Item.category == category,
+                    Item.name.ilike(f"%{item_name}%")
+                )
+            ).order_by(Item.timestamp.desc()).limit(10).all()
+
+        # Find all items in specific category
+        elif category !='All' and item_name == '':
+            return Item.query.filter(
+                and_(
+                    Item.status == "available",
+                    Item.approval == "approved",
+                    Item.category == category
+                )
+            ).order_by(Item.timestamp.desc()).limit(10).all()
+        
+        # Find specific items in all categories
+        elif category =='All' and item_name != '':
+            return Item.query.filter(
+                and_(
+                    Item.status == "available",
+                    Item.approval == "approved",
+                    Item.name.ilike(f"%{item_name}%")
+                )
+            ).order_by(Item.timestamp.desc()).limit(10).all()
+        
+        # Find all items in all categories
         return Item.query.filter(
-            self.db.or_(
-                Item.name.ilike(f'%{item_name}%'),
+            and_(
+                Item.status == "available",
+                Item.approval == "approved"
             )
-        ).limit(10).all()
+        ).order_by(Item.timestamp.desc()).limit(10).all()
