@@ -4,7 +4,7 @@ from flask import render_template, request, url_for, flash, session, redirect
 from app.app_stub import Flask_App_Stub
 from app.item_dbhandler import ItemRepository
 from app.routes.endpoint import Endpoint
-from app.function import allowed_file
+from app.function import allowed_file, getUnreadCount
 
 class ItemApprovalDetail(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -19,4 +19,8 @@ class ItemApprovalDetail(Endpoint):
         item_dbHandler = ItemRepository(self.flask_app)
 
         item = item_dbHandler.query_item(item_id)
-        return render_template('item_approval_detail.html', item=item)
+
+        user_id = session['user_id']
+        total_unread = getUnreadCount(self.flask_app, user_id)
+
+        return render_template('item_approval_detail.html', item=item, total_unread=total_unread)

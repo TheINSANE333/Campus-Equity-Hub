@@ -33,10 +33,16 @@ class Marketplace(Endpoint):
 
         items = item_dbHandler.find_item(item_name, category_filter)
 
+        items = [item for item in items if item.user_id != user.id]
+
+        unfiltered_items = items
+
         if user_role != 'special' and user_role != 'admin':
             items = [item for item in items if item.timestamp <= two_days_ago]
+
+        
 
         user_id = session['user_id']
         total_unread = getUnreadCount(self.flask_app, user_id)
 
-        return render_template('marketplace.html', items=items, selected_category=category_filter, total_unread=total_unread)
+        return render_template('marketplace.html', items=items, unfiltered_items=unfiltered_items, total_unread=total_unread)

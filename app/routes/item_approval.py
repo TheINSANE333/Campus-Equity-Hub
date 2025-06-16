@@ -16,6 +16,10 @@ class ItemApproval(Endpoint):
         self.methods = ['GET', 'POST']
 
     def item_approval(self):
+        if 'user_id' not in session:
+            flash('Please log in to edit items.', 'danger')
+            return redirect(url_for('login'))
+         
         item_dbHandler = ItemRepository(self.flask_app)
 
         approval = item_dbHandler.get_pending_items()
