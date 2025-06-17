@@ -88,9 +88,6 @@
         <div class="col">
             <div class="category-card">
                 <a href="{{ url_for('marketplace', category='All') }}" style="text-decoration: none; color: black;">
-                    {% if itemCount %}
-                    <div class="notification-badge">{{itemCount}}</div>
-                    {% endif %}
                     <div class="category-icon">
                         <i class="fas fa-ellipsis-h"></i>
                     </div>
