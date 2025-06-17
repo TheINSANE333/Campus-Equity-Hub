@@ -50,11 +50,8 @@ class AddItem(Endpoint):
             
             flash(message, 'success' if success else 'danger')
             # return redirect(url_for('my_items'))
-
-        user_id = session['user_id']
-        total_unread = getUnreadCount(self.flask_app, user_id)
     
-        return render_template('add_item.html', total_unread=total_unread)
+        return render_template('add_item.html')
     
 class NewItemCommand:
     def __init__(self, item_dbHandler):

@@ -30,6 +30,4 @@ class ViewSwap(Endpoint):
             'user': current_user
         }
 
-        user_id = session['user_id']
-        total_unread = getUnreadCount(self.flask_app, user_id)
-        return render_template('view_swap.html', **context, total_unread=total_unread)
+        return render_template('view_swap.html', **context)

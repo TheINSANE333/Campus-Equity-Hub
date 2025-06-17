@@ -14,7 +14,6 @@ class SignupAdmin(Endpoint):
         self.methods = ['GET', 'POST']
 
     def signupAdmin(self):
-        total_unread = getUnreadCount(self.flask_app, 1)
         if request.method == 'POST':
             username = request.form['username']
             email = request.form['email']
@@ -29,7 +28,7 @@ class SignupAdmin(Endpoint):
             flash(message, 'success' if success else 'danger')
             return redirect(url_for('login' if success else 'signup'))
         
-        return render_template('signup_admin.html', total_unread=total_unread)
+        return render_template('signup_admin.html')
 
 class SignupCommand:
     def __init__(self, dbHandler):

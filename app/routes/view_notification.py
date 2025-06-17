@@ -39,7 +39,4 @@ class ViewNotification(Endpoint):
             hidden_ids = update_delete_notification.hidden_notifications.get(user_id, [])
             notifications = [n for n in notifications if n.id not in hidden_ids]
 
-        user_id = session['user_id']
-        total_unread = getUnreadCount(self.flask_app, user_id)
-
-        return render_template('notification.html', notifications=notifications, total_unread=total_unread)
+        return render_template('notification.html', notifications=notifications)

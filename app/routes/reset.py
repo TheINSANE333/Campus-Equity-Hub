@@ -22,11 +22,8 @@ class Reset(Endpoint):
                 return redirect(url_for('login'))
             else:
                 flash('Confirmation text did not match. Database was not reset.', 'danger')
-
-        user_id = session['user_id']
-        total_unread = getUnreadCount(self.flask_app, user_id)
                 
-        return render_template('reset.html', total_unread=total_unread)
+        return render_template('reset.html')
 
 
 
