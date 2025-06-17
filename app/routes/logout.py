@@ -17,4 +17,4 @@ class Logout(Endpoint):
             session.pop('username', None)
             flash('You have been logged out.', 'info')
         
-        return render_template('index.html')
+        return redirect('/')

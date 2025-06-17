@@ -15,14 +15,20 @@ class Reset(Endpoint):
         self.methods = ['GET', 'POST']
 
     def reset(self):
+        if 'user_id' not in session or session['user_id'] != 1:
+            flash('Please log in as admin to access this page.', 'danger')
+            return redirect(url_for('login'))
+        
         if request.method == 'POST':
             if request.form.get('confirm') == 'RESET':
                 dbHandler = AdminDatabaseTools(self.flask_app)
                 dbHandler.reset_database()
+                print("Db reset successful")
                 flash('Database has been reset successfully. Restarting application...', 'success')
             
                 # Restart the application
                 os.execv(sys.executable, ['python'] + sys.argv)
+
             else:
                 flash('Confirmation text did not match. Database was not reset.', 'danger')
                 
