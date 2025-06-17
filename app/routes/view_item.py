@@ -20,6 +20,6 @@ class ViewItem(Endpoint):
 
         item = item_dbHandler.query_item(item_id)
 
-        user_id = session['user_id']
+        user_id = c
         total_unread = getUnreadCount(self.flask_app, user_id)
         return render_template('view_item.html', item=item, total_unread=total_unread)
