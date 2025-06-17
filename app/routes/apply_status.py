@@ -20,9 +20,6 @@ class ApplyStatus(Endpoint):
             flash('Please log in to access this page.', 'danger')
             return redirect(url_for('login'))
         
-        user_id = session['user_id']
-        total_unread = getUnreadCount(self.flask_app, user_id)
-        
         if request.method == 'POST':
             name = request.form['name']
             ic = request.form['ic']
@@ -47,9 +44,9 @@ class ApplyStatus(Endpoint):
             
             flash(message, 'success' if success else 'danger')
             if success:
-                return render_template('dashboard.html', total_unread=total_unread)
+                return render_template('dashboard.html')
     
-        return render_template('apply_status.html', total_unread=total_unread)
+        return render_template('apply_status.html')
     
 class NewApplicationCommand:
     def __init__(self, application_dbHandler):

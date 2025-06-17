@@ -4,6 +4,7 @@ from app.extensions import Extensions, db, bcrypt
 from app.app import Flask_App
 from app.endpoint_factory import EndpointFactory
 from app.seeder import DatabaseSeeder
+from app.context_processors import register_context_processors
 
 class FlaskAppBuilder: #builder
     """Builder class to set up the Flask application."""
@@ -40,6 +41,11 @@ class FlaskAppBuilder: #builder
         flask_app = Flask_App(self._app, self._db, self._bcrypt, self._session)
         endpoint_factory = EndpointFactory(flask_app)
         endpoint_factory.register_endpoints1()
+        return self
+    
+    def register_context_processors(self) -> 'FlaskAppBuilder':
+        flask_app_instance = Flask_App(self._app, self._db, self._bcrypt, self._session)
+        register_context_processors(self._app, flask_app_instance)
         return self
 
     def build(self) -> Flask_App:

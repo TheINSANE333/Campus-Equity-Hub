@@ -61,15 +61,12 @@ class ChatWithUser(Endpoint):
         unread_counts = chat_dbhandler.get_unread_counts(current_user_id)
         
         unread_by_user = {sender_id: count for sender_id, count in unread_counts}
-
-        total_unread = getUnreadCount(self.flask_app, current_user_id)
         
         return render_template(
             'chat_with_user.html',
             chat_partner=chat_partner,
             messages=messages,
             users=users,
-            unread_by_user=unread_by_user, 
-            total_unread=total_unread, 
+            unread_by_user=unread_by_user,
             item=item
         )

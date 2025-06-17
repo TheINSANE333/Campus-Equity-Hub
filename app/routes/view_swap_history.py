@@ -60,7 +60,4 @@ class ViewSwapHistory(Endpoint):
             }
             swap_history.append(swap_data)
 
-            user_id = session['user_id']
-            total_unread = getUnreadCount(self.flask_app, user_id)
-
-        return render_template('swap_history.html', swaps=swap_history, total_unread=total_unread)
+        return render_template('swap_history.html', swaps=swap_history)

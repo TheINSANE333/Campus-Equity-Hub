@@ -43,8 +43,5 @@ class EditItem(Endpoint):
             
             flash('Your item has been updated successfully!', 'success')
             # return redirect(url_for('my_items'))
-
-        user_id = session['user_id']
-        total_unread = getUnreadCount(self.flask_app, user_id)
         
-        return render_template('edit_item.html', item=item, total_unread=total_unread)
+        return render_template('edit_item.html', item=item)

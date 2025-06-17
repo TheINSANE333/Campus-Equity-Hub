@@ -106,7 +106,8 @@ class ItemRepository(DbHandler):
             
             # Generate unique filename
             filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
-            file.save(os.path.join(self.app.config['UPLOAD_FOLDER'], filename))
+            os.makedirs('app/static/uploads', exist_ok=True)
+            file.save(os.path.join('app/static/uploads', filename))
             item.image_filename = filename
     
             self.db.session.commit()

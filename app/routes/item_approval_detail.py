@@ -28,7 +28,4 @@ class ItemApprovalDetail(Endpoint):
 
         item = item_dbHandler.query_item(item_id)
 
-        user_id = session['user_id']
-        total_unread = getUnreadCount(self.flask_app, user_id)
-
-        return render_template('item_approval_detail.html', item=item, total_unread=total_unread)
+        return render_template('item_approval_detail.html', item=item)

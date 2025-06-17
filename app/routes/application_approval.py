@@ -20,7 +20,4 @@ class ApplicationApproval(Endpoint):
 
         approval = application_dbHandler.get_pending_approval()
 
-        user_id = session['user_id']
-        total_unread = getUnreadCount(self.flask_app, user_id)
-
-        return render_template('application_approval.html', approval=approval, total_unread=total_unread)
+        return render_template('application_approval.html', approval=approval)

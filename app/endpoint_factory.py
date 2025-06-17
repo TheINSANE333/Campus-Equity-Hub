@@ -1,3 +1,4 @@
+from app.app_stub import Flask_App_Stub
 from app.routes.index import Index
 from app.routes.signup import Signup
 from app.routes.login import Login
@@ -24,7 +25,6 @@ from app.routes.view_notification import ViewNotification
 from app.routes.update_delete_notification import UpdateDeleteNotification
 from app.routes.profile import Profile
 from app.routes.process_profile import ProcessProfile
-from app.app_stub import Flask_App_Stub
 from app.routes.request_swap import RequestSwap
 from app.routes.submit_swap_request import SubmitSwapRequest
 from app.routes.view_swap import ViewSwap
@@ -34,6 +34,7 @@ from app.routes.search_api import SearchApi
 from app.routes.search_api_item import SearchApiItem
 from app.routes.view_swap_history import ViewSwapHistory
 from app.routes.signup_admin import SignupAdmin
+from app.routes.reset import Reset
 
 class EndpointFactory: #factory method
     def __init__(self, app: Flask_App_Stub) -> None:

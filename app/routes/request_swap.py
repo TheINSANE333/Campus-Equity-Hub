@@ -44,8 +44,5 @@ class RequestSwap(Endpoint):
             'myItems': eligible_my_items, # Pass the filtered list
         }
 
-        user_id = session['user_id']
-        total_unread = getUnreadCount(self.flask_app, user_id)
-
         # Render the request swap page
-        return render_template('request_swap.html', **context, total_unread=total_unread)
+        return render_template('request_swap.html', **context)

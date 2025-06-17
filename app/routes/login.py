@@ -14,8 +14,6 @@ class Login(Endpoint):
         self.methods = ['GET', 'POST']
 
     def login(self):
-        total_unread = getUnreadCount(self.flask_app, 0)
-
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
@@ -44,4 +42,4 @@ class Login(Endpoint):
             else:
                 flash('Login unsuccessful. Please check your username and password.', 'danger')
 
-        return render_template('login.html', total_unread=total_unread)
+        return render_template('login.html')
