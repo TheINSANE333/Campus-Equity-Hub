@@ -37,7 +37,7 @@
                 <div class="col-auto">
                     <div class="search-container">
                         <form id="search-form" action="{{ url_for('marketplace') }}" method="GET" style="display: flex; align-items: center;">
-                            <button type="submit" style="background: none; border: none; cursor: pointer;">
+                            <button type="submit" style="background: none; border: none; cursor: pointer; padding-right: 0.1px;">
                                 <i class="fas fa-search"></i>
                             </button>
                             <input type="text" class="form-control search-input" name="name" id="search-input" placeholder="Search for items..." value="{{ query }}">
