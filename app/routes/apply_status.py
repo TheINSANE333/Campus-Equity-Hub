@@ -44,7 +44,7 @@ class ApplyStatus(Endpoint):
             
             flash(message, 'success' if success else 'danger')
             if success:
-                return render_template('dashboard.html')
+                return render_template('dashboard.html', total_unread=total_unread)
             
         user_id = session['user_id']
         total_unread = getUnreadCount(self.flask_app, user_id)
