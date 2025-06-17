@@ -145,7 +145,7 @@ class Authenticator(DbHandler):
         raise NotImplementedError("Authenticator does not implement reset_database")
 
 class AdminDatabaseTools(DbHandler):
-    def reset_database(self) -> None:
+    def reset_database(self) -> None: # This will reset every database
         try:
             self.db.drop_all()
             self.db.create_all()

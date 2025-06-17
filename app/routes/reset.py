@@ -2,7 +2,8 @@ from flask import render_template, request, flash, redirect, url_for, session
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.dbhandler import AdminDatabaseTools
-from app.function import getUnreadCount
+import os
+import sys
 
 class Reset(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -18,8 +19,10 @@ class Reset(Endpoint):
             if request.form.get('confirm') == 'RESET':
                 dbHandler = AdminDatabaseTools(self.flask_app)
                 dbHandler.reset_database()
-                flash('Database has been reset successfully. Please log in again.', 'success')
-                return redirect(url_for('login'))
+                flash('Database has been reset successfully. Restarting application...', 'success')
+            
+                # Restart the application
+                os.execv(sys.executable, ['python'] + sys.argv)
             else:
                 flash('Confirmation text did not match. Database was not reset.', 'danger')
                 
