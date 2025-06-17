@@ -14,7 +14,7 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             background-color: #fff;
             padding: 30px;
@@ -74,6 +74,39 @@
         .back-button:hover {
             background-color: #1d4ed8;
         }
+
+        .requester-badge {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .owner-badge {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            color: #ff9800;
+            font-weight: 500;
+        }
+
+        .status-accepted {
+            color: #4caf50;
+            font-weight: 500;
+        }
+
+        .status-rejected {
+            color: #f44336;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -85,6 +118,7 @@
         <tr>
             <th>Item</th>
             <th>Swap With</th>
+            <th>Role</th>
             <th>Deal Time</th>
             <th>Status</th>
         </tr>
@@ -95,13 +129,22 @@
         <tr>
             <td>{{ swap.item_name }}</td>
             <td>{{ swap.swap_with_username }}</td>
+            <td>
+                {% if swap.is_requester %}
+                <span class="requester-badge">Requester</span>
+                {% else %}
+                <span class="owner-badge">Item Owner</span>
+                {% endif %}
+            </td>
             <td>{{ swap.dealTime }}</td>
-            <td>{{ swap.status }}</td>
+            <td>
+                <span class="status-{{ swap.status.lower() }}">{{ swap.status }}</span>
+            </td>
         </tr>
         {% endfor %}
         {% else %}
         <tr>
-            <td colspan="4" class="empty-message">No swap history found.</td>
+            <td colspan="5" class="empty-message">No swap history found.</td>
         </tr>
         {% endif %}
         </tbody>
