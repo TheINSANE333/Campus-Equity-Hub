@@ -24,16 +24,3 @@ Just simply access the hosted website
 Default users:
 1.  Username: admin
      Password: admin123
-	 
-2.  Username: user1 
-     Password: user1123
-	 
-Default items:
-1.  Item1
-
-Default campuses: 
-1.  Multimedia University
-2.  Monash University
-3.  University Malaya
-
- 
