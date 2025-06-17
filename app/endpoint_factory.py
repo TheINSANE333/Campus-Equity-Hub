@@ -22,7 +22,7 @@ from app.routes.item_approval import ItemApproval
 from app.routes.item_approval_detail import ItemApprovalDetail
 from app.routes.process_item import ProcessItem
 from app.routes.view_notification import ViewNotification
-from app.routes.update_delete_notification import UpdateDeleteNotification
+from app.routes.update_notification import UpdateNotification
 from app.routes.profile import Profile
 from app.routes.process_profile import ProcessProfile
 from app.routes.request_swap import RequestSwap
@@ -35,6 +35,7 @@ from app.routes.search_api_item import SearchApiItem
 from app.routes.view_swap_history import ViewSwapHistory
 from app.routes.signup_admin import SignupAdmin
 from app.routes.reset import Reset
+from app.routes.delete_notification import DeleteNotification
 
 class EndpointFactory: #factory method
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -63,7 +64,7 @@ class EndpointFactory: #factory method
             'ItemApprovalDetail': ItemApprovalDetail,
             'ProcessItem': ProcessItem,
             'ViewNotification': ViewNotification,
-            'UpdateDeleteNotification': UpdateDeleteNotification,
+            'UpdateNotification': UpdateNotification,
             'Profile': Profile,
             'ProcessProfile': ProcessProfile,
             'RequestSwap': RequestSwap,
@@ -74,7 +75,8 @@ class EndpointFactory: #factory method
             'SearchApi': SearchApi,
             'SearchApiItem': SearchApiItem,
             'ViewSwapHistory': ViewSwapHistory, 
-            'SignupAdmin': SignupAdmin
+            'SignupAdmin': SignupAdmin,
+            'DeleteNotification': DeleteNotification
         }
         self._cache = {}
 
