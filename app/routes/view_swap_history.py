@@ -5,6 +5,7 @@ from app.models.item import Item
 import datetime
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
+from app.function import getUnreadCount
 
 class ViewSwapHistory(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -59,4 +60,7 @@ class ViewSwapHistory(Endpoint):
             }
             swap_history.append(swap_data)
 
-        return render_template('swap_history.html', swaps=swap_history)
+            user_id = session['user_id']
+            total_unread = getUnreadCount(self.flask_app, user_id)
+
+        return render_template('swap_history.html', swaps=swap_history, total_unread=total_unread)
