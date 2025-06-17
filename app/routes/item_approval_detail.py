@@ -16,6 +16,14 @@ class ItemApprovalDetail(Endpoint):
         self.methods = ['GET', 'POST']
 
     def item_approval_detail(self, item_id):
+        if 'user_id' not in session:
+            flash('Please log in to access this page.', 'danger')
+            return redirect(url_for('login'))
+        
+        if session['role'] != "admin":
+            flash ('Please log in as admin to access this page.', 'danger')
+            return redirect(url_for('login'))
+        
         item_dbHandler = ItemRepository(self.flask_app)
 
         item = item_dbHandler.query_item(item_id)

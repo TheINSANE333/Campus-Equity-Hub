@@ -1,4 +1,4 @@
-from flask import request, redirect, url_for, flash
+from flask import request, redirect, url_for, flash, session
 from app.app_stub import Flask_App_Stub
 from app.item_dbhandler import ItemRepository
 from app.routes.endpoint import Endpoint
@@ -13,6 +13,14 @@ class ProcessItem(Endpoint):
         self.methods = ['POST']
         
     def process_item(self, item_id):
+        if 'user_id' not in session:
+            flash('Please log in to access this page.', 'danger')
+            return redirect(url_for('login'))
+        
+        if session['role'] != "admin":
+            flash ('Please log in as admin to access this page.', 'danger')
+            return redirect(url_for('login'))
+        
         action = request.form.get('action')
         
         # Get the item from database
