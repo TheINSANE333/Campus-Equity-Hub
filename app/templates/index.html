@@ -1,6 +1,19 @@
 <!-- templates/index.html -->
 {% extends "layout.html" %}
 {% block content %}
+<style>
+body {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+</style>
+
 <div class="hero-section rounded-3">
     <div class="container-fluid py-5">
         <div class="row">
