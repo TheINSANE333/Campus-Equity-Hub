@@ -1,9 +1,10 @@
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from flask import flash, redirect, url_for, render_template
-from app.models.item import Item
+from app.item_dbhandler import ItemRepository
 from app.extensions import db
-from app.models.swap import Swap
+from app.swap_dbhandler import SwapRepository
+from app.models.item import Item
 
 
 class DeleteItem(Endpoint):
@@ -16,38 +17,24 @@ class DeleteItem(Endpoint):
         self.methods = ['POST']
 
     def delete_item(self, item_id):
-        item_to_delete = Item.query.get(item_id)
+        item_dbhandler = ItemRepository(self.flask_app)
+        swap_dbhandler = SwapRepository(self.flask_app)
+        item_to_delete = item_dbhandler.query_item(item_id)
 
         if not item_to_delete:
             flash('Item not found.', 'danger')
             return redirect(url_for('dashboard'))
 
         try:
+            swaps_to_update = swap_dbhandler.get_swaps_to_update(item_to_delete)
+
             # Mark the item as 'deleted'
             item_to_delete.status = 'deleted'
-            db.session.add(item_to_delete)
+            item_dbhandler.set_item_status(item_to_delete)
 
-            # Find pending swaps where the deleted item was the primary item (swap.item_id)
-            # The "requested user's item" (swap.target_item_id) should revert to 'available'.
-            swaps_to_update = Swap.query.filter(
-                Swap.item_id == item_to_delete.id,
-                Swap.status == 'pending'  # Consider only active pending swaps
-            ).all()
+            # Update related swaps
+            swap_dbhandler.update_status(swaps_to_update, item_dbhandler)
 
-            for swap in swaps_to_update:
-                # Update the status of the "requested user's item"
-                if swap.target_item_id:
-                    target_item_of_swap = Item.query.get(swap.target_item_id)
-                    if target_item_of_swap and target_item_of_swap.status == 'swapping':
-                        target_item_of_swap.status = 'available'
-                        db.session.add(target_item_of_swap)
-
-                # Update the swap record itself
-                swap.status = 'deleted'  # Changed from 'cancelled_item_unavailable'
-                db.session.add(swap)
-
-            db.session.commit()
-            flash('Item deleted successfully. Related pending swaps have been updated.', 'success')
         except Exception as e:
             db.session.rollback()
             flash(f'Error updating item status or related swaps: {str(e)}', 'danger')
