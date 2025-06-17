@@ -1,11 +1,12 @@
 from flask import request, flash, redirect, url_for, session
 from app.app_stub import Flask_App_Stub
-from app.models.item import Item
 from app.models.user import User # Import the User model
 from app.extensions import db
 from datetime import datetime
 from app.routes.endpoint import Endpoint
-from app.models.swap import Swap
+from app.swap_dbhandler import SwapRepository
+from app.item_dbhandler import ItemRepository
+from app.dbhandler import UserRepository
 
 class SubmitSwapRequest(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -18,14 +19,14 @@ class SubmitSwapRequest(Endpoint):
 
     def submit_swap_request(self, item_id):
         # Find the item to be swapped
-        item = Item.query.get_or_404(item_id)
+        item_dbhandler = ItemRepository(self.flask_app)
+        swap_dbhandler = SwapRepository(self.flask_app)
+        item = item_dbhandler.query_item(item_id)
         target_item_id = request.form['swapItem']
-        target_item = Item.query.get_or_404(target_item_id)
+        target_item = item_dbhandler.query_item(target_item_id)
 
         # Check if the item is available for swap
-        if item.status != 'available':
-            flash('This item is no longer available for swap.', 'danger')
-            return redirect(url_for('dashboard'))
+        swap_dbhandler.check_item_available(item)
 
         try:
             # Get the description from the form
@@ -37,42 +38,28 @@ class SubmitSwapRequest(Endpoint):
                 flash('User not logged in.', 'danger')
                 return redirect(url_for('login')) # Or your login route
 
-            user = User.query.get(current_user_id)
+            user_dbhandler = UserRepository(self.flask_app)
+            user = user_dbhandler.query_user_id(current_user_id)
+
             if not user:
                 flash('User not found.', 'danger')
                 return redirect(url_for('dashboard'))
 
             # Create a new swap
-            swap_item = Swap(
-                item_id=item.id,
-                user_id=current_user_id,
-                item_name=item.name,  # Add item_name
-                username=user.username,  # Add username
-                status='pending',
-                date=datetime.now(),
-                swap_description=description,
-                target_item_id=target_item.id,
-                target_item_name=target_item.name
-            )
+            swap_item = swap_dbhandler.get_swap_item(item, target_item, current_user_id, description, user)
 
             # Update the item status to "requested"
             item.status = 'requested'
             target_item.status = 'swapping'
+            swap_dbhandler.update_all_item_status(item)
+            swap_dbhandler.update_all_item_status(target_item)
 
-            # Add the swap item to the database
-            db.session.add(swap_item)
-            db.session.commit()
+            # Update the swap item to the database
+            swap_dbhandler.update_all_item_status(swap_item)
 
             # Verify the status update
-            updated_swap = Swap.query.filter_by(id=swap_item.id).first()
-            if updated_swap and updated_swap.status == 'pending':
-                flash('Your swap request has been submitted successfully.', 'success')
-            else:
-                flash('An unexpected error occurred while updating the swap status.', 'danger')
-                # Rollback if verification fails to ensure data consistency
-                db.session.rollback()
-
-
+            updated_swap = swap_dbhandler.get_item_status(swap_item)
+            swap_dbhandler.item_verify_status(updated_swap)
             # Redirect to the dashboard
             return redirect(url_for('dashboard'))
 
@@ -83,8 +70,3 @@ class SubmitSwapRequest(Endpoint):
             # logging.error(f"Error submitting swap request: {e}")
             flash('An error occurred while submitting your swap request. Please try again.', 'danger')
             return redirect(url_for('dashboard'))
-
-        # This line is likely unreachable due to the try/except block always redirecting.
-        # However, if it were reachable, it should probably redirect to a more specific page
-        # or the same page with an error if the try block was not entered.
-        return redirect(url_for('dashboard'))

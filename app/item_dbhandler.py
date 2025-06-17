@@ -7,6 +7,7 @@ from app.function import allowed_file
 from abc import ABC, abstractmethod
 from typing import List
 from sqlalchemy import or_, and_
+from flask import flash, redirect, url_for
 
 class DbHandler(ABC):
     _instance = None
@@ -71,6 +72,16 @@ class ItemRepository(DbHandler):
 
     def query_item(self, item_id: str) -> Item:
         return Item.query.get_or_404(item_id)
+
+    def set_item_status(self, status):
+        self.db.session.add(status)
+        self.db.session.commit()
+
+    def check_item_available(self, item):
+        if item.status != 'available':
+            flash('This item is no longer available for swap.', 'danger')
+            return redirect(url_for('dashboard'))
+        return True
 
     def get_available_items(self) -> List[Item]:
         """Get all available items ordered by timestamp (newest first)"""

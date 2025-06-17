@@ -21,22 +21,6 @@ class ViewNotification(Endpoint):
             return redirect(url_for('login'))
         
         notification_dbHandler = NotificationRepository(self.flask_app)
-        notifications = notification_dbHandler.get_user_notifications(session['user_id'])
-        
-        # Check if there are hidden notifications from update_delete_notification
-        update_delete_notification = None
-        try:
-            # Import inside method to avoid circular imports
-            from app.endpoint_factory import EndpointFactory
-            factory = EndpointFactory(self.flask_app)
-            update_delete_notification = factory.create_endpoint('UpdateDeleteNotification')
-        except Exception as e:
-            self.flask_app.logger.error(f"Error getting UpdateDeleteNotification instance: {str(e)}")
-
-        # Filter out hidden notifications if any
-        if update_delete_notification and hasattr(update_delete_notification, 'hidden_notifications'):
-            user_id = session['user_id']
-            hidden_ids = update_delete_notification.hidden_notifications.get(user_id, [])
-            notifications = [n for n in notifications if n.id not in hidden_ids]
+        notifications = notification_dbHandler.get_unread_notifications(session['user_id'])
 
         return render_template('notification.html', notifications=notifications)

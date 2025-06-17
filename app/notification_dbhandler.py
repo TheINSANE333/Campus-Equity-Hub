@@ -28,7 +28,7 @@ class DbHandler(ABC):
         self._initialized = True
 
     @abstractmethod
-    def create_notification(self, receiver_id: int, sender_id: int, message: str, notification_type: str, title: str = None) -> None: ...
+    def create_notification(self, receiver_id: int, sender_id: int, message: str, notification_type: str, status: str, title: str = None) -> None: ...
 
     @abstractmethod
     def get_user_notifications(self, user_id: int) -> List[Notification]: ...
@@ -37,7 +37,7 @@ class DbHandler(ABC):
     def mark_as_read(self, notification_id: int) -> None: ...
 
     @abstractmethod
-    def delete_notification(self, notification_id: int) -> None: ...
+    def set_notification_status_to_delete(self, notification_id: int) -> None: ...
 
     @classmethod
     def get_instance(cls, app: Flask_App_Stub = None):
@@ -50,7 +50,7 @@ class DbHandler(ABC):
         return cls._instance
 
 class NotificationRepository(DbHandler):
-    def create_notification(self, receiver_id: int, sender_id: int, message: str, notification_type: str, title: str = None) -> None:
+    def create_notification(self, receiver_id: int, sender_id: int, message: str, notification_type: str, status: str, title: str = None) -> None:
         """
         Create a new notification for a user
         
@@ -66,9 +66,9 @@ class NotificationRepository(DbHandler):
             sender_id=sender_id,
             message=message,
             notification_type=notification_type,
-            read=False,
-            timestamp=datetime.utcnow(),
-            title=title
+            timestamp=datetime.now(),
+            title=title,
+            status=status
         )
         
         self.db.session.add(new_notification)
@@ -80,38 +80,38 @@ class NotificationRepository(DbHandler):
     
     def get_unread_notifications(self, user_id: int) -> List[Notification]:
         """Get unread notifications for a specific user"""
-        return Notification.query.filter_by(receiver_id=user_id, read=False).order_by(Notification.timestamp.desc()).all()
+        return Notification.query.filter_by(receiver_id=user_id, status='unread').order_by(Notification.timestamp.desc()).all()
     
     def count_unread_notifications(self, user_id: int) -> int:
         """Count unread notifications for a specific user"""
-        return Notification.query.filter_by(receiver_id=user_id, read=False).count()
+        return Notification.query.filter_by(receiver_id=user_id, status='unread').count()
     
     def mark_as_read(self, notification_id: int) -> None:
         """Mark a specific notification as read"""
         notification = Notification.query.get_or_404(notification_id)
-        notification.read = True
+        notification.status = 'read'
+        self.db.session.add(notification)
         self.db.session.commit()
     
     def mark_all_as_read(self, user_id: int) -> None:
         """Mark all notifications for a user as read"""
-        notifications = Notification.query.filter_by(receiver_id=user_id, read=False).all()
+        notifications = Notification.query.filter_by(receiver_id=user_id, status='unread').all()
         for notification in notifications:
-            notification.read = True
+            notification.status = 'read'
+        self.db.session.add_all(notifications)
         self.db.session.commit()
     
-    def delete_notification(self, notification_id: int) -> None:
-        """Delete a specific notification"""
+    def set_notification_status_to_delete(self, notification_id: int) -> None:
+        """Set a specific notification to deleted status to prevent data lost"""
         notification = Notification.query.get_or_404(notification_id)
-        self.db.session.delete(notification)
+        notification.status = 'deleted'
+        self.db.session.add(notification)
         self.db.session.commit()
-    
-    def delete_all_notifications(self, user_id: int) -> None:
-        """Delete all notifications for a user"""
+
+    def set_all_notifications_to_delete(self, user_id: int) -> None:
+        """Set all notifications for a user to deleted status"""
         notifications = Notification.query.filter_by(receiver_id=user_id).all()
         for notification in notifications:
-            self.db.session.delete(notification)
+            notification.status = 'deleted'
+        self.db.session.add_all(notifications)
         self.db.session.commit()
-    
-    def get_notification_by_id(self, notification_id: int) -> Notification:
-        """Get a specific notification by ID"""
-        return Notification.query.get_or_404(notification_id)

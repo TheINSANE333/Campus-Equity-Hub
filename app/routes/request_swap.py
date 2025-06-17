@@ -1,11 +1,9 @@
 from flask import render_template, request, flash, redirect, url_for, session
 from app.app_stub import Flask_App_Stub
-from app.models.item import Item
-from app.extensions import db
 from app.routes.endpoint import Endpoint
-from app.models.swap import Swap
 from app.item_dbhandler import ItemRepository
 from app.function import getUnreadCount
+from app.swap_dbhandler import SwapRepository
 
 class RequestSwap(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -18,26 +16,22 @@ class RequestSwap(Endpoint):
 
     def request_swap_page(self, item_id):
         # Find the item to be swapped
-        item = Item.query.get_or_404(item_id)
+        item_dbhandler = ItemRepository(self.flask_app)
+        swap_dbhandler = SwapRepository(self.flask_app)
+        item = item_dbhandler.query_item(item_id)
 
         # Check if the item is available for swap
-        if item.status != 'available':
-            flash('This item is no longer available for swap.', 'danger')
-            return redirect(url_for('dashboard'))
+        item_dbhandler.check_item_available(item)
 
         if 'user_id' not in session:
             flash('Please log in to request a swap.', 'danger')
             return redirect(url_for('login'))
 
         current_user_id = session.get('user_id')
-        item_dbhandler = ItemRepository(self.flask_app)
         all_my_items = item_dbhandler.get_user_items(current_user_id)
 
         # Filter user's items: must be 'available' and 'approved'
-        eligible_my_items = [
-            item for item in all_my_items
-            if item.status == 'available' and item.approval == 'approved'
-        ]
+        eligible_my_items = swap_dbhandler.get_eligible_item(all_my_items)
 
         context = {
             'item': item,
