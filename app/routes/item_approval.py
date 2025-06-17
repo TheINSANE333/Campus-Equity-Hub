@@ -19,6 +19,10 @@ class ItemApproval(Endpoint):
         if 'user_id' not in session:
             flash('Please log in to edit items.', 'danger')
             return redirect(url_for('login'))
+        
+        if session['role'] != "admin":
+            flash ('Please log in as admin to access this page.', 'danger')
+            return redirect(url_for('login'))
          
         item_dbHandler = ItemRepository(self.flask_app)
 
