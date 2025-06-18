@@ -71,6 +71,13 @@ class SwapRepository(DbHandler):
 
     def get_requester_swaps(self, user_id):
         return Swap.query.filter(Swap.user_id == user_id).all()
+    
+    def get_incoming_swap_request(self, current_user_id):
+        return Swap.query \
+            .join(Item, Swap.item_id == Item.id) \
+            .filter(Item.user_id == current_user_id) \
+            .filter(Item.status != 'deleted') \
+            .all()
 
     def get_all_swaps_ordered_by_time_desc(self, swap_ids):
         if isinstance(swap_ids, list):

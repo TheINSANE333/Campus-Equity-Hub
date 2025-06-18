@@ -80,6 +80,7 @@ class ItemRepository(DbHandler):
                 Item.status != 'swapping',
                 Item.status != 'requested'
             )
+    
     def query_item(self, item_id: str) -> Item:
         return Item.query.get_or_404(item_id)
 

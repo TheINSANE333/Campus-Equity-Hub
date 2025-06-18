@@ -6,8 +6,6 @@ from app.function import dateCounter
 from app.swap_dbhandler import SwapRepository
 from app.dbhandler import UserRepository
 
-
-
 class Dashboard(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
         super().__init__(app)
@@ -24,7 +22,7 @@ class Dashboard(Endpoint):
 
         current_user_id = session['user_id']
         item_dbhandler = ItemRepository(self.flask_app)
-        Item = item_dbhandler.query_item(current_user_id)
+        # item = item_dbhandler.query_item(current_user_id)
 
         # --- Items for "Discover" tab ---
         items_for_display_query = item_dbhandler.item_to_display(current_user_id)
@@ -33,16 +31,16 @@ class Dashboard(Endpoint):
         user = user_dbhandler.query_user(current_user_id)
 
         swap_dbhandler = SwapRepository(self.flask_app)
-        swap = swap_dbhandler.query_swap(current_user_id)
+        # swap = swap_dbhandler.query_swap(current_user_id)
 
-        if user:
-            # user_role = user.role
-            two_days_ago = dateCounter()
+        # if user:
+        #     # user_role = user.role
+        #     two_days_ago = dateCounter()
 
-            # if user_role != 'special' and user_role != 'special student':
-            items_for_display_query = items_for_display_query.filter(Item.timestamp <= two_days_ago)
+        #     # if user_role != 'special' and user_role != 'special student':
+        #     # items_for_display_query = items_for_display_query.filter(item.timestamp <= two_days_ago)
 
-            items_for_display = items_for_display_query.all()
+        #     items_for_display = items_for_display_query.all()
 
         # --- Swaps for "My Swaps" tab ---
         incoming_swap_requests = swap_dbhandler.get_incoming_swap_request(current_user_id)
@@ -58,7 +56,7 @@ class Dashboard(Endpoint):
         pending_incoming_swaps = swap_dbhandler.count_pending_incoming_swaps(current_user_id)
 
         # Count pending swaps where current user is the requester (outgoing requests)
-        pending_outgoing_swaps = swap_dbhandler.count_pending_outgoing_swaps(current_user_id)
+        # pending_outgoing_swaps = swap_dbhandler.count_pending_outgoing_swaps(current_user_id)
 
         # Total pending swaps (you might want to adjust this logic based on your needs)
         # If you only want to show pending requests that need action from the current user,
@@ -67,9 +65,7 @@ class Dashboard(Endpoint):
         # Or if you want to show all pending swaps involving the user:
         # pending_swaps_count = pending_incoming_swaps + pending_outgoing_swaps
 
-        item_dbhandler = ItemRepository(self.flask_app)
-        swap_dbhandler = SwapRepository(self.flask_app)
-        all_my_items = item_dbhandler.get_user_items(session.get('user_id'))
+        all_my_items = item_dbhandler.get_user_items(session['user_id'])
         my_items_for_display = [item for item in all_my_items if item.status != 'deleted' and item.approval != 'rejected']
 
         # Get all available items and exclude user's own items
@@ -82,6 +78,7 @@ class Dashboard(Endpoint):
         token_count = user_dbhandler.get_user_tokens(current_user_id)
 
         swap_completed_count = swap_dbhandler.get_swap_completed_count(current_user_id)
+        
         context = {
             'username': session.get('username', 'User'),
             'swaps': merged_swaps,
