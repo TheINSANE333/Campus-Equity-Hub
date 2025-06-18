@@ -1,5 +1,6 @@
 from flask import render_template, url_for, flash, session, redirect
 from app.app_stub import Flask_App_Stub
+from app.models.item import Item
 from app.routes.endpoint import Endpoint
 from app.item_dbhandler import ItemRepository
 from app.function import dateCounter
@@ -22,30 +23,24 @@ class Dashboard(Endpoint):
 
         current_user_id = session['user_id']
         item_dbhandler = ItemRepository(self.flask_app)
-        # item = item_dbhandler.query_item(current_user_id)
+        user_dbhandler = UserRepository(self.flask_app)
+        user = user_dbhandler.query_user(session.get('username'))
 
         items_for_display_query = item_dbhandler.item_to_display(current_user_id)
-
-        user_dbhandler = UserRepository(self.flask_app)
-        user = user_dbhandler.query_user(current_user_id)
+        if user:
+            two_days_ago = dateCounter()
+            items_for_display_query = items_for_display_query.filter(Item.timestamp <= two_days_ago)
+            items_for_display = items_for_display_query.all()
 
         swap_dbhandler = SwapRepository(self.flask_app)
-        # swap = swap_dbhandler.query_swap(current_user_id)
-
-        # if user:
-        #     # user_role = user.role
-        #     two_days_ago = dateCounter()
-
-        #     # if user_role != 'special' and user_role != 'special student':
-        #     # items_for_display_query = items_for_display_query.filter(item.timestamp <= two_days_ago)
-
-        #     items_for_display = items_for_display_query.all()
 
         incoming_swap_requests = swap_dbhandler.get_incoming_swap_request(current_user_id)
         outgoing_swap_requests = swap_dbhandler.get_outgoing_swap_request(current_user_id)
         merged_swaps = incoming_swap_requests + outgoing_swap_requests
+
         pending_incoming_swaps = swap_dbhandler.count_pending_incoming_swaps(current_user_id)
         pending_swaps_count = pending_incoming_swaps
+
         all_my_items = item_dbhandler.get_user_items(session.get('user_id'))
         my_items_for_display = [item for item in all_my_items if item.status != 'deleted' and item.approval != 'rejected']
 
@@ -61,6 +56,7 @@ class Dashboard(Endpoint):
         
         context = {
             'username': session.get('username', 'User'),
+            'items': items_for_display,
             'swaps': merged_swaps,
             'myItems': my_items_for_display,
             'itemCount': item_count,
