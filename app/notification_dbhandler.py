@@ -27,40 +27,10 @@ class DbHandler(ABC):
         self.bcrypt = app.bcrypt
         self._initialized = True
 
-    @abstractmethod
-    def create_notification(self, receiver_id: int, sender_id: int, message: str, notification_type: str, status: str, title: str = None) -> None: ...
-
-    @abstractmethod
-    def get_user_notifications(self, user_id: int) -> List[Notification]: ...
-
-    @abstractmethod
-    def mark_as_read(self, notification_id: int) -> None: ...
-
-    @abstractmethod
-    def set_notification_status_to_delete(self, notification_id: int) -> None: ...
-
-    @classmethod
-    def get_instance(cls, app: Flask_App_Stub = None):
-        """
-        Get the singleton instance of the DbHandler.
-        Provide app parameter only on first call.
-        """
-        if cls._instance is None:
-            return cls(app)
-        return cls._instance
-
 class NotificationRepository(DbHandler):
+
     def create_notification(self, receiver_id: int, sender_id: int, message: str, notification_type: str, status: str, title: str = None) -> None:
-        """
-        Create a new notification for a user
-        
-        Parameters:
-        receiver_id (int): The ID of the user to receive the notification
-        sender_id (int): The ID of the user sending the notification
-        message (str): The notification message
-        notification_type (str): Type of notification (e.g., 'item', 'application', 'system')
-        title (str, optional): Title of the notification
-        """
+
         new_notification = Notification(
             receiver_id=receiver_id,
             sender_id=sender_id,
@@ -108,7 +78,7 @@ class NotificationRepository(DbHandler):
         self.db.session.add(notification)
         self.db.session.commit()
 
-    def set_all_notifications_to_delete(self, user_id: int) -> None:
+    def set_all_notification_status_to_delete(self, user_id: int) -> None:
         """Set all notifications for a user to deleted status"""
         notifications = Notification.query.filter_by(receiver_id=user_id).all()
         for notification in notifications:
