@@ -3,7 +3,7 @@ from app.extensions import db
 class Notification(db.Model):
     __tablename__ = 'notifications'
     id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.Text, nullable=False),
+    message = db.Column(db.Text, nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_notifications')
     sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
