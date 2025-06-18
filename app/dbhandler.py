@@ -114,7 +114,7 @@ class UserRepository(DbHandler):
 
     def add_token(self, user, amount):
         user.token += amount
-        self.db.session.add(user)
+        # self.db.session.add(user)
         self.db.session.commit()
 
     def get_user_tokens(self, user_id: int) -> int:
@@ -138,7 +138,7 @@ class UserRepository(DbHandler):
     def add_achievement_points(self, user_id: int, points: int) -> None:
         user = self.query_user_id(user_id)
         user.achievement_point += points
-        self.db.session.add(user)
+        # self.db.session.add(user)
         self.db.session.commit()
 
     def get_user_achievement_level(self, user_id: int):
@@ -154,14 +154,14 @@ class UserRepository(DbHandler):
         else:
             user.achievement_level = 4
 
-        self.db.session.add(user)
+        # self.db.session.add(user)
         self.db.session.commit()
         return user.achievement_level
 
     def update_achievement_level(self, user_id: int, level) -> None:
         user = self.query_user_id(user_id)
         user.achievement_level = level
-        self.db.session.add(user)
+        # self.db.session.add(user)
         self.db.session.commit()
 
 class Authenticator(DbHandler):

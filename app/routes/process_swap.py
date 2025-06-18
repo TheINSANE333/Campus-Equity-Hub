@@ -57,7 +57,7 @@ class ProcessSwap(Endpoint):
                     user_dbHandler.add_token(owner, 5)
 
                 if item.category == 'Donate':
-                    user_dbHandler.add_achievement_points(owner, 1)
+                    user_dbHandler.add_achievement_points(owner_id, 1)
 
                 flash('Swap Accepted! Both users have been rewarded with tokens.', 'success')
 
