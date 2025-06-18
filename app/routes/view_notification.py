@@ -14,12 +14,12 @@ class ViewNotification(Endpoint):
         self.methods = ['GET']
 
     def view_notification_page(self):
-        """Render the notification HTML page"""
+        user_id = session.get('user_id')
         if 'user_id' not in session:
             flash('Please log in to access this page.', 'danger')
             return redirect(url_for('login'))
         
         notification_dbHandler = NotificationRepository(self.flask_app)
-        notifications = notification_dbHandler.get_unread_notifications(session['user_id'])
+        notifications = notification_dbHandler.get_unread_notifications(user_id)
 
         return render_template('notification.html', notifications=notifications)

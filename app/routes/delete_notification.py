@@ -14,7 +14,7 @@ class DeleteNotification(Endpoint):
         self.callback = self.delete_notification
         self.methods = ['POST', 'DELETE']
 
-        self.notification_dbhandler = NotificationRepository.get_instance(app)
+        self.notification_dbhandler = NotificationRepository(self.flask_app)
 
     @login_required
     def delete_notification(self):

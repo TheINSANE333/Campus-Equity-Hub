@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, session
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from flask_login import login_required
@@ -14,14 +14,14 @@ class UpdateNotification(Endpoint):
         self.callback = self.update_notification
         self.methods = ['GET']
 
-        self.notification_dbhandler = NotificationRepository.get_instance(app)
+        self.notification_dbhandler = NotificationRepository(self.flask_app)
 
     @login_required
     def update_notification(self):
-        if 'user_id' not in self.request.session:
+        if 'user_id' not in session:
             return jsonify({'error': 'Unauthorized'}), 401
 
-        user_id = self.request.session['user_id']
+        user_id = session.get('user_id')
 
         try:
             notifications = self.notification_dbhandler.get_user_notifications(user_id)
