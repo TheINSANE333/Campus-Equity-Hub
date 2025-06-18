@@ -1,0 +1,349 @@
+{% extends "layout.html" %}
+
+{% block title %}Achievement Progress{% endblock %}
+
+{% block content %}
+<style>
+    /* Custom CSS for Inter font and achievement styling */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #e0f2f7 !important; /* Light blue background matching Figma */
+    }
+
+    .achievement-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 200px); /* Account for header and navigation */
+        padding: 20px 0;
+    }
+
+    .achievement-card {
+        width: 100%;
+        max-width: 900px; /* Wider card to accommodate content */
+        background-color: #fff;
+        padding: 32px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        border: 1px solid #e0e0e0; /* Subtle border */
+        margin: 0 auto;
+    }
+
+    .badge-circle {
+        width: 80px; /* Size of the badge circle */
+        height: 80px;
+        border-radius: 50%;
+        background-color: #e0f2f7; /* Light blue background for badge */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid #63b3ed; /* Blue border for badge */
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        color: #2b6cb0; /* Darker blue text */
+        font-weight: bold;
+        font-size: 0.7rem;
+        line-height: 1.1;
+        text-align: center;
+        overflow: hidden; /* To contain the heart icon */
+    }
+
+    .badge-circle svg {
+        width: 24px; /* Icon size */
+        height: 24px;
+        margin-bottom: 2px;
+    }
+
+    .badge-text {
+        font-size: 0.6rem;
+        line-height: 1;
+        margin-top: 2px;
+    }
+
+    .progress-bar-track {
+        height: 12px; /* Thinner progress bar */
+        background-color: #e0e7ff; /* Light gray-blue for the track */
+        border-radius: 6px;
+        position: relative; /* For the thumb marker */
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background-color: #63b3ed; /* Blue for the filled portion */
+        border-radius: 6px;
+        transition: width 0.3s ease;
+    }
+
+    .progress-thumb {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%); /* Center based on its own width/height */
+        width: 20px; /* Size of the thumb */
+        height: 20px;
+        background-color: #ef4444; /* Red color for the thumb */
+        border-radius: 50%;
+        border: 3px solid white; /* White border for emphasis */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        pointer-events: none; /* Do not block clicks */
+        z-index: 10; /* Ensure it's on top */
+    }
+
+    .point-labels-line {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 8px; /* Space below bar */
+        position: relative;
+    }
+
+    .point-label {
+        font-size: 0.875rem; /* text-sm */
+        color: #4b5563; /* gray-600 */
+        text-align: center;
+        flex: 1; /* Equal spacing */
+        position: relative;
+    }
+
+    .point-label:first-child {
+        text-align: left;
+        flex: 0;
+    }
+
+    .point-label:last-child {
+        text-align: right;
+        flex: 0;
+    }
+
+    .reward-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        background-color: #f9fafb;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        margin-bottom: 12px;
+    }
+
+    .back-button {
+        background-color: #2563eb;
+        color: white;
+        padding: 12px 32px;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .back-button:hover {
+        background-color: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .achievement-card {
+            padding: 20px;
+        }
+
+        .badge-circle {
+            width: 70px;
+            height: 70px;
+        }
+
+        .badge-text {
+            font-size: 0.5rem;
+        }
+    }
+</style>
+
+<div class="achievement-container">
+    <div class="achievement-card">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="display-5 fw-bold text-dark border-bottom border-primary border-3 pb-2 d-inline-block mb-0">Achievement</h1>
+            <div class="d-flex align-items-center">
+                <span class="text-muted me-3 fw-medium">My Badge:</span>
+                <div class="badge-circle">
+                    <!-- Heart icon -->
+                    <svg class="text-danger" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                    </svg>
+                    <div class="badge-text">Here To Help</div>
+                    <div class="badge-text">Level <span id="userLevel"></span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Point and Progress Bar Section -->
+        <div class="mb-5">
+            <div class="d-flex justify-content-between align-items-end mb-3">
+                <p class="h5 fw-semibold text-dark mb-0">
+                    Current point: <span id="currentPointValue" class="text-primary">{{ user.achievement_point }}</span>
+                </p>
+            </div>
+
+            <!-- Progress Bar Container -->
+            <div class="mb-4">
+                <!-- Progress Bar Track -->
+                <div class="progress-bar-track w-100 rounded-pill position-relative">
+                    <!-- Progress Bar Fill -->
+                    <div id="progressBarFill" class="progress-bar-fill rounded-pill" style="width: 0%;"></div>
+                    <!-- Progress Thumb Marker -->
+                    <div id="progressThumb" class="progress-thumb" style="left: 0%;"></div>
+                </div>
+
+                <!-- Point Labels below the bar -->
+                <div class="point-labels-line">
+                    <div class="point-label">0</div>
+                    <div class="point-label">10</div>
+                    <div class="point-label">20</div>
+                    <div class="point-label">30</div>
+                    <div class="point-label">40</div>
+                    <div class="point-label">50</div>
+                    <div class="point-label">60</div>
+                    <div class="point-label">70</div>
+                    <div class="point-label">80</div>
+                    <div class="point-label">90</div>
+                    <div class="point-label">100+</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rewards Section -->
+        <h2 class="h3 fw-bold text-warning mb-4">Rewards</h2>
+        <div class="mb-5">
+            <!-- Reward Items -->
+            <div class="reward-item">
+                <span class="text-dark">Point 10: Helping people badge level 1</span>
+                <span id="reward1" class="fs-6 text-muted">🔒</span>
+            </div>
+            <div class="reward-item">
+                <span class="text-dark">Point 20: Helping people badge level 2</span>
+                <span id="reward2" class="fs-6 text-muted">🔒</span>
+            </div>
+            <div class="reward-item">
+                <span class="text-dark">Point 30: Helping people badge level 3</span>
+                <span id="reward3" class="fs-6 text-muted">🔒</span>
+            </div>
+            <div class="reward-item">
+                <span class="text-dark">Point 40: Helping people badge level 4</span>
+                <span id="reward4" class="fs-6 text-muted">🔒</span>
+            </div>
+        </div>
+
+        <!-- Navigation Button -->
+        <div class="text-center">
+            <button class="back-button" onclick="goBack()">
+                <i class="fas fa-arrow-left me-2"></i>Back To Main Page
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Configuration - Replace with actual data from your Flask backend
+    const achievementPoint = {{ user.achievement_point }};
+    const userLevel = Math.min(Math.floor(achievementPoint / 10), 4); // Calculate level based on points
+
+    // Get elements
+    const progressBarFill = document.getElementById('progressBarFill');
+    const progressThumb = document.getElementById('progressThumb');
+    const currentPointValue = document.getElementById('currentPointValue');
+    const userLevelElement = document.getElementById('userLevel');
+
+    // Set user level
+    userLevelElement.textContent = userLevel;
+
+    // Configuration for animation
+    const initialProgress = 0; // Starting actual progress from 0
+    const targetProgress = Math.min(achievementPoint, 100); // Cap at 100 for display
+    const animationDuration = 1500; // Animation duration in milliseconds
+
+    let startTime = null; // To store the starting time of the animation
+
+    // Function to update reward status
+    function updateRewards(points) {
+        const rewards = ['reward1', 'reward2', 'reward3', 'reward4'];
+        const thresholds = [10, 20, 30, 40];
+
+        rewards.forEach((rewardId, index) => {
+            const rewardElement = document.getElementById(rewardId);
+            if (points >= thresholds[index]) {
+                rewardElement.textContent = '✅';
+                rewardElement.style.color = '#10b981';
+            } else {
+                rewardElement.textContent = '🔒';
+                rewardElement.style.color = '#6b7280';
+            }
+        });
+    }
+
+    // Function to animate the progress bar and thumb
+    function animateProgress(currentTime) {
+        if (!startTime) {
+            startTime = currentTime; // Set the start time on the first frame
+        }
+
+        const elapsedTime = currentTime - startTime;
+        // Calculate the progress ratio (0 to 1) based on elapsed time
+        const progressRatio = Math.min(elapsedTime / animationDuration, 1);
+
+        // Easing function for smoother animation
+        const easeOutQuart = 1 - Math.pow(1 - progressRatio, 4);
+
+        // Calculate the current continuous progress percentage for the bar and thumb
+        const currentProgress = initialProgress + (targetProgress - initialProgress) * easeOutQuart;
+
+        // Update the visual width of the progress bar fill
+        progressBarFill.style.width = `${currentProgress}%`;
+
+        // Update the thumb position (centered on the current progress)
+        progressThumb.style.left = `${currentProgress}%`;
+
+        // Update the "Current point" text (round to nearest integer for display)
+        const displayPoint = Math.round(initialProgress + (achievementPoint - initialProgress) * easeOutQuart);
+        currentPointValue.textContent = displayPoint;
+
+        // Update rewards based on current progress
+        updateRewards(displayPoint);
+
+        // Continue animation if duration has not been reached
+        if (elapsedTime < animationDuration) {
+            requestAnimationFrame(animateProgress);
+        } else {
+            // Ensure it ends precisely at the target value
+            progressBarFill.style.width = `${targetProgress}%`;
+            progressThumb.style.left = `${targetProgress}%`;
+            currentPointValue.textContent = achievementPoint;
+            updateRewards(achievementPoint);
+            console.log(`Progress animation completed at ${achievementPoint} points!`);
+        }
+    }
+
+    // Function to handle back button click
+    function goBack() {
+        {% if session.get('role') == 'admin' %}
+        window.location.href = "{{ url_for('admin_dashboard') }}";
+        {% else %}
+        window.location.href = "{{ url_for('dashboard') }}";
+        {% endif %}
+    }
+
+    // Start the animation when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize rewards on page load
+        updateRewards(0); // Start with locked rewards
+        // Start animation after a brief delay
+        setTimeout(() => {
+            requestAnimationFrame(animateProgress);
+        }, 300);
+    });
+</script>
+{% endblock %}

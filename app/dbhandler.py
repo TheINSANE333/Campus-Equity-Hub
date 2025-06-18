@@ -63,7 +63,7 @@ class DbHandler(ABC):
 class UserRepository(DbHandler):
     def add_new_user(self, username: str, email: str, password: str, campus: str, role: str) -> None:
         hashed_password = self.bcrypt.generate_password_hash(password).decode('utf-8')
-        new_user = User(username=username, email=email, password=hashed_password, role=role, campus=campus, token=0)
+        new_user = User(username=username, email=email, password=hashed_password, role=role, campus=campus, token=0, achievement_point=0, achievement_level=0)
         self.db.session.add(new_user)
         print("User added to session")
         self.db.session.commit()
@@ -126,6 +126,43 @@ class UserRepository(DbHandler):
     
     def reset_database(self) -> None:
         raise NotImplementedError("UserRepository does not implement reset_database")
+
+    def get_user_achievement_points(self, user_id: int) -> int:
+        user = self.query_user_id(user_id)
+        return user.achievement_point
+
+    def get_user_achievement_level(self, user_id: int) -> int:
+        user = self.query_user_id(user_id)
+        return user.achievement_level
+
+    def add_achievement_points(self, user_id: int, points: int) -> None:
+        user = self.query_user_id(user_id)
+        user.achievement_point += points
+        self.db.session.add(user)
+        self.db.session.commit()
+
+    def get_user_achievement_level(self, user_id: int):
+        user = self.query_user_id(user_id)
+        if  user.achievement_point < 10:
+            pass
+        elif user.achievement_point < 20:
+            user.achievement_level = 1
+        elif user.achievement_point < 30:
+            user.achievement_level = 2
+        elif user.achievement_point < 40:
+            user.achievement_level = 3
+        else:
+            user.achievement_level = 4
+
+        self.db.session.add(user)
+        self.db.session.commit()
+        return user.achievement_level
+
+    def update_achievement_level(self, user_id: int, level) -> None:
+        user = self.query_user_id(user_id)
+        user.achievement_level = level
+        self.db.session.add(user)
+        self.db.session.commit()
 
 class Authenticator(DbHandler):
     def check_password(self, username: str, password: str) -> bool:

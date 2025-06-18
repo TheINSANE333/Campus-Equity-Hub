@@ -49,14 +49,15 @@ class ProcessSwap(Endpoint):
                 swap_dbHandler.update_location(swap, location)
                 swap_dbHandler.update_time(swap, trade_time)
 
-                print(f"[DEBUG] Requester ID is {requester_id}, Owner ID is {owner_id}")
-
                 if requester_id == owner_id:
                     user_dbHandler.add_token(requester, 5)
+
                 else:
                     user_dbHandler.add_token(requester, 5)
                     user_dbHandler.add_token(owner, 5)
 
+                if item.category == 'Donate':
+                    user_dbHandler.add_achievement_points(owner, 1)
 
                 flash('Swap Accepted! Both users have been rewarded with tokens.', 'success')
 

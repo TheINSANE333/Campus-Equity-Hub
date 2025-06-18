@@ -11,6 +11,8 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(128), nullable=False, default="student")
     campus = db.Column(db.String(120), nullable=False)
     token = db.Column(db.Integer, nullable=False, default=0)
+    achievement_point = db.Column(db.Integer, nullable=False, default=0)
+    achievement_level = db.Column(db.Integer, nullable=False, default=0)
 
     print("User model created")
 
