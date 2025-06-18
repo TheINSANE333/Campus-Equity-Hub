@@ -2,9 +2,11 @@ from datetime import datetime
 from flask import render_template, request, redirect, url_for, flash, session
 from app.app_stub import Flask_App_Stub
 from app.item_dbhandler import ItemRepository
-from app.swap_dbhandler import SwapRepository  # Add this import
+from app.swap_dbhandler import SwapRepository
 from app.routes.endpoint import Endpoint
-from app.function import getUnreadCount
+from app.dbhandler import UserRepository
+from app.extensions import db
+
 
 class ProcessSwap(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -14,38 +16,78 @@ class ProcessSwap(Endpoint):
         self.endpoint = 'process_swap'
         self.callback = self.process_swap
         self.methods = ['POST']
-        
+
     def process_swap(self, swap_id):
         action = request.form.get('action')
-        
-        # Get the swap and items related from database
+
         swap_dbHandler = SwapRepository(self.flask_app)
         item_dbHandler = ItemRepository(self.flask_app)
+        user_dbHandler = UserRepository(self.flask_app)
 
-        swap = swap_dbHandler.query_swap(swap_id)
-        item = item_dbHandler.query_item(swap.item_id)
-        target = item_dbHandler.query_item(swap.target_item_id)
+        try:
+            # 获取交换记录和相关物品
+            swap = swap_dbHandler.query_swap(swap_id)
+            item = item_dbHandler.query_item(swap.item_id)
+            target = item_dbHandler.query_item(swap.target_item_id)
 
-        if action == 'accepted':
-            location = request.form.get('location')
-            timeStr = request.form.get('trade_time')
-            time = datetime.strptime(timeStr, '%Y-%m-%dT%H:%M')
-            item_dbHandler.update_item_status(item,'sold')
-            item_dbHandler.update_item_status(target,'sold')
-            swap_dbHandler.update_swap_status(swap, 'accepted')
-            swap_dbHandler.update_location(swap, location)
-            swap_dbHandler.update_time(swap, time)
-            flash('Swap Accepted!', 'success')
-        else:
-            item_dbHandler.update_item_status(item, 'available')
-            item_dbHandler.update_item_status(target, 'available')
-            swap_dbHandler.update_swap_status(swap, 'rejected')
-            flash('Swap Rejected!', 'success')
+            requester_id = item.user_id
+            owner_id = target.user_id
+
+            requester = user_dbHandler.query_user_id(requester_id)
+            owner = user_dbHandler.query_user_id(owner_id)
+
+            if not requester or not owner:
+                flash("One or more users could not be found.", "danger")
+                return redirect(url_for('dashboard'))
+
+            if action == 'accepted':
+                location = request.form.get('location')
+                time_str = request.form.get('trade_time')
+                trade_time = datetime.strptime(time_str, '%Y-%m-%dT%H:%M')
+
+                # 更新物品状态
+                item_dbHandler.update_item_status(item, 'sold')
+                item_dbHandler.update_item_status(target, 'sold')
+
+                # 更新交换状态
+                swap_dbHandler.update_swap_status(swap, 'accepted')
+                swap_dbHandler.update_location(swap, location)
+                swap_dbHandler.update_time(swap, trade_time)
+
+                print(f"[DEBUG] Requester ID is {requester_id}, Owner ID is {owner_id}")
+
+                if requester_id == owner_id:
+                    # 同一个用户作为请求者和所有者，仅奖励一次
+                    user_dbHandler.add_token(requester, 5)
+                else:
+                    # 分别奖励请求者和所有者
+                    user_dbHandler.add_token(requester, 5)
+                    user_dbHandler.add_token(owner, 5)
+
+
+                flash('Swap Accepted! Both users have been rewarded with tokens.', 'success')
+
+            elif action == 'rejected':
+                item_dbHandler.update_item_status(item, 'available')
+                item_dbHandler.update_item_status(target, 'available')
+                swap_dbHandler.update_swap_status(swap, 'rejected')
+                flash('Swap Rejected!', 'info')
+
+            else:
+                flash('Unknown action received.', 'warning')
+                return redirect(url_for('dashboard'))
+
+        except Exception as e:
+
+            db.session.rollback()
+            flash('An error occurred while processing the swap. Please try again.', 'danger')
+            print(f"[ERROR] {str(e)}")
+            return redirect(url_for('dashboard'))
 
         context = {
             'swap': swap,
             'item': item,
             'target': target
         }
-        
+
         return render_template('view_swap.html', **context)

@@ -70,6 +70,16 @@ class ItemRepository(DbHandler):
         self.db.session.commit()
         print("Commit successful")
 
+    def item_to_display(self, current_user_id: int):
+        return Item.query.filter(
+                Item.user_id != current_user_id,
+                Item.status == 'available',
+                Item.approval != 'rejected',
+                Item.approval != 'pending',
+                Item.status != 'deleted',
+                Item.status != 'swapping',
+                Item.status != 'requested'
+            )
     def query_item(self, item_id: str) -> Item:
         return Item.query.get_or_404(item_id)
 

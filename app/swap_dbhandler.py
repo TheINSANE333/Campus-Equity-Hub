@@ -10,7 +10,7 @@ from typing import List
 
 class DbHandler(ABC):
     _instance = None
-    
+
     def __new__(cls, app: Flask_App_Stub = None):
         if cls._instance is None:
             if app is None:
@@ -18,14 +18,14 @@ class DbHandler(ABC):
             cls._instance = super(DbHandler, cls).__new__(cls)
             cls._instance._initialized = False
         return cls._instance
-    
+
     def __init__(self, app: Flask_App_Stub) -> None:
         if self._initialized:
             return
-            
+
         if app is None:
             raise ValueError("App must be provided when initializing DbHandler for the first time")
-        
+
         self.flask_app = app
         self.db = app.db
         self.bcrypt = app.bcrypt
@@ -34,6 +34,57 @@ class SwapRepository(DbHandler):
     def query_swap(self, swap_id: str) -> Swap:
         return Swap.query.get_or_404(swap_id)
 
+    def get_pending_swaps_count(self, user_id: int) -> int:
+        from app.models.item import Item
+        return Swap.query.join(
+            Item, Swap.target_item_id == Item.id
+        ).filter(
+            Item.user_id == user_id,  # User owns the target item
+            Swap.status == 'pending'  # Swap is pending
+        ).count()
+
+    def get_incoming_swap_request(self, current_user_id):
+          return Swap.query \
+                .join(Item, Swap.item_id == Item.id) \
+                .filter(Item.user_id == current_user_id) \
+                .filter(Item.status != 'deleted') \
+                .all()
+
+    def get_outgoing_swap_request(self, current_user_id):
+        return Swap.query \
+            .filter(Swap.user_id == current_user_id) \
+            .all()
+
+    def count_pending_incoming_swaps(self, current_user_id):
+        return Swap.query \
+            .join(Item, Swap.item_id == Item.id) \
+            .filter(Item.user_id == current_user_id) \
+            .filter(Swap.status == 'pending') \
+            .filter(Item.status != 'deleted') \
+            .count()
+
+    def count_pending_outgoing_swaps(self, current_user_id):
+        return Swap.query \
+            .filter(Swap.user_id == current_user_id) \
+            .filter(Swap.status == 'pending') \
+            .count()
+
+    def get_requester_swaps(self, user_id):
+        return Swap.query.filter(Swap.user_id == user_id).all()
+
+    def get_all_swaps_ordered_by_time_desc(self, swap_ids):
+        if isinstance(swap_ids, list):
+            ids = [swap.id for swap in swap_ids]
+            return Swap.query.filter(Swap.id.in_(ids)).order_by(Swap.dealTime.desc()).all()
+        return swap_ids.order_by(Swap.dealTime.desc()).all()
+
+    def get_target_item_swaps(self, user_id):
+        return Swap.query.join(Item, Swap.target_item_id == Item.id).filter(Item.user_id == user_id).all()
+
+    def query_swap_id(self, user_id):
+        return Swap.query.filter(
+            (Swap.user_id == user_id) | (Swap.target_item.has(user_id=user_id))
+        ).all()
     def get_item_status(self, swap_item: Swap):
         return Swap.query.filter_by(id=swap_item.id).first()
 
@@ -120,4 +171,4 @@ class SwapRepository(DbHandler):
             self.db.and_(Swap.user_id==user_id, Swap.status=='accepted'),
             self.db.and_(Item.user_id==user_id, Swap.status=='accepted')
         )).count()
-        
+

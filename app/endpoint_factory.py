@@ -76,7 +76,7 @@ class EndpointFactory: #factory method
             'SearchApiItem': SearchApiItem,
             'ViewSwapHistory': ViewSwapHistory, 
             'SignupAdmin': SignupAdmin,
-            'DeleteNotification': DeleteNotification
+            'DeleteNotification': DeleteNotification,
         }
         self._cache = {}
 
