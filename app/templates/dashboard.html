@@ -14,7 +14,7 @@
             <!-- Pending Alert -->
             <div class="pending-alert mt-3">
                 <i class="fas fa-clock me-2"></i>
-                <strong>Pending swap request waiting for action: {{ pending_swaps_count|default(0) }}</strong>
+                <strong>Pending swap request waiting for action: {{ PendingSwapsCount }}</strong>
             </div>
         </div>
         <div class="col-md-4 text-end">
@@ -283,7 +283,7 @@
                     </div>
                     <div class="flex-grow-1">
                         <div class="fw-medium">Tokens</div>
-                        <div class="fs-5 fw-bold">25</div>
+                        <div class="fs-5 fw-bold">{{tokenCount}}</div>
                     </div>
                 </div>
 

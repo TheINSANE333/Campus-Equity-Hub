@@ -48,6 +48,8 @@ class DbHandler(ABC):
     @abstractmethod
     def reset_database(self) -> None: ...
 
+
+
     @classmethod
     def get_instance(cls, app: Flask_App_Stub = None):
         """
@@ -61,7 +63,7 @@ class DbHandler(ABC):
 class UserRepository(DbHandler):
     def add_new_user(self, username: str, email: str, password: str, campus: str, role: str) -> None:
         hashed_password = self.bcrypt.generate_password_hash(password).decode('utf-8')
-        new_user = User(username=username, email=email, password=hashed_password, role=role, campus=campus)
+        new_user = User(username=username, email=email, password=hashed_password, role=role, campus=campus, token=0)
         self.db.session.add(new_user)
         print("User added to session")
         self.db.session.commit()
@@ -109,7 +111,16 @@ class UserRepository(DbHandler):
         except Exception as e:
             print(f"Error querying user: {e}")
             return None
-        
+
+    def add_token(self, user, amount):
+        user.token += amount
+        self.db.session.add(user)
+        self.db.session.commit()
+
+    def get_user_tokens(self, user_id: int) -> int:
+        user = self.query_user_id(user_id)
+        return user.token
+
     def check_password(self, username: str, password: str) -> bool:
         raise NotImplementedError("UserRepository does not implement check_password")
     
