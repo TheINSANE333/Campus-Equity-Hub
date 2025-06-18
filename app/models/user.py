@@ -10,6 +10,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(128), nullable=False)
     role = db.Column(db.String(128), nullable=False, default="student")
     campus = db.Column(db.String(120), nullable=False)
+    token = db.Column(db.Integer, nullable=False, default=0)
 
     print("User model created")
 
