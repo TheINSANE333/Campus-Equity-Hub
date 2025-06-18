@@ -29,8 +29,8 @@ class Dashboard(Endpoint):
         items_for_display_query = item_dbhandler.item_to_display(current_user_id)
         if user:
             two_days_ago = dateCounter()
-            items_for_display_query = items_for_display_query.filter(Item.timestamp <= two_days_ago)
-            items_for_display = items_for_display_query.all()
+            items = [item for item in items_for_display_query if item.timestamp <= two_days_ago]
+            items_for_display = items
 
         swap_dbhandler = SwapRepository(self.flask_app)
 

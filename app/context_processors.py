@@ -43,5 +43,4 @@ def register_context_processors(app, flask_app_instance):
             
             result[template_var] = session[cache_key]
 
-        print("Unread: ", result)
         return result
