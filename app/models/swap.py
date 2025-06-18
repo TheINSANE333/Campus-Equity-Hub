@@ -26,39 +26,6 @@ class Swap(db.Model):
         return f'<Swap {self.id} - User {self.user_id} - Item {self.item_id}>'
 
     def to_dict(self, current_user_id=None):
-        # Get the target item's owner username
-        target_user_username = self.target_item.user.username if self.target_item and self.target_item.user else 'Unknown'
-
-        # Debug: Print current user and swap details
-        print(f"Current user ID: {current_user_id}")
-        print(f"Swap requester ID: {self.user_id}")
-        print(f"Target item owner ID: {self.target_item.user_id if self.target_item else 'None'}")
-        print(f"Item name: {self.item_name}")
-        print(f"Target item name: {self.target_item_name}")
-
-        # Determine what item to show based on user perspective
-        if current_user_id:
-            # If current user is the requester, show target item name (what they want to get)
-            if current_user_id == self.user_id:
-                display_item_name = self.target_item_name
-                swap_with_username = target_user_username
-                print(f"User is requester - showing target item: {display_item_name}")
-            # If current user is the target item owner, show item name (what they're being asked to trade)
-            elif self.target_item and current_user_id == self.target_item.user_id:
-                display_item_name = self.item_name
-                swap_with_username = self.user.username
-                print(f"User is target owner - showing requested item: {display_item_name}")
-            else:
-                # Fallback
-                display_item_name = self.item_name
-                swap_with_username = target_user_username
-                print(f"Fallback case - showing item: {display_item_name}")
-        else:
-            # Default behavior if no current_user_id provided
-            display_item_name = self.item_name
-            swap_with_username = target_user_username
-            print(f"No current user - default showing: {display_item_name}")
-
         return {
             'id': self.id,
             'user_id': self.user_id,
@@ -67,8 +34,6 @@ class Swap(db.Model):
             'status': self.status,
             'swap_description': self.swap_description,
             'username': self.user.username,  # Person who initiated the swap
-            'swap_with_username': swap_with_username,  # Person they want to swap with
-            'item_name': display_item_name,  # Item shown based on user perspective
             'original_item_name': self.item_name,  # Original item being offered
             'target_item_id': self.target_item_id,
             'target_item_name': self.target_item_name,  # Target item being requested
