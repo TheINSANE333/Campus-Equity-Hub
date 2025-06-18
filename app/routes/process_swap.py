@@ -48,13 +48,9 @@ class ProcessSwap(Endpoint):
                 swap_dbHandler.update_swap_status(swap, 'accepted')
                 swap_dbHandler.update_location(swap, location)
                 swap_dbHandler.update_time(swap, trade_time)
-
-                if requester_id == owner_id:
-                    user_dbHandler.add_token(requester, 5)
-
-                else:
-                    user_dbHandler.add_token(requester, 5)
-                    user_dbHandler.add_token(owner, 5)
+    
+                user_dbHandler.add_token(requester, 5)
+                user_dbHandler.add_token(owner, 5)
 
                 if item.category == 'Donate':
                     user_dbHandler.add_achievement_points(requester_id, 1)
