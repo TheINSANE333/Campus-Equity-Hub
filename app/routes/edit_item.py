@@ -22,8 +22,7 @@ class EditItem(Endpoint):
         
         item_dbhandler = ItemRepository(self.flask_app)
         item = item_dbhandler.query_item(item_id)
-        
-        # Check if user owns the item or is admin
+
         if item.user_id != session['user_id']:
             flash('You do not have permission to edit this item.', 'danger')
             return redirect(url_for('marketplace'))
@@ -36,8 +35,7 @@ class EditItem(Endpoint):
             status = request.form.get('status', item.status)
 
             item_dbhandler.edit_item(item, name, description, price, category, status)
-            
-            # Handle image upload
+
             if 'image' in request.files:
                 item_dbhandler.upload_image(item, request.files['image'])
             

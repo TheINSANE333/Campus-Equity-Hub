@@ -22,7 +22,6 @@ class ViewSwapHistory(Endpoint):
         requester_swaps = swap_repository.get_requester_swaps(user_id)
         target_item_swaps = swap_repository.get_target_item_swaps(user_id)
 
-        # Combine lists and pass to the function
         combined_swaps = list(set(requester_swaps + target_item_swaps))  # Removes duplicates
         all_swaps = swap_repository.get_all_swaps_ordered_by_time_desc(combined_swaps)
 

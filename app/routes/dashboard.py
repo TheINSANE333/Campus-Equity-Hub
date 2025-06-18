@@ -24,7 +24,6 @@ class Dashboard(Endpoint):
         item_dbhandler = ItemRepository(self.flask_app)
         # item = item_dbhandler.query_item(current_user_id)
 
-        # --- Items for "Discover" tab ---
         items_for_display_query = item_dbhandler.item_to_display(current_user_id)
 
         user_dbhandler = UserRepository(self.flask_app)
@@ -42,33 +41,14 @@ class Dashboard(Endpoint):
 
         #     items_for_display = items_for_display_query.all()
 
-        # --- Swaps for "My Swaps" tab ---
         incoming_swap_requests = swap_dbhandler.get_incoming_swap_request(current_user_id)
-
-        # Get swaps where user is the requester
         outgoing_swap_requests = swap_dbhandler.get_outgoing_swap_request(current_user_id)
-
-        # Combine both types of swaps
         merged_swaps = incoming_swap_requests + outgoing_swap_requests
-
-        # --- Calculate pending swaps count ---
-        # Count pending swaps where current user is the item owner (receiving requests)
         pending_incoming_swaps = swap_dbhandler.count_pending_incoming_swaps(current_user_id)
-
-        # Count pending swaps where current user is the requester (outgoing requests)
-        # pending_outgoing_swaps = swap_dbhandler.count_pending_outgoing_swaps(current_user_id)
-
-        # Total pending swaps (you might want to adjust this logic based on your needs)
-        # If you only want to show pending requests that need action from the current user,
-        # you might only want to count incoming requests:
         pending_swaps_count = pending_incoming_swaps
-        # Or if you want to show all pending swaps involving the user:
-        # pending_swaps_count = pending_incoming_swaps + pending_outgoing_swaps
-
-        all_my_items = item_dbhandler.get_user_items(session['user_id'])
+        all_my_items = item_dbhandler.get_user_items(session.get('user_id'))
         my_items_for_display = [item for item in all_my_items if item.status != 'deleted' and item.approval != 'rejected']
 
-        # Get all available items and exclude user's own items
         all_items_temp = item_dbhandler.get_available_items()
         my_item_ids = {item.id for item in my_items_for_display}
         all_item = [item for item in all_items_temp if item.id not in my_item_ids]

@@ -14,8 +14,7 @@ class UpdateNotification(Endpoint):
         self.callback = self.update_notification
         self.methods = ['GET']
 
-        # 初始化通知仓库
-        self.notification_repo = NotificationRepository.get_instance(app)
+        self.notification_dbhandler = NotificationRepository.get_instance(app)
 
     @login_required
     def update_notification(self):
@@ -25,10 +24,7 @@ class UpdateNotification(Endpoint):
         user_id = self.request.session['user_id']
 
         try:
-            # 获取用户最新的通知
-            notifications = self.notification_repo.get_user_notifications(user_id)
-
-            # 转换为可序列化的数据格式
+            notifications = self.notification_dbhandler.get_user_notifications(user_id)
             notification_data = [
                 {
                     'id': n.id,
