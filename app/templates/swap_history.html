@@ -1,26 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Swap History</title>
+{% extends "layout.html" %}
+
+{% block title %}Swap History{% endblock %}
+
+{% block content %}
     <style>
-        body {
+        /* body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
             background-color: #f5f5f5;
             margin: 0;
             padding: 20px;
-        }
+        } */
 
-        .container {
+        /* .container {
             max-width: 1200px;
             margin: 0 auto;
             background-color: #fff;
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+        } */
 
         h1 {
             text-align: center;
@@ -118,7 +118,6 @@
         <tr>
             <th>Item</th>
             <th>Swap With</th>
-            <th>Role</th>
             <th>Deal Time</th>
             <th>Status</th>
         </tr>
@@ -128,14 +127,7 @@
         {% for swap in swaps %}
         <tr>
             <td>{{ swap.item_name }}</td>
-            <td>{{ swap.swap_with_username }}</td>
-            <td>
-                {% if swap.is_requester %}
-                <span class="requester-badge">Requester</span>
-                {% else %}
-                <span class="owner-badge">Item Owner</span>
-                {% endif %}
-            </td>
+            <td>{{ swap.target_item_name }}</td>
             <td>{{ swap.dealTime }}</td>
             <td>
                 <span class="status-{{ swap.status.lower() }}">{{ swap.status }}</span>
@@ -152,5 +144,4 @@
 
     <button class="back-button" onclick="history.back()">Back to Previous Page</button>
 </div>
-</body>
-</html>
+{% endblock %}
