@@ -200,12 +200,12 @@
                             {% if swap.user_id == user.id %}
                             {{ swap.target_item_name }}
                             {% else %}
-                           {{ swap.item_name }}
+                            {{ swap.item_name }}
                             {% endif %}
                         </h6>
                     </div>
                     <div class="text-muted mb-3">
-                        <small>Request Swap User: {{swap.username}}</small><br>
+                        <small>Requester: {{swap.username}}</small><br>
                         <small>Item swapped: {{ swap.target_item_name }}</small>
                     </div>
                     <div class="d-flex gap-2">

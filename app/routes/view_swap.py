@@ -22,7 +22,7 @@ class ViewSwap(Endpoint):
         swap = swap_dbHandler.query_swap(swap_id)
         item = item_dbHandler.query_item(swap.item_id)
         target = item_dbHandler.query_item(swap.target_item_id)
-        current_user = session['user_id']
+        current_user = session.get('user_id')
         context = {
             'swap': swap,
             'item': item,
