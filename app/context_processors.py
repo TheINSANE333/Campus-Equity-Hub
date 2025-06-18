@@ -7,13 +7,13 @@ NOTIFICATION_CONFIGS = {
     'total_unread': {
         'function': getUnreadCount,
         'cache_key': 'unread_count',
-        'cache_duration': 300
+        'cache_duration': 1
     },
 
     # 'unread_notifications': {
     #     'function': getUnreadNotifications,
     #     'cache_key': 'unread_messages',
-    #     'cache_duration': 300
+    #     'cache_duration': 1
     # },
 }
 
@@ -43,4 +43,5 @@ def register_context_processors(app, flask_app_instance):
             
             result[template_var] = session[cache_key]
 
+        print("Unread: ", result)
         return result
