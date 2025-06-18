@@ -25,14 +25,10 @@ class SubmitSwapRequest(Endpoint):
         target_item_id = request.form['swapItem']
         target_item = item_dbhandler.query_item(target_item_id)
 
-        # Check if the item is available for swap
         swap_dbhandler.check_item_available(item)
 
         try:
-            # Get the description from the form
             description = request.form.get('description')
-
-            # Get the current user
             current_user_id = session.get('user_id')
             if not current_user_id:
                 flash('User not logged in.', 'danger')
@@ -45,28 +41,20 @@ class SubmitSwapRequest(Endpoint):
                 flash('User not found.', 'danger')
                 return redirect(url_for('dashboard'))
 
-            # Create a new swap
             swap_item = swap_dbhandler.get_swap_item(item, target_item, current_user_id, description, user)
 
-            # Update the item status to "requested"
             item.status = 'requested'
             target_item.status = 'swapping'
             swap_dbhandler.update_all_item_status(item)
             swap_dbhandler.update_all_item_status(target_item)
 
-            # Update the swap item to the database
             swap_dbhandler.update_all_item_status(swap_item)
 
-            # Verify the status update
             updated_swap = swap_dbhandler.get_item_status(swap_item)
             swap_dbhandler.item_verify_status(updated_swap)
-            # Redirect to the dashboard
             return redirect(url_for('dashboard'))
 
         except Exception as e:
             db.session.rollback()
-            # For debugging, you might want to log the error e
-            # import logging
-            # logging.error(f"Error submitting swap request: {e}")
             flash('An error occurred while submitting your swap request. Please try again.', 'danger')
             return redirect(url_for('dashboard'))

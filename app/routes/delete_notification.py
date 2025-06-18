@@ -14,7 +14,6 @@ class DeleteNotification(Endpoint):
         self.callback = self.delete_notification
         self.methods = ['POST', 'DELETE']
 
-        # 初始化通知仓库
         self.notification_dbhandler = NotificationRepository.get_instance(app)
 
     @login_required
@@ -32,7 +31,6 @@ class DeleteNotification(Endpoint):
                 return jsonify({'success': False, 'error': 'Missing notification ID'})
 
             try:
-                # update a single message as "deleted"
                 self.notification_dbhandler.set_notification_status_to_delete(notification_id)
                 return jsonify({'success': True})
             except Exception as e:
@@ -41,7 +39,6 @@ class DeleteNotification(Endpoint):
 
         elif flask_request.method == 'DELETE':
             try:
-                # set current user all message as "deleted"
                 self.notification_dbhandler.set_all_notification_status_to_delete(user_id)
                 return jsonify({'success': True})
             except Exception as e:

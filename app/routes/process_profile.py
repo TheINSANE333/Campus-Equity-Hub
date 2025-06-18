@@ -12,11 +12,10 @@ class ProcessProfile(Endpoint):  # Changed class name to match endpoint
         self.callback = self.process_profile
         self.methods = ['POST']
         
-    def process_profile(self):  # Changed to accept user_id parameter
-        process = request.form.get('process')  # Get from form data
-        newInfo = request.form.get('newInfo')  # Get from form data
-        
-        # Get the profile from database
+    def process_profile(self):  #
+        process = request.form.get('process')
+        newInfo = request.form.get('newInfo')
+
         dbHandler = UserRepository(self.flask_app)
         current_user = dbHandler.query_user(session['username'])
         

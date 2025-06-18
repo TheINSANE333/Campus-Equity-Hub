@@ -15,12 +15,10 @@ class RequestSwap(Endpoint):
         self.methods = ['GET']
 
     def request_swap_page(self, item_id):
-        # Find the item to be swapped
         item_dbhandler = ItemRepository(self.flask_app)
         swap_dbhandler = SwapRepository(self.flask_app)
         item = item_dbhandler.query_item(item_id)
 
-        # Check if the item is available for swap
         item_dbhandler.check_item_available(item)
 
         if 'user_id' not in session:
@@ -29,8 +27,6 @@ class RequestSwap(Endpoint):
 
         current_user_id = session.get('user_id')
         all_my_items = item_dbhandler.get_user_items(current_user_id)
-
-        # Filter user's items: must be 'available' and 'approved'
         eligible_my_items = swap_dbhandler.get_eligible_item(all_my_items)
 
         context = {
@@ -38,5 +34,4 @@ class RequestSwap(Endpoint):
             'myItems': eligible_my_items, # Pass the filtered list
         }
 
-        # Render the request swap page
         return render_template('request_swap.html', **context)

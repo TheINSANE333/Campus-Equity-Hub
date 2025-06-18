@@ -8,9 +8,8 @@ class ViewNotification(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
         super().__init__(app)
 
-        # Keep endpoint name consistent everywhere
         self.route = '/notifications'
-        self.endpoint = 'view_notification'  # Changed to match references elsewhere in the code
+        self.endpoint = 'view_notification'
         self.callback = self.view_notification_page
         self.methods = ['GET']
 

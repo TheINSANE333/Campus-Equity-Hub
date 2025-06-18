@@ -25,7 +25,6 @@ class ProcessSwap(Endpoint):
         user_dbHandler = UserRepository(self.flask_app)
 
         try:
-            # 获取交换记录和相关物品
             swap = swap_dbHandler.query_swap(swap_id)
             item = item_dbHandler.query_item(swap.item_id)
             target = item_dbHandler.query_item(swap.target_item_id)
@@ -44,12 +43,8 @@ class ProcessSwap(Endpoint):
                 location = request.form.get('location')
                 time_str = request.form.get('trade_time')
                 trade_time = datetime.strptime(time_str, '%Y-%m-%dT%H:%M')
-
-                # 更新物品状态
                 item_dbHandler.update_item_status(item, 'sold')
                 item_dbHandler.update_item_status(target, 'sold')
-
-                # 更新交换状态
                 swap_dbHandler.update_swap_status(swap, 'accepted')
                 swap_dbHandler.update_location(swap, location)
                 swap_dbHandler.update_time(swap, trade_time)
@@ -57,10 +52,8 @@ class ProcessSwap(Endpoint):
                 print(f"[DEBUG] Requester ID is {requester_id}, Owner ID is {owner_id}")
 
                 if requester_id == owner_id:
-                    # 同一个用户作为请求者和所有者，仅奖励一次
                     user_dbHandler.add_token(requester, 5)
                 else:
-                    # 分别奖励请求者和所有者
                     user_dbHandler.add_token(requester, 5)
                     user_dbHandler.add_token(owner, 5)
 
