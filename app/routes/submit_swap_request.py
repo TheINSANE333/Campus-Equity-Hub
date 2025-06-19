@@ -43,10 +43,10 @@ class SubmitSwapRequest(Endpoint):
 
             swap_item = swap_dbhandler.get_swap_item(item, target_item, current_user_id, description, user)
 
-            item.status = 'requested'
-            target_item.status = 'swapping'
-            swap_dbhandler.update_all_item_status(item)
-            swap_dbhandler.update_all_item_status(target_item)
+            # item.status = 'requested'
+            # target_item.status = 'swapping'
+            swap_dbhandler.update_swap_status(item, 'requested')
+            swap_dbhandler.update_swap_status(target_item, 'swapping')
 
             swap_dbhandler.update_all_item_status(swap_item)
 
