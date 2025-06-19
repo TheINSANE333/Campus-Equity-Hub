@@ -22,7 +22,7 @@ class Achievement(Endpoint):
         user = user_dbhandler.query_user_id(session['user_id'])
         achievement_point = user.achievement_point
 
-        user_achievement_level = user_dbhandler.get_user_achievement_level(session['user_id'])
+        user_achievement_level = user_dbhandler.get_update_user_achievement_level(session['user_id'])
         if user.achievement_level != user_achievement_level:
             user_dbhandler.update_achievement_level(session.get("user_id"), user_achievement_level)
 
@@ -32,4 +32,4 @@ class Achievement(Endpoint):
         json_achievement_data = json.dumps(achievement_data)
         print(json_achievement_data)
 
-        return render_template('achievement.html', user=user, user_achievement_level=user_achievement_level)
+        return render_template('achievement.html', user=user)
