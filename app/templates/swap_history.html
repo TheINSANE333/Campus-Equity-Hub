@@ -120,6 +120,7 @@
             <th>Swap With</th>
             <th>Deal Time</th>
             <th>Status</th>
+            <th>Details</th>
         </tr>
         </thead>
         <tbody>
@@ -131,6 +132,9 @@
             <td>{{ swap.dealTime }}</td>
             <td>
                 <span class="status-{{ swap.status.lower() }}">{{ swap.status }}</span>
+            </td>
+            <td>
+                <a href="{{ url_for('view_swap', swap_id=swap.id) }}" class="btn btn-primary btn-sm px-3">View Details</a>
             </td>
         </tr>
         {% endfor %}
