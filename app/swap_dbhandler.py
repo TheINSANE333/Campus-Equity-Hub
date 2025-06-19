@@ -43,13 +43,6 @@ class SwapRepository(DbHandler):
             Swap.status == 'pending'  # Swap is pending
         ).count()
 
-    def get_incoming_swap_request(self, current_user_id):
-          return Swap.query \
-                .join(Item, Swap.item_id == Item.id) \
-                .filter(Item.user_id == current_user_id) \
-                .filter(Item.status != 'deleted') \
-                .all()
-
     def get_outgoing_swap_request(self, current_user_id):
         return Swap.query \
             .filter(Swap.user_id == current_user_id) \
@@ -122,7 +115,7 @@ class SwapRepository(DbHandler):
 
             # Update the swap record itself
             swap.status = 'deleted'  # Changed from 'cancelled_item_unavailable'
-            self.db.session.add(swap)
+            #self.db.session.add(swap)
 
         self.db.session.commit()
         flash('Item deleted successfully. Related pending swaps have been updated.', 'success')
@@ -160,17 +153,17 @@ class SwapRepository(DbHandler):
 
     def update_swap_status(self, swap, status) -> None:
         swap.status = status
-        self.db.session.add(swap)
+        #self.db.session.add(swap)
         self.db.session.commit()
 
     def update_location(self, swap, location):
         swap.dealLocation = location
-        self.db.session.add(swap)
+        #self.db.session.add(swap)
         self.db.session.commit()
 
     def update_time(self, swap, time):
         swap.dealTime = time
-        self.db.session.add(swap)
+        #self.db.session.add(swap)
         self.db.session.commit()
 
     def get_swap_completed_count(self, user_id) -> List[Item]:

@@ -60,7 +60,7 @@ class NotificationRepository(DbHandler):
         """Mark a specific notification as read"""
         notification = Notification.query.get_or_404(notification_id)
         notification.status = 'read'
-        self.db.session.add(notification)
+        #self.db.session.add(notification)
         self.db.session.commit()
     
     def mark_all_as_read(self, user_id: int) -> None:
@@ -68,14 +68,14 @@ class NotificationRepository(DbHandler):
         notifications = Notification.query.filter_by(receiver_id=user_id, status='unread').all()
         for notification in notifications:
             notification.status = 'read'
-        self.db.session.add_all(notifications)
+        #self.db.session.add_all(notifications)
         self.db.session.commit()
     
     def set_notification_status_to_delete(self, notification_id: int) -> None:
         """Set a specific notification to deleted status to prevent data lost"""
         notification = Notification.query.get_or_404(notification_id)
         notification.status = 'deleted'
-        self.db.session.add(notification)
+        #self.db.session.add(notification)
         self.db.session.commit()
 
     def set_all_notification_status_to_delete(self, user_id: int) -> None:
@@ -83,5 +83,5 @@ class NotificationRepository(DbHandler):
         notifications = Notification.query.filter_by(receiver_id=user_id).all()
         for notification in notifications:
             notification.status = 'deleted'
-        self.db.session.add_all(notifications)
+        #self.db.session.add_all(notifications)
         self.db.session.commit()
