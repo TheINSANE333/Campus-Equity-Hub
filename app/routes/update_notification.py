@@ -1,9 +1,9 @@
 from flask import jsonify, session
+import time
+from flask import jsonify, session
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
-from flask_login import login_required
 from app.notification_dbhandler import NotificationRepository
-
 
 class UpdateNotification(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -16,7 +16,6 @@ class UpdateNotification(Endpoint):
 
         self.notification_dbhandler = NotificationRepository(self.flask_app)
 
-    @login_required
     def update_notification(self):
         if 'user_id' not in session:
             return jsonify({'error': 'Unauthorized'}), 401
@@ -39,9 +38,15 @@ class UpdateNotification(Endpoint):
                 } for n in notifications
             ]
 
+            # Update session cache for unread count
+            unread_count = sum(1 for n in notifications if n.status == 'unread')
+            session['unread_count_' + str(user_id)] = unread_count
+            session['unread_count_time_' + str(user_id)] = time.time()
+
             return jsonify({
                 'success': True,
-                'new_notifications': notification_data
+                'new_notifications': notification_data,
+                'unread_count': unread_count
             })
 
         except Exception as e:

@@ -1,6 +1,6 @@
 from flask import session
 import time
-from app.function import getUnreadCount
+from app.function import getUnreadCount, getUnreadNotifications
 
 # Configuration for different notification types
 NOTIFICATION_CONFIGS = {
@@ -10,11 +10,11 @@ NOTIFICATION_CONFIGS = {
         'cache_duration': 1
     },
 
-    # 'unread_notifications': {
-    #     'function': getUnreadNotifications,
-    #     'cache_key': 'unread_messages',
-    #     'cache_duration': 1
-    # },
+    'unread_notifications': {
+        'function': getUnreadNotifications,
+        'cache_key': 'unread_messages',
+        'cache_duration': 1
+    },
 }
 
 

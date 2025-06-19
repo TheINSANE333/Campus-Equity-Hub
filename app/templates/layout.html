@@ -49,7 +49,11 @@
                     <div class="notification-icon text-white position-relative">
                         <i class="fas fa-bell fs-5"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            3
+                            {% if unread_notifications > 0 %}
+                            {{ unread_notifications }}
+                            {% else %}
+                            0
+                            {% endif %}
                         </span>
                     </div>
                 </a>
@@ -136,6 +140,82 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     {% if 'user_id' in session %}
     <script>
+
+        function updateNotificationBadge() {
+            fetch('/update_notification', {
+                method: 'GET',
+                credentials: 'same-origin'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update notification badge count
+                        const badgeElement = document.getElementById('notification-badge');
+                        if (badgeElement) {
+                            const count = data.new_notifications.filter(n => n.status === 'unread').length;
+                            badgeElement.textContent = count;
+
+                            // Show/hide badge based on count
+                            if (count > 0) {
+                                badgeElement.style.display = 'flex';
+                            } else {
+                                badgeElement.style.display = 'none';
+                            }
+                        }
+                    }
+                })
+                .catch(error => console.error('Error updating notifications:', error));
+        }
+
+        function updateBadgeAfterDelete() {
+            // Count remaining unread notifications
+            const remainingUnread = document.querySelectorAll('.notification-card:not(.read)').length;
+
+            // Update badge in current window
+            const localBadge = document.getElementById('notification-badge');
+            if (localBadge) {
+                localBadge.textContent = remainingUnread;
+                localBadge.style.display = remainingUnread > 0 ? 'flex' : 'none';
+            }
+
+            // Update badge in parent window (for when opened in iframe/modal)
+            if (window.parent && window.parent !== window) {
+                const parentBadge = window.parent.document.getElementById('notification-badge');
+                if (parentBadge) {
+                    parentBadge.textContent = remainingUnread;
+                    parentBadge.style.display = remainingUnread > 0 ? 'flex' : 'none';
+                }
+            }
+
+            // Update top-level window (dashboard)
+            if (window.top && window.top !== window) {
+                const topBadge = window.top.document.getElementById('notification-badge');
+                if (topBadge) {
+                    topBadge.textContent = remainingUnread;
+                    topBadge.style.display = remainingUnread > 0 ? 'flex' : 'none';
+                }
+            }
+
+            // Update via fetch to ensure server state is updated
+            fetch('/update_notification', {
+                method: 'GET',
+                credentials: 'same-origin'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Force session update
+                        localStorage.setItem('notification_update', Date.now());
+                    }
+                })
+                .catch(error => console.error('Error updating badge:', error));
+        }
+
+        // Poll for updates every 30 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            setInterval(updateNotificationBadge, 30000);
+        });
+
         // Search functionality
         document.querySelector('.search-input').addEventListener('focus', function() {
             this.style.background = 'rgba(255,255,255,0.3)';

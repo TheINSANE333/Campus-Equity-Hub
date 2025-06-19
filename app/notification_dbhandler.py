@@ -65,39 +65,19 @@ class NotificationRepository(DbHandler):
                 Notification.status != 'deleted'
             ).order_by(Notification.timestamp.desc()).all()
 
-
-    def get_unread_notifications(self, user_id: int, role_to_be_view: str) -> List[Notification]:
-        """Get unread notifications for a specific user and role"""
-        return Notification.query.filter_by(
-            receiver_id=user_id,
-            status='unread',
-            role_to_be_view=role_to_be_view
-        ).order_by(Notification.timestamp.desc()).all()
-
     def count_unread_notifications(self, user_id: int, role_to_be_view: str) -> int:
         """Count unread notifications for a specific user and role"""
-        return Notification.query.filter_by(
-            receiver_id=user_id,
-            status='unread',
-            role_to_be_view=role_to_be_view
-        ).count()
-
-    def mark_as_read(self, notification_id: int) -> None:
-        """Mark a specific notification as read"""
-        notification = Notification.query.get_or_404(notification_id)
-        notification.status = 'read'
-        self.db.session.commit()
-
-    def mark_all_as_read(self, user_id: int, role_to_be_view: str) -> None:
-        """Mark all notifications for a user and role as read"""
-        notifications = Notification.query.filter_by(
-            receiver_id=user_id,
-            status='unread',
-            role_to_be_view=role_to_be_view
-        ).all()
-        for notification in notifications:
-            notification.status = 'read'
-        self.db.session.commit()
+        if role_to_be_view == 'admin':
+            # For admin, count all unread notifications meant for admins
+            return Notification.query.filter_by(
+                role_to_be_view='admin',
+                status='unread'
+            ).count()
+        else:
+            return Notification.query.filter_by(
+                receiver_id=user_id,
+                status='unread',
+            ).count()
 
     def set_notification_status_to_delete(self, notification_id: int) -> None:
         """Set a specific notification to deleted status to prevent data lost"""
