@@ -41,15 +41,18 @@ class ProcessApplication(Endpoint):
         name =  sender.username
         user = user_dbHandler.query_user_id(application.user_id)
 
+
         # If application is approved, update user role to special
         if action == 'approved':
 
             user_dbHandler.update_role(user, 'special')
-            notification_dbHandler.create_notification(user.id, sender_id, name, 'Your status has been approved and updated to Priority Access','Special Approval', 'unread', 'student', 'Updated Status For Priority Access')
+            role_to_be_view = user.role
+            notification_dbHandler.create_notification(user.id, sender_id, name, 'Your status has been approved and updated to Priority Access','Special Approval', 'unread', role_to_be_view, 'Updated Status For Priority Access')
             flash('Application approved and user role updated to special!', 'success')
         else:
+            role_to_be_view = user.role
             flash('Application rejected!', 'danger')
-            notification_dbHandler.create_notification(user.id, sender_id, name, 'Your status has been approved and updated to Priority Access','Special Approval', 'unread', 'student', 'Updated Status For Priority Access')
+            notification_dbHandler.create_notification(user.id, sender_id, name, 'Your status has been approved and updated to Priority Access','Special Approval', 'unread', role_to_be_view, 'Updated Status For Priority Access')
         
         # Redirect back to application list or details page
         return redirect(url_for('application_approval'))
