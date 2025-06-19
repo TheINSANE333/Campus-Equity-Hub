@@ -126,22 +126,13 @@ class UserRepository(DbHandler):
     
     def reset_database(self) -> None:
         raise NotImplementedError("UserRepository does not implement reset_database")
-
-    def get_user_achievement_points(self, user_id: int) -> int:
-        user = self.query_user_id(user_id)
-        return user.achievement_point
-
-    def get_user_achievement_level(self, user_id: int) -> int:
-        user = self.query_user_id(user_id)
-        return user.achievement_level
-
     def add_achievement_points(self, user_id: int, points: int) -> None:
         user = self.query_user_id(user_id)
         user.achievement_point += points
         # self.db.session.add(user)
         self.db.session.commit()
 
-    def get_user_achievement_level(self, user_id: int):
+    def get_update_user_achievement_level(self, user_id: int):
         user = self.query_user_id(user_id)
         if  user.achievement_point < 10:
             pass
