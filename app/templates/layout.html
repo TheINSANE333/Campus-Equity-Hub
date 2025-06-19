@@ -48,13 +48,11 @@
                 <a href="{{ url_for('view_notification') }}" class="col-auto text-decoration-none">
                     <div class="notification-icon text-white position-relative">
                         <i class="fas fa-bell fs-5"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {% if unread_notifications > 0 %}
+                        {% if unread_notifications > 0 %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">    
                             {{ unread_notifications }}
-                            {% else %}
-                            0
-                            {% endif %}
                         </span>
+                        {% endif %}
                     </div>
                 </a>
                 <a href="{{ url_for('achievement') }}" class="col-auto text-decoration-none">
