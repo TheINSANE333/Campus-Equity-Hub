@@ -1,4 +1,6 @@
 from flask import request, flash, redirect, url_for, session
+
+import app.notification_dbhandler
 from app.app_stub import Flask_App_Stub
 from app.models.user import User # Import the User model
 from app.extensions import db
@@ -6,6 +8,8 @@ from datetime import datetime
 from app.routes.endpoint import Endpoint
 from app.swap_dbhandler import SwapRepository
 from app.item_dbhandler import ItemRepository
+from app.dbhandler import UserRepository
+from app.notification_dbhandler import NotificationRepository
 from app.dbhandler import UserRepository
 
 class SubmitSwapRequest(Endpoint):
@@ -24,12 +28,16 @@ class SubmitSwapRequest(Endpoint):
         item = item_dbhandler.query_item(item_id)
         target_item_id = request.form['swapItem']
         target_item = item_dbhandler.query_item(target_item_id)
+        notification_dbhandler = NotificationRepository(self.flask_app)
+        user_dbhandler = UserRepository(self.flask_app)
+        current_user = user_dbhandler.query_user_id(session.get('user_id'))
 
         swap_dbhandler.check_item_available(item)
 
         try:
             description = request.form.get('description')
             current_user_id = session.get('user_id')
+            current_user_name = current_user.username
             if not current_user_id:
                 flash('User not logged in.', 'danger')
                 return redirect(url_for('login')) # Or your login route
@@ -47,6 +55,7 @@ class SubmitSwapRequest(Endpoint):
             # target_item.status = 'swapping'
             swap_dbhandler.update_swap_status(item, 'requested')
             swap_dbhandler.update_swap_status(target_item, 'swapping')
+            notification_dbhandler.create_notification(item.user_id, current_user_id, current_user_name, description, 'request swap', 'unread', 'student', f"Request For'{target_item}'")
 
             swap_dbhandler.update_all_item_status(swap_item)
 

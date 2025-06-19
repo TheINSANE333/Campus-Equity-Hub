@@ -29,7 +29,7 @@ class DbHandler(ABC):
 
 class NotificationRepository(DbHandler):
 
-    def create_notification(self, receiver_id: int, sender_id: int, message: str, notification_type: str, status: str, title: str = None) -> None:
+    def create_notification(self, receiver_id: int, sender_id: int, sender_name: str,message: str, notification_type: str, status: str, role_to_be_view: str, title: str = None) -> None:
 
         new_notification = Notification(
             receiver_id=receiver_id,
@@ -38,50 +38,92 @@ class NotificationRepository(DbHandler):
             notification_type=notification_type,
             timestamp=datetime.now(),
             title=title,
-            status=status
+            status=status,
+            role_to_be_view=role_to_be_view,
+            sender_name=sender_name
         )
-        
+
         self.db.session.add(new_notification)
         self.db.session.commit()
-    
-    def get_user_notifications(self, user_id: int) -> List[Notification]:
-        """Get all notifications for a specific user ordered by timestamp (newest first)"""
-        return Notification.query.filter_by(receiver_id=user_id).order_by(Notification.timestamp.desc()).all()
-    
-    def get_unread_notifications(self, user_id: int) -> List[Notification]:
-        """Get unread notifications for a specific user"""
-        return Notification.query.filter_by(receiver_id=user_id, status='unread').order_by(Notification.timestamp.desc()).all()
-    
-    def count_unread_notifications(self, user_id: int) -> int:
-        """Count unread notifications for a specific user"""
-        return Notification.query.filter_by(receiver_id=user_id, status='unread').count()
-    
+
+
+    def get_user_notifications(self, user_id: int, role_to_be_view: str) -> List[Notification]:
+        """Get all non-deleted notifications for a specific user and role ordered by timestamp (newest first)"""
+        if role_to_be_view == 'admin':
+            # For admin, show all notifications meant for admins (role_to_be_view = 'admin')
+            return Notification.query.filter_by(
+                role_to_be_view='admin'
+            ).filter(
+                Notification.status != 'deleted'
+            ).order_by(Notification.timestamp.desc()).all()
+        else:
+            # For students, show only notifications meant for them specifically
+            return Notification.query.filter_by(
+                receiver_id=user_id,
+                role_to_be_view=role_to_be_view
+            ).filter(
+                Notification.status != 'deleted'
+            ).order_by(Notification.timestamp.desc()).all()
+
+
+    def get_unread_notifications(self, user_id: int, role_to_be_view: str) -> List[Notification]:
+        """Get unread notifications for a specific user and role"""
+        return Notification.query.filter_by(
+            receiver_id=user_id,
+            status='unread',
+            role_to_be_view=role_to_be_view
+        ).order_by(Notification.timestamp.desc()).all()
+
+    def count_unread_notifications(self, user_id: int, role_to_be_view: str) -> int:
+        """Count unread notifications for a specific user and role"""
+        return Notification.query.filter_by(
+            receiver_id=user_id,
+            status='unread',
+            role_to_be_view=role_to_be_view
+        ).count()
+
     def mark_as_read(self, notification_id: int) -> None:
         """Mark a specific notification as read"""
         notification = Notification.query.get_or_404(notification_id)
         notification.status = 'read'
-        #self.db.session.add(notification)
         self.db.session.commit()
-    
-    def mark_all_as_read(self, user_id: int) -> None:
-        """Mark all notifications for a user as read"""
-        notifications = Notification.query.filter_by(receiver_id=user_id, status='unread').all()
+
+    def mark_all_as_read(self, user_id: int, role_to_be_view: str) -> None:
+        """Mark all notifications for a user and role as read"""
+        notifications = Notification.query.filter_by(
+            receiver_id=user_id,
+            status='unread',
+            role_to_be_view=role_to_be_view
+        ).all()
         for notification in notifications:
             notification.status = 'read'
-        #self.db.session.add_all(notifications)
         self.db.session.commit()
-    
+
     def set_notification_status_to_delete(self, notification_id: int) -> None:
         """Set a specific notification to deleted status to prevent data lost"""
         notification = Notification.query.get_or_404(notification_id)
         notification.status = 'deleted'
-        #self.db.session.add(notification)
         self.db.session.commit()
 
-    def set_all_notification_status_to_delete(self, user_id: int) -> None:
-        """Set all notifications for a user to deleted status"""
-        notifications = Notification.query.filter_by(receiver_id=user_id).all()
+    def set_all_notification_status_to_delete(self, user_id: int, role_to_be_view: str) -> None:
+        """Set all notifications for a user and role to deleted status"""
+        if role_to_be_view == 'admin':
+            # For admin, update all admin notifications
+            notifications = Notification.query.filter_by(
+                role_to_be_view='admin'
+            ).filter(
+                Notification.status != 'deleted'
+            ).all()
+        else:
+            # For other roles, update only their specific notifications
+            notifications = Notification.query.filter_by(
+                receiver_id=user_id,
+                role_to_be_view=role_to_be_view
+            ).filter(
+                Notification.status != 'deleted'
+            ).all()
+
         for notification in notifications:
             notification.status = 'deleted'
-        #self.db.session.add_all(notifications)
+
         self.db.session.commit()

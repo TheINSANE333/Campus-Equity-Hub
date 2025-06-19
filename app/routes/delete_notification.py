@@ -16,12 +16,10 @@ class DeleteNotification(Endpoint):
 
         self.notification_dbhandler = NotificationRepository(self.flask_app)
 
-    @login_required
     def delete_notification(self):
-        if 'user_id' not in session:
-            return jsonify({'error': 'Unauthorized'}), 401
 
         user_id = session['user_id']
+        role = session.get('role', 'student')  # Default to 'student' if no role
 
         if flask_request.method == 'POST':
             data = flask_request.get_json()
@@ -39,7 +37,8 @@ class DeleteNotification(Endpoint):
 
         elif flask_request.method == 'DELETE':
             try:
-                self.notification_dbhandler.set_all_notification_status_to_delete(user_id)
+                # Pass the role to properly handle admin notifications
+                self.notification_dbhandler.set_all_notification_status_to_delete(user_id, role)
                 return jsonify({'success': True})
             except Exception as e:
                 self.flask_app.logger.error(f"Error deleting all notifications: {str(e)}")

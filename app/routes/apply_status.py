@@ -1,10 +1,14 @@
 import os
 import uuid
 from flask import render_template, request, url_for, flash, session, redirect
+from sqlalchemy.sql.functions import current_user
+
 from app.app_stub import Flask_App_Stub
 from app.application_dbhandler import ApplicationRepository
 from app.routes.endpoint import Endpoint
 from app.function import pdfVerification, getUnreadCount
+from app.notification_dbhandler import NotificationRepository
+from app.dbhandler import UserRepository
 
 class ApplyStatus(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:
@@ -19,7 +23,12 @@ class ApplyStatus(Endpoint):
         if 'user_id' not in session:
             flash('Please log in to access this page.', 'danger')
             return redirect(url_for('login'))
-        
+
+        notification_dbHandler = NotificationRepository(self.flask_app)
+        user_dbHandler = UserRepository(self.flask_app)
+        current_user_id = session.get('user_id')
+        user = user_dbHandler.query_user_id(current_user_id)
+
         if request.method == 'POST':
             name = request.form['name']
             ic = request.form['ic']
@@ -41,6 +50,7 @@ class ApplyStatus(Endpoint):
             application_dbHandler = ApplicationRepository(self.flask_app)
             command = NewApplicationCommand(application_dbHandler)
             success, message = command.execute(name, ic, cgpa, pdf_filename, hpnumber, income)
+            notification_dbHandler.create_notification(0, session['user_id'], user.username, f"New Application, '{user.username}' has applied for a Priority Access.", 'Special Approval','unread', 'admin', 'Application for Priority Access')
             
             flash(message, 'success' if success else 'danger')
             if success:

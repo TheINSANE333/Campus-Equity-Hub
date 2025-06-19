@@ -22,17 +22,20 @@ class UpdateNotification(Endpoint):
             return jsonify({'error': 'Unauthorized'}), 401
 
         user_id = session.get('user_id')
+        role = session.get('role', 'student')  # Default to 'student' if no role
 
         try:
-            notifications = self.notification_dbhandler.get_user_notifications(user_id)
+            notifications = self.notification_dbhandler.get_user_notifications(user_id, role)
             notification_data = [
                 {
                     'id': n.id,
                     'title': n.title,
                     'message': n.message,
                     'sender_id': n.sender_id,
+                    'sender_name': n.sender_name,
                     'timestamp': n.timestamp.isoformat(),
-                    'read': n.read
+                    'status': n.status,
+                    'notification_type': n.notification_type
                 } for n in notifications
             ]
 

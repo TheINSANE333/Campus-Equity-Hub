@@ -6,6 +6,7 @@ from app.swap_dbhandler import SwapRepository
 from app.routes.endpoint import Endpoint
 from app.dbhandler import UserRepository
 from app.extensions import db
+from app.notification_dbhandler import NotificationRepository
 
 
 class ProcessSwap(Endpoint):
@@ -23,6 +24,7 @@ class ProcessSwap(Endpoint):
         swap_dbHandler = SwapRepository(self.flask_app)
         item_dbHandler = ItemRepository(self.flask_app)
         user_dbHandler = UserRepository(self.flask_app)
+        notification_dbHandler = NotificationRepository(self.flask_app)
 
         try:
             swap = swap_dbHandler.query_swap(swap_id)
@@ -31,6 +33,8 @@ class ProcessSwap(Endpoint):
 
             requester_id = item.user_id
             owner_id = target.user_id
+            owner = user_dbHandler.query_user_id(owner_id)
+            owner_name = owner.username
 
             requester = user_dbHandler.query_user_id(requester_id)
             owner = user_dbHandler.query_user_id(owner_id)
@@ -48,6 +52,7 @@ class ProcessSwap(Endpoint):
                 swap_dbHandler.update_swap_status(swap, 'accepted')
                 swap_dbHandler.update_location(swap, location)
                 swap_dbHandler.update_time(swap, trade_time)
+                notification_dbHandler.create_notification(requester_id, owner_id, owner_name, f"Your swap request  for '{target.name}' has been accepted!", 'swap approve', 'unnread', 'student', f"Swap Accepted For '{target.name}'")
     
                 user_dbHandler.add_token(requester, 5)
                 user_dbHandler.add_token(owner, 5)

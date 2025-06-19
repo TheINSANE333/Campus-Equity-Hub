@@ -15,11 +15,14 @@ class ViewNotification(Endpoint):
 
     def view_notification_page(self):
         user_id = session.get('user_id')
+        role = session.get('role', 'student')  # Default to 'student' if no role
+
         if 'user_id' not in session:
             flash('Please log in to access this page.', 'danger')
             return redirect(url_for('login'))
-        
+
         notification_dbHandler = NotificationRepository(self.flask_app)
-        notifications = notification_dbHandler.get_unread_notifications(user_id)
+        # Get all notifications for the user and role, not just unread ones
+        notifications = notification_dbHandler.get_user_notifications(user_id, role)
 
         return render_template('notification.html', notifications=notifications)

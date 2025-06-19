@@ -12,9 +12,10 @@
         {% for notification in notifications %}
         <div class="notification-card" data-notification-id="{{ notification.id }}">
             <div class="notification-content">
-                <div class="notification-title">{{ notification.title or 'System Notification' }}</div>
-                <div class="notification-sender">{{ notification.sender_id }}</div>
+                <div class="notification-title">{{ notification.title or 'Notification' }}</div>
+                <div class="notification-sender">{{ notification.sender_name or 'System' }}</div>
                 <div class="notification-message">{{ notification.message }}</div>
+                <div class="notification-time">{{ notification.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
             </div>
             <button class="delete-btn" data-notification-id="{{ notification.id }}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -32,7 +33,7 @@
     </div>
 
     <div class="actions">
-        <button id="backBtn" class="action-btn secondary">
+        <button id="backBtn" onclick="javascript:history.back()" class="action-btn secondary">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
@@ -146,6 +147,13 @@
         font-size: 15px;
         color: #374151;
         line-height: 1.5;
+        margin-bottom: 8px;
+    }
+
+    .notification-time {
+        font-size: 12px;
+        color: #9ca3af;
+        font-weight: 500;
     }
 
     .delete-btn {
@@ -347,120 +355,106 @@
 </style>
 
 <script>
-    // Delete single notification
-    document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const notificationId = this.getAttribute('data-notification-id');
-            const notificationCard = this.closest('.notification-card');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle individual notification deletion
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
 
-            notificationCard.classList.add('removing');
+                const notificationId = this.getAttribute('data-notification-id');
+                const notificationCard = this.closest('.notification-card');
 
-            setTimeout(() => {
-                fetch('/delete_notification', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ notification_id: notificationId })
-                }).then(response => {
-                    if (response.ok) {
-                        notificationCard.remove();
-                        checkEmptyNotificationList();
-                    } else {
-                        notificationCard.classList.remove('removing');
-                        alert('Failed to delete notification.');
-                    }
-                }).catch(error => {
-                    notificationCard.classList.remove('removing');
-                    alert('Failed to delete notification.');
-                });
-            }, 400);
+                if (confirm('Are you sure you want to delete this notification?')) {
+                    deleteNotification(notificationId, notificationCard);
+                }
+            });
         });
-    });
 
-    // Remove all notifications
-    document.getElementById('removeAllBtn')?.addEventListener('click', function () {
-        if (!confirm('Clear all notifications?')) return;
-
-        this.innerHTML = 'Clearing...';
-        this.disabled = true;
-
-        fetch('/delete_notification', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' }
-        }).then(response => {
-            if (response.ok) {
-                const notifications = document.querySelectorAll('.notification-card');
-                notifications.forEach((card, index) => {
-                    setTimeout(() => {
-                        card.classList.add('removing');
-                    }, index * 100);
-                });
-
-                setTimeout(() => {
-                    document.getElementById('notification-list').innerHTML = `
-                        <div class="empty-state">
-                            <div class="empty-icon">🔔</div>
-                            <p>No notifications</p>
-                        </div>
-                    `;
-                }, notifications.length * 100 + 400);
-            } else {
-                alert('Failed to clear notifications.');
+        // Handle "Clear All" button
+        document.getElementById('removeAllBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear all notifications?')) {
+                clearAllNotifications();
             }
-        }).catch(error => {
-            alert('Failed to clear notifications.');
-        }).finally(() => {
-            this.innerHTML = 'Clear All';
-            this.disabled = false;
         });
-    });
 
-    // Back button functionality
-    document.getElementById('backBtn')?.addEventListener('click', function () {
-        if (document.referrer && document.referrer !== window.location.href) {
-            window.history.back();
-        } else {
-            window.location.href = '/dashboard';
+        function deleteNotification(notificationId, cardElement) {
+            fetch('/delete_notification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    notification_id: notificationId
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Add removing animation
+                        cardElement.classList.add('removing');
+
+                        // Remove the element after animation completes
+                        setTimeout(() => {
+                            cardElement.remove();
+
+                            // Check if no notifications left
+                            const remainingCards = document.querySelectorAll('.notification-card');
+                            if (remainingCards.length === 0) {
+                                showEmptyState();
+                            }
+                        }, 400);
+                    } else {
+                        alert('Error deleting notification: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error deleting notification');
+                });
         }
-    });
 
-    // Check for empty notification list
-    function checkEmptyNotificationList() {
-        const list = document.getElementById('notification-list');
-        const notifications = list.querySelectorAll('.notification-card');
-
-        if (notifications.length === 0) {
-            list.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">🔔</div>
-                    <p>No notifications</p>
-                </div>
-            `;
-        }
-    }
-
-    // Auto-refresh notifications
-    setInterval(function () {
-        fetch('/api/notifications')
-            .then(response => response.json())
-            .then(data => {
-                if (data.new_notifications) {
-                    document.body.style.opacity = '0.9';
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 200);
+        function clearAllNotifications() {
+            fetch('/delete_notification', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
                 }
             })
-            .catch(error => console.error('Error fetching notifications:', error));
-    }, 5000);
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Add removing animation to all cards
+                        const allCards = document.querySelectorAll('.notification-card');
+                        allCards.forEach((card, index) => {
+                            setTimeout(() => {
+                                card.classList.add('removing');
+                            }, index * 100); // Stagger the animations
+                        });
 
-    // Add subtle parallax effect
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const cards = document.querySelectorAll('.notification-card');
-        cards.forEach((card, index) => {
-            const speed = 0.5 + (index * 0.1);
-            card.style.transform = `translateY(${scrolled * speed * 0.1}px)`;
-        });
+                        // Show empty state after all animations complete
+                        setTimeout(() => {
+                            showEmptyState();
+                        }, allCards.length * 100 + 400);
+                    } else {
+                        alert('Error clearing notifications: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error clearing notifications');
+                });
+        }
+
+        function showEmptyState() {
+            const notificationsList = document.getElementById('notification-list');
+            notificationsList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🔔</div>
+                <p>No notifications</p>
+            </div>
+        `;
+        }
     });
 </script>
 
