@@ -98,7 +98,7 @@ class NotificationRepository(DbHandler):
             # For other roles, update only their specific notifications
             notifications = Notification.query.filter_by(
                 receiver_id=user_id,
-                role_to_be_view=role_to_be_view
+                role_to_be_view='student'
             ).filter(
                 Notification.status != 'deleted'
             ).all()
