@@ -28,16 +28,19 @@ class ProcessItem(Endpoint):
         # Get the item from database
         item_dbHandler = ItemRepository(self.flask_app)
         item = item_dbHandler.query_item(item_id)
+        item_owner_id = item.user_id
         notification_dbHandler = NotificationRepository(self.flask_app)
         user_dbHandler = UserRepository(self.flask_app)
         user = user_dbHandler.query_user_id(session["user_id"])
         name =user.username
+        item_owner = user_dbHandler.query_user_id(item_owner_id)
+        role_to_be_view = item_owner.role
         user_id = session.get('user_id')
         item_dbHandler.update_status(item,action)
         if action == 'approved':
-            notification_dbHandler.create_notification(item.user_id, user_id, name,f"Your item '{item.name}' has been {action}.", 'item approval', 'unread', 'admin', 'Item Approval Update')
+            notification_dbHandler.create_notification(item.user_id, user_id, name,f"Your item '{item.name}' has been {action}.", 'item approval', 'unread', role_to_be_view, 'Item Approval Update')
         elif action == 'rejected':
-            notification_dbHandler.create_notification(item.user_id, user_id, name,f"Your item '{item.name}' has been {action}.", 'item approval', 'unread', 'admin', 'Item Approval Update')
+            notification_dbHandler.create_notification(item.user_id, user_id, name,f"Your item '{item.name}' has been {action}.", 'item approval', 'unread', role_to_be_view, 'Item Approval Update')
 
         flash('Item status updated!', 'success')
         # Redirect back to item list or details page

@@ -31,13 +31,14 @@ class ProcessSwap(Endpoint):
             item = item_dbHandler.query_item(swap.item_id)
             target = item_dbHandler.query_item(swap.target_item_id)
 
-            requester_id = item.user_id
-            owner_id = target.user_id
+            owner_id = item.user_id
+            requester_id = target.user_id
             owner = user_dbHandler.query_user_id(owner_id)
             owner_name = owner.username
 
             requester = user_dbHandler.query_user_id(requester_id)
             owner = user_dbHandler.query_user_id(owner_id)
+            role_to_be_view = requester.role
 
             if not requester or not owner:
                 flash("One or more users could not be found.", "danger")
@@ -52,7 +53,7 @@ class ProcessSwap(Endpoint):
                 swap_dbHandler.update_swap_status(swap, 'accepted')
                 swap_dbHandler.update_location(swap, location)
                 swap_dbHandler.update_time(swap, trade_time)
-                notification_dbHandler.create_notification(requester_id, owner_id, owner_name, f"Your swap request  for '{target.name}' has been accepted!", 'swap approve', 'unnread', 'student', f"Swap Accepted For '{target.name}'")
+                notification_dbHandler.create_notification(requester_id, owner_id, owner_name, f"Your swap request  for '{target.name}' has been accepted!", 'swap approve', 'unread', role_to_be_view, f"Swap Accepted For '{target.name}'")
     
                 user_dbHandler.add_token(requester, 5)
                 user_dbHandler.add_token(owner, 5)
@@ -66,6 +67,7 @@ class ProcessSwap(Endpoint):
                 item_dbHandler.update_item_status(item, 'available')
                 item_dbHandler.update_item_status(target, 'available')
                 swap_dbHandler.update_swap_status(swap, 'rejected')
+                notification_dbHandler.create_notification(requester_id, owner_id, owner_name, f"Your swap request  for '{target.name}' has been rejected!", 'swap rejected', 'unread', role_to_be_view, f"Swap Rejected For '{target.name}'")
                 flash('Swap Rejected!', 'info')
 
             else:

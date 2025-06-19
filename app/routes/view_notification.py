@@ -15,7 +15,7 @@ class ViewNotification(Endpoint):
 
     def view_notification_page(self):
         user_id = session.get('user_id')
-        role = session.get('role', 'student')  # Default to 'student' if no role
+        role = session.get('role', 'student')
 
         if 'user_id' not in session:
             flash('Please log in to access this page.', 'danger')

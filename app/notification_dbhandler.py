@@ -60,7 +60,7 @@ class NotificationRepository(DbHandler):
             # For students, show only notifications meant for them specifically
             return Notification.query.filter_by(
                 receiver_id=user_id,
-                role_to_be_view='student'
+                role_to_be_view=role_to_be_view
             ).filter(
                 Notification.status != 'deleted'
             ).order_by(Notification.timestamp.desc()).all()
@@ -98,7 +98,7 @@ class NotificationRepository(DbHandler):
             # For other roles, update only their specific notifications
             notifications = Notification.query.filter_by(
                 receiver_id=user_id,
-                role_to_be_view='student'
+                role_to_be_view=role_to_be_view
             ).filter(
                 Notification.status != 'deleted'
             ).all()

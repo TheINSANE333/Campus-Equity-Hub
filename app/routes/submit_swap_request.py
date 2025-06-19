@@ -50,12 +50,14 @@ class SubmitSwapRequest(Endpoint):
                 return redirect(url_for('dashboard'))
 
             swap_item = swap_dbhandler.get_swap_item(item, target_item, current_user_id, description, user)
-
+            owner_id = item.user_id
+            owner = user_dbhandler.query_user_id(owner_id)
+            role_to_be_view = owner.role
             # item.status = 'requested'
             # target_item.status = 'swapping'
             swap_dbhandler.update_swap_status(item, 'requested')
             swap_dbhandler.update_swap_status(target_item, 'swapping')
-            notification_dbhandler.create_notification(item.user_id, current_user_id, current_user_name, description, 'request swap', 'unread', 'student', f"Request For'{target_item}'")
+            notification_dbhandler.create_notification(item.user_id, current_user_id, current_user_name, description, 'request swap', 'unread', role_to_be_view, f"Request For'{target_item}'")
 
             swap_dbhandler.update_all_item_status(swap_item)
 
