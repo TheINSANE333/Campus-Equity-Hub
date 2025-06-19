@@ -27,8 +27,7 @@ class DeleteItem(Endpoint):
 
         try:
             swaps_to_update = swap_dbhandler.get_swaps_to_update(item_to_delete)
-            item_to_delete.status = 'deleted'
-            item_dbhandler.set_item_status(item_to_delete)
+            item_dbhandler.set_item_status(item_to_delete, 'deleted')
             swap_dbhandler.update_status(swaps_to_update, item_dbhandler)
 
         except Exception as e:

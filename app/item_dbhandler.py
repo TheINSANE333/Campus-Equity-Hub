@@ -84,8 +84,8 @@ class ItemRepository(DbHandler):
     def query_item(self, item_id: str) -> Item:
         return Item.query.get_or_404(item_id)
 
-    def set_item_status(self, status):
-        self.db.session.add(status)
+    def set_item_status(self, item, status):
+        item.status = status
         self.db.session.commit()
 
     def check_item_available(self, item):
@@ -152,7 +152,7 @@ class ItemRepository(DbHandler):
 
     def update_item_status(self, item, status) -> None:
         item.status = status
-        self.db.session.add(item)
+        #self.db.session.add(item)
         self.db.session.commit()
 
     def get_item_by_category(self, category) -> List[Item]:
