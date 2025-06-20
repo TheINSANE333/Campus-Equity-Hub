@@ -128,18 +128,18 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="tradeDetailsModalLabel">Set Trade Details</h5>
+                <h5 class="modal-title" id="tradeDetailsModalLabel">Set Swap Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST" action="{{ url_for('process_swap', swap_id=swap.id) }}">
                 <div class="modal-body">
                     <input type="hidden" name="action" value="accepted">
                     <div class="mb-3">
-                        <label for="location" class="form-label">Trade Location</label>
+                        <label for="location" class="form-label">Swap Location</label>
                         <input type="text" class="form-control" id="location" name="location" required>
                     </div>
                     <div class="mb-3">
-                        <label for="tradeTime" class="form-label">Trade Time</label>
+                        <label for="tradeTime" class="form-label">Swap Time</label>
                         <input type="datetime-local" class="form-control" id="tradeTime" name="trade_time" required>
                     </div>
                 </div>
