@@ -19,7 +19,8 @@ After downloaded the libraries, run:
 Or
 
 Just simply access the hosted website
-[Campus Equity Hub](https://simple-login-4ndj.onrender.com "Campus Equity Hub")
+[Campus Equity Hub](https://simple-login-4ndj.onrender.com "Campus Equity Hub")  
+
 **Note that  it may takes a while to load the website*
 
 Default users:
