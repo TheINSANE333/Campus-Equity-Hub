@@ -1,7 +1,5 @@
 from app.extensions import db, bcrypt
-from datetime import datetime
 from app.models.user import User
-from app.models.item import Item
 
 class DatabaseSeeder:
     """Handles database seeding operations."""
@@ -27,9 +25,6 @@ class DatabaseSeeder:
                 )
                 db.session.add(admin)
                 db.session.commit()
-                print("Admin user created successfully.")
-            else:
-                print("Admin user already exists.")
 
     def seed_user_1(self):
         """Create default user if it doesn't exist."""
@@ -49,9 +44,6 @@ class DatabaseSeeder:
                 )
                 db.session.add(user1)
                 db.session.commit()
-                print("User1 created successfully.")
-            else:
-                print("User1 already exists.")
 
     def seed_user_2(self):
         """Create default user if it doesn't exist."""
@@ -71,70 +63,61 @@ class DatabaseSeeder:
                 )
                 db.session.add(user2)
                 db.session.commit()
-                print("User1 created successfully.")
-            else:
-                print("User1 already exists.")
 
-    def seed_item_1(self):
-        """Create default item if it doesn't exist."""
-        with self.app.app_context():
-            # Check if item1 already exists
-            item_1 = Item.query.filter_by(name='Item1').first()
+    # def seed_item_1(self):
+    #     """Create default item if it doesn't exist."""
+    #     with self.app.app_context():
+    #         # Check if item1 already exists
+    #         item_1 = Item.query.filter_by(name='Item1').first()
             
-            if not item_1:
-                # Create item1
-                item1 = Item(
-                    name = 'Item1',
-                    description = "Lorem ipsum dolor sit amet, " \
-                    "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " \
-                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " \
-                    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " \
-                    "Excepteur sint occaecat cupidatat non proident, " \
-                    "sunt in culpa qui officia deserunt mollit anim id est laborum.", 
-                    price = 447243.74,
-                    image_filename = 'bitcoin.png',
-                    timestamp = datetime.utcnow(),
-                    user_id = 2, 
-                    category = "Electronics", 
-                    status = 'available',   # available, hidden, sold
-                    approval = 'pending'
-                )
-                db.session.add(item1)
-                db.session.commit()
-                print("Item1 created successfully.")
-            else:
-                print("Item1 already exists.")
+    #         if not item_1:
+    #             # Create item1
+    #             item1 = Item(
+    #                 name = 'Item1',
+    #                 description = "Lorem ipsum dolor sit amet, " \
+    #                 "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " \
+    #                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " \
+    #                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " \
+    #                 "Excepteur sint occaecat cupidatat non proident, " \
+    #                 "sunt in culpa qui officia deserunt mollit anim id est laborum.", 
+    #                 price = 447243.74,
+    #                 image_filename = 'bitcoin.png',
+    #                 timestamp = datetime.utcnow(),
+    #                 user_id = 2, 
+    #                 category = "Electronics", 
+    #                 status = 'available',   # available, hidden, sold
+    #                 approval = 'pending'
+    #             )
+    #             db.session.add(item1)
+    #             db.session.commit()
 
-    def seed_item_2(self):
-        """Create default item if it doesn't exist."""
-        with self.app.app_context():
-            # Check if item1 already exists
-            item_2 = Item.query.filter_by(name='Item2').first()
+    # def seed_item_2(self):
+    #     """Create default item if it doesn't exist."""
+    #     with self.app.app_context():
+    #         # Check if item1 already exists
+    #         item_2 = Item.query.filter_by(name='Item2').first()
             
-            if not item_2:
-                # Create item1
-                item2 = Item(
-                    name = 'Item2',
-                    description = "Lorem ipsum dolor sit amet, " \
-                    "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " \
-                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " \
-                    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " \
-                    "Excepteur sint occaecat cupidatat non proident, " \
-                    "sunt in culpa qui officia deserunt mollit anim id est laborum.", 
-                    price = 14371.70,
-                    image_filename = 'gold.jpg',
-                    timestamp = datetime.utcnow(),
-                    user_id = 3, 
-                    category = "Dorm Essentials", 
-                    status = 'available',   # available, hidden, sold
-                    approval = 'approved'
-                )
-                db.session.add(item2)
-                db.session.commit()
-                print("Item2 created successfully.")
-            else:
-                print("Item2 already exists.")
-    
+    #         if not item_2:
+    #             # Create item1
+    #             item2 = Item(
+    #                 name = 'Item2',
+    #                 description = "Lorem ipsum dolor sit amet, " \
+    #                 "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " \
+    #                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " \
+    #                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " \
+    #                 "Excepteur sint occaecat cupidatat non proident, " \
+    #                 "sunt in culpa qui officia deserunt mollit anim id est laborum.", 
+    #                 price = 14371.70,
+    #                 image_filename = 'gold.jpg',
+    #                 timestamp = datetime.utcnow(),
+    #                 user_id = 3, 
+    #                 category = "Dorm Essentials", 
+    #                 status = 'available',   # available, hidden, sold
+    #                 approval = 'approved'
+    #             )
+    #             db.session.add(item2)
+    #             db.session.commit()
+
     def seed_all(self):
         """Run all seeding operations."""
         self.seed_admin_user()

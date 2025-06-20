@@ -1,6 +1,6 @@
-from flask import Flask, session
+from flask import Flask
 from app.configs import Config
-from app.extensions import Extensions, db, bcrypt
+from app.extensions import Extensions
 from app.app import Flask_App
 from app.endpoint_factory import EndpointFactory
 from app.seeder import DatabaseSeeder

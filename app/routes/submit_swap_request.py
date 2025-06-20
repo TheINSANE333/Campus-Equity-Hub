@@ -1,10 +1,6 @@
 from flask import request, flash, redirect, url_for, session
-
-import app.notification_dbhandler
 from app.app_stub import Flask_App_Stub
-from app.models.user import User # Import the User model
 from app.extensions import db
-from datetime import datetime
 from app.routes.endpoint import Endpoint
 from app.swap_dbhandler import SwapRepository
 from app.item_dbhandler import ItemRepository

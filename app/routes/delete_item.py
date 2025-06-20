@@ -1,10 +1,9 @@
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
-from flask import flash, redirect, url_for, render_template
+from flask import flash, redirect, url_for
 from app.item_dbhandler import ItemRepository
 from app.extensions import db
 from app.swap_dbhandler import SwapRepository
-from app.models.item import Item
 
 
 class DeleteItem(Endpoint):

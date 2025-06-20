@@ -15,8 +15,6 @@ class Application(db.Model):
     
     # Define relationship
     user = db.relationship('User', backref=db.backref('application', lazy=True))
-
-    print("Application created")
     
     def __repr__(self):
         return f'<Application {self.id}>'

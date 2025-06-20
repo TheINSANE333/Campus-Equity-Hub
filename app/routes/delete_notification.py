@@ -1,7 +1,6 @@
 from flask import jsonify, request as flask_request, session
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
-from flask_login import login_required
 from app.notification_dbhandler import NotificationRepository
 
 

@@ -48,8 +48,7 @@
                             <th>ID</th>
                             <th>Username</th>
                             <th>Email</th>
-                            <th>Admin</th>
-                            <th>Actions</th>
+                            <th>Role</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,7 +56,7 @@
                             <td>{{ me.id }}</td>
                             <td>{{ me.username }}</td>
                             <td>{{ me.email }}</td>
-                            <td>{% if me.role == 'admin' %}Yes{% else %}No{% endif %}</td>
+                            <td>{{ me.role }}</td>
                             <td></td>
                         </tr>
                         {% for user in users[:10] %}
@@ -65,7 +64,7 @@
                             <td>{{ user.id }}</td>
                             <td>{{ user.username }}</td>
                             <td>{{ user.email }}</td>
-                            <td>{% if user.role == 'admin' %}Yes{% else %}No{% endif %}</td>
+                            <td>{{ user.role }}</td>
                             <td></td>
                         </tr>
                         {% endfor %}

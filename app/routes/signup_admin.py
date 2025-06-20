@@ -2,7 +2,6 @@ from flask import render_template, request, flash, redirect, url_for
 from app.app_stub import Flask_App_Stub
 from app.dbhandler import UserRepository
 from app.routes.endpoint import Endpoint
-from app.function import getUnreadCount
 
 class SignupAdmin(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:

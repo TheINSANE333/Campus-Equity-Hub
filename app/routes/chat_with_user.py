@@ -4,7 +4,6 @@ from app.routes.endpoint import Endpoint
 from app.chat_dbhandler import ChatRepository
 from app.dbhandler import UserRepository
 from app.item_dbhandler import ItemRepository
-from app.function import getUnreadCount
 
 class ChatWithUser(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:

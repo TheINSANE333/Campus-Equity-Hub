@@ -1,4 +1,3 @@
-import os
 import shutil
 from app.app_stub import Flask_App_Stub
 from app.models.user import User

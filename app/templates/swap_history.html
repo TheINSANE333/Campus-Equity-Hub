@@ -59,8 +59,9 @@
         }
 
         .back-button {
+            float:left;
             display: block;
-            margin: 0 auto;
+            margin: 0px auto 20px auto;
             padding: 10px 25px;
             background-color: #2563eb;
             color: white;
@@ -107,11 +108,15 @@
             color: #f44336;
             font-weight: 500;
         }
+
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Swap History</h1>
+<div class="container"  style="padding-bottom: 60px">
+    <div class="header">
+        <h1>Swap History</h1>
+        <button class="back-button" onclick="history.back()">Back to Previous Page</button>
+    </div>
 
     <table>
         <thead>
@@ -145,7 +150,5 @@
         {% endif %}
         </tbody>
     </table>
-
-    <button class="back-button" onclick="history.back()">Back to Previous Page</button>
 </div>
 {% endblock %}

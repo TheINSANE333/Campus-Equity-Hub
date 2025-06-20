@@ -1,4 +1,4 @@
-from flask import render_template, request, url_for, flash, session, redirect
+from flask import render_template, url_for, flash, session, redirect
 from app.app_stub import Flask_App_Stub
 from app.dbhandler import UserRepository
 from app.routes.endpoint import Endpoint

@@ -14,8 +14,6 @@ class User(db.Model, UserMixin):
     achievement_point = db.Column(db.Integer, nullable=False, default=0)
     achievement_level = db.Column(db.Integer, nullable=False, default=0)
 
-    print("User model created")
-
     def __repr__(self):
         return f'<User {self.username}>'
     
