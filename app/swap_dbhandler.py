@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from flask import flash, redirect, url_for
 from app.app_stub import Flask_App_Stub
 from app.extensions import db

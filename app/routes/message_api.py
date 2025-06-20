@@ -1,8 +1,7 @@
-from flask import render_template, request, flash, redirect, url_for, session, jsonify
+from flask import request, session, jsonify
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.chat_dbhandler import ChatRepository
-from app.dbhandler import UserRepository
 
 class MessageApi(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:

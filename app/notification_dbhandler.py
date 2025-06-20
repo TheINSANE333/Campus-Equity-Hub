@@ -1,6 +1,6 @@
 from app.app_stub import Flask_App_Stub
 from app.models.notification import Notification
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import List
 from datetime import datetime
 

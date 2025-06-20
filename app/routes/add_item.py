@@ -4,7 +4,7 @@ from flask import render_template, request, url_for, flash, session, redirect
 from app.app_stub import Flask_App_Stub
 from app.item_dbhandler import ItemRepository
 from app.routes.endpoint import Endpoint
-from app.function import allowed_file, getUnreadCount
+from app.function import allowed_file
 from app.notification_dbhandler import NotificationRepository
 from app.dbhandler import UserRepository
 

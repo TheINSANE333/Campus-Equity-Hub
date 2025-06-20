@@ -1,8 +1,7 @@
 from flask import render_template, url_for, flash, session, redirect
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
-from app.dbhandler import UserRepository, Authenticator
-from app.function import getUnreadCount
+from app.dbhandler import UserRepository
 
 class AdminDashboard(Endpoint):
     def __init__(self, app: Flask_App_Stub) -> None:

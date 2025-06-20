@@ -1,6 +1,5 @@
 from flask import render_template, url_for, flash, session, redirect
 from app.app_stub import Flask_App_Stub
-from app.models.item import Item
 from app.routes.endpoint import Endpoint
 from app.item_dbhandler import ItemRepository
 from app.function import dateCounter

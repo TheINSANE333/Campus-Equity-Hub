@@ -1,12 +1,10 @@
 import os
 import uuid
 from flask import render_template, request, url_for, flash, session, redirect
-from sqlalchemy.sql.functions import current_user
-
 from app.app_stub import Flask_App_Stub
 from app.application_dbhandler import ApplicationRepository
 from app.routes.endpoint import Endpoint
-from app.function import pdfVerification, getUnreadCount
+from app.function import pdfVerification
 from app.notification_dbhandler import NotificationRepository
 from app.dbhandler import UserRepository
 

@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, request, redirect, url_for, flash, session
+from flask import render_template, request, redirect, url_for, flash
 from app.app_stub import Flask_App_Stub
 from app.item_dbhandler import ItemRepository
 from app.swap_dbhandler import SwapRepository

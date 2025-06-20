@@ -1,4 +1,3 @@
-import os
 from app.builder import FlaskAppBuilder
 
 if __name__ == '__main__':

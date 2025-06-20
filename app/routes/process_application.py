@@ -18,8 +18,6 @@ class ProcessApplication(Endpoint):
         if 'user_id' not in session:
             flash('Please log in to access this page.', 'danger')
             return redirect(url_for('login'))
-
-
         
         if session['role'] != "admin":
             flash ('Please log in as admin to access this page.', 'danger')
@@ -40,7 +38,6 @@ class ProcessApplication(Endpoint):
         sender = user_dbHandler.query_user_id(sender_id)
         name =  sender.username
         user = user_dbHandler.query_user_id(application.user_id)
-
 
         # If application is approved, update user role to special
         if action == 'approved':
