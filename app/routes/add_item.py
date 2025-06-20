@@ -67,5 +67,5 @@ class NewItemCommand:
         user_id = session['user_id']
         user = self._user_dbhandler.query_user_id(user_id)
         self._item_dbHandler.add_new_item(name, description, price, image_filename, user_id, category)
-        self._notification_dbhandler.create_notification(1, user_id, user.username, f"item '{name}' to be approval", 'item approval', 'status', 'admin', f"'{name} to be approve'")
+        self._notification_dbhandler.create_notification(1, user_id, user.username, f"item '{name}' to be approval", 'item approval', 'unread', 'admin', f"'{name} to be approve'")
         return True, 'Item created successfully! Item will be available after admin approval!'
