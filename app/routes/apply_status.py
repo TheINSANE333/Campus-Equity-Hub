@@ -50,7 +50,7 @@ class ApplyStatus(Endpoint):
             application_dbHandler = ApplicationRepository(self.flask_app)
             command = NewApplicationCommand(application_dbHandler)
             success, message = command.execute(name, ic, cgpa, pdf_filename, hpnumber, income)
-            notification_dbHandler.create_notification(0, session['user_id'], user.username, f"New Application, '{user.username}' has applied for a Priority Access.", 'Special Approval','unread', 'admin', 'Application for Priority Access')
+            notification_dbHandler.create_notification(1, session['user_id'], user.username, f"New Application, '{user.username}' has applied for a Priority Access.", 'Special Approval','unread', 'admin', 'Application for Priority Access')
             
             flash(message, 'success' if success else 'danger')
             if success:
