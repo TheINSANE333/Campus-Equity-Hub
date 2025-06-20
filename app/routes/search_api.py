@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, session
 from app.app_stub import Flask_App_Stub
 from app.routes.endpoint import Endpoint
 from app.item_dbhandler import ItemRepository
@@ -18,7 +18,7 @@ class SearchApi(Endpoint):
         
         if query:
             # Search for campuses that match the query (case-insensitive)
-            items = item_dbhandler.find_item(query, 'All')
+            items = item_dbhandler.find_item(query, 'All', session['user_id'])
             
             # Format results for JSON response
             results = [

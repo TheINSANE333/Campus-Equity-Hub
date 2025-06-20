@@ -31,7 +31,7 @@ class Marketplace(Endpoint):
         
         two_days_ago = dateCounter()
 
-        items = item_dbHandler.find_item(item_name, category_filter)
+        items = item_dbHandler.find_item(item_name, category_filter, session['user_id'])
 
         items = [item for item in items if item.user_id != user.id]
 

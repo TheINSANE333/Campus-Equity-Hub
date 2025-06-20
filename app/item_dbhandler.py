@@ -156,7 +156,7 @@ class ItemRepository(DbHandler):
     def get_item_by_category(self, category) -> List[Item]:
         return Item.query.filter_by(status="available", approval='approved', category=category).order_by(Item.timestamp.desc()).all()
     
-    def find_item(self, item_name: str, category: str) -> List[Item]:
+    def find_item(self, item_name: str, category: str, user_id: int) -> List[Item]:
         
         # Find specific item in specific categories
         if category != 'All' and item_name !='':
@@ -165,7 +165,8 @@ class ItemRepository(DbHandler):
                     Item.status == "available",
                     Item.approval == "approved",
                     Item.category == category,
-                    Item.name.ilike(f"%{item_name}%")
+                    Item.name.ilike(f"%{item_name}%"),
+                    Item.user_id != user_id
                 )
             ).order_by(Item.timestamp.desc()).limit(10).all()
 
@@ -175,7 +176,8 @@ class ItemRepository(DbHandler):
                 and_(
                     Item.status == "available",
                     Item.approval == "approved",
-                    Item.category == category
+                    Item.category == category,
+                    Item.user_id != user_id
                 )
             ).order_by(Item.timestamp.desc()).limit(10).all()
         
@@ -185,7 +187,8 @@ class ItemRepository(DbHandler):
                 and_(
                     Item.status == "available",
                     Item.approval == "approved",
-                    Item.name.ilike(f"%{item_name}%")
+                    Item.name.ilike(f"%{item_name}%"),
+                    Item.user_id != user_id
                 )
             ).order_by(Item.timestamp.desc()).limit(10).all()
         
@@ -193,6 +196,7 @@ class ItemRepository(DbHandler):
         return Item.query.filter(
             and_(
                 Item.status == "available",
-                Item.approval == "approved"
+                Item.approval == "approved",
+                Item.user_id != user_id
             )
         ).order_by(Item.timestamp.desc()).limit(10).all()
