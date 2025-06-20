@@ -40,4 +40,4 @@ class Marketplace(Endpoint):
         if user_role != 'special' and user_role != 'admin':
             items = [item for item in items if item.timestamp <= two_days_ago]
 
-        return render_template('marketplace.html', items=items, unfiltered_items=unfiltered_items)
+        return render_template('marketplace.html', items=items, unfiltered_items=unfiltered_items, category=category_filter)
