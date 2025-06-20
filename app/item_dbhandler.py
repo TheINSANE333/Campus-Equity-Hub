@@ -66,9 +66,7 @@ class ItemRepository(DbHandler):
                         user_id = user_id,
                         category = category)
         self.db.session.add(new_item)
-        print("Item added to database")
         self.db.session.commit()
-        print("Commit successful")
 
     def item_to_display(self, current_user_id: int):
         return Item.query.filter(

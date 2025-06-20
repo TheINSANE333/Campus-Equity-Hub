@@ -34,7 +34,6 @@ class Login(Endpoint):
                 flash(f'Welcome back, {user.username}!', 'success')
 
                 if user.role == "admin":
-                    print("is admin")
                     return redirect(url_for('admin_dashboard'))
                 else:
                     return redirect(url_for('dashboard'))

@@ -27,9 +27,6 @@ class DatabaseSeeder:
                 )
                 db.session.add(admin)
                 db.session.commit()
-                print("Admin user created successfully.")
-            else:
-                print("Admin user already exists.")
 
     def seed_user_1(self):
         """Create default user if it doesn't exist."""
@@ -49,9 +46,6 @@ class DatabaseSeeder:
                 )
                 db.session.add(user1)
                 db.session.commit()
-                print("User1 created successfully.")
-            else:
-                print("User1 already exists.")
 
     def seed_user_2(self):
         """Create default user if it doesn't exist."""
@@ -71,9 +65,6 @@ class DatabaseSeeder:
                 )
                 db.session.add(user2)
                 db.session.commit()
-                print("User1 created successfully.")
-            else:
-                print("User1 already exists.")
 
     def seed_item_1(self):
         """Create default item if it doesn't exist."""
@@ -101,9 +92,6 @@ class DatabaseSeeder:
                 )
                 db.session.add(item1)
                 db.session.commit()
-                print("Item1 created successfully.")
-            else:
-                print("Item1 already exists.")
 
     def seed_item_2(self):
         """Create default item if it doesn't exist."""
@@ -131,10 +119,7 @@ class DatabaseSeeder:
                 )
                 db.session.add(item2)
                 db.session.commit()
-                print("Item2 created successfully.")
-            else:
-                print("Item2 already exists.")
-    
+
     def seed_all(self):
         """Run all seeding operations."""
         self.seed_admin_user()
