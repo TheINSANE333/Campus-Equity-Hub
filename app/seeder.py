@@ -1,7 +1,5 @@
 from app.extensions import db, bcrypt
-from datetime import datetime
 from app.models.user import User
-from app.models.item import Item
 
 class DatabaseSeeder:
     """Handles database seeding operations."""
