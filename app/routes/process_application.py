@@ -47,6 +47,8 @@ class ProcessApplication(Endpoint):
 
             user_dbHandler.update_role(user, 'special')
             role_to_be_view = user.role
+            # delete all the notification when status is student
+            notification_dbHandler.set_all_notification_status_to_delete(user.id, 'student')
             notification_dbHandler.create_notification(user.id, sender_id, name, 'Your status has been approved and updated to Priority Access','Special Approval', 'unread', role_to_be_view, 'Updated Status For Priority Access')
             flash('Application approved and user role updated to special!', 'success')
         else:
